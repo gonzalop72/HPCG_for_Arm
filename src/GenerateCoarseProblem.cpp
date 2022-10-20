@@ -38,7 +38,7 @@
 
 */
 
-void GenerateCoarseProblem(const SparseMatrix & Af) {
+void GenerateCoarseProblem(const SparseMatrix & Af, int level) {
 
   // Make local copies of geometry information.  Use global_int_t since the RHS products in the calculations
   // below may result in global range values.
@@ -104,7 +104,11 @@ void GenerateCoarseProblem(const SparseMatrix & Af) {
   InitializeVector(*Axf, Af.localNumberOfColumns);
   Af.Ac = Ac;
   MGData * mgData = new MGData;
-  InitializeMGData(f2cOperator, rc, xc, Axf, *mgData);
+  InitializeMGData(f2cOperator, rc, xc, Axf, *mgData
+  #ifdef ENABLE_MG_COUNTERS
+    ,level
+  #endif
+);
   Af.mgData = mgData;
 
   return;

@@ -70,7 +70,7 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
   char ** argv = *argv_p;
   char fname[80];
   int i, j, *iparams;
-  char cparams[][7] = {"--nx=", "--ny=", "--nz=", "--rt=", "--pz=", "--zl=", "--zu=", "--npx=", "--npy=", "--npz="};
+  char cparams[][7] = {"--nx=", "--ny=", "--nz=", "--rt=", "--pz=", "--zl=", "--zu=", "--npx=", "--npy=", "--npz=", "--lvt="};
   time_t rawtime;
   tm * ptm;
   const int nparams = (sizeof cparams) / (sizeof cparams[0]);
@@ -163,6 +163,11 @@ HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
     HPCG_fout.open(NULLDEVICE);
 #endif
   }
+  
+#if defined(LIKWID_INSTRUMENTATION) || defined(ENABLE_MG_COUNTERS)
+  if (iparams[10] > 0)
+  params.lvl_Trace = iparams[10];
+#endif
 
   free( iparams );
 

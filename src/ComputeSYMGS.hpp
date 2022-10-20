@@ -36,7 +36,9 @@
 #include "SparseMatrix.hpp"
 #include "Vector.hpp"
 
-int ComputeSYMGS( const SparseMatrix  & A, const Vector & r, Vector & x );
+#include "InstrumentationData.hpp"
+
+int ComputeSYMGS( const SparseMatrix  & A, const Vector & r, Vector & x, TraceData& trace );
 int ComputeFusedSYMGS_SPMV( const SparseMatrix  & A, const Vector & r, Vector & x, Vector & y );
 #ifdef HPCG_USE_NEON
 int ComputeFusedSYMGS_SPMV_NEON (const SparseMatrix & A, const Vector & r, Vector & x, Vector & y);

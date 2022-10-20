@@ -57,7 +57,7 @@
 /*
  * TDG VERSION
  */
-int ComputeSYMGS_TDG_SVE(const SparseMatrix & A, const Vector & r, Vector & x) {
+int ComputeSYMGS_TDG_SVE(const SparseMatrix & A, const Vector & r, Vector & x, TraceData &trace) {
 	assert(x.localLength == A.localNumberOfColumns);
 
 #ifndef HPCG_NO_MPI
@@ -1286,7 +1286,7 @@ int ComputeFusedSYMGS_SPMV ( const SparseMatrix & A, const Vector & r, Vector & 
 	return 0;
 }
 
-int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x ) {
+int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, TraceData& trace ) {
 
 	assert( x.localLength == A.localNumberOfColumns);
 
@@ -1349,7 +1349,7 @@ int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x ) {
 	return 0;
 }
 
-int ComputeSYMGS_BLOCK( const SparseMatrix & A, const Vector & r, Vector & x ) {
+int ComputeSYMGS_BLOCK( const SparseMatrix & A, const Vector & r, Vector & x, TraceData& trace ) {
 
 	assert(x.localLength >= A.localNumberOfColumns);
 	
@@ -1538,7 +1538,7 @@ int ComputeSYMGS_BLOCK( const SparseMatrix & A, const Vector & r, Vector & x ) {
 
   @see ComputeSYMGS_ref
 */
-int ComputeSYMGS( const SparseMatrix & A, const Vector & r, Vector & x) {
+int ComputeSYMGS( const SparseMatrix & A, const Vector & r, Vector & x, TraceData& trace) {
 
 	// This function is just a stub right now which decides which implementation of the SYMGS will be executed (TDG or block coloring)
 	if ( A.TDG ) {
@@ -1547,7 +1547,7 @@ int ComputeSYMGS( const SparseMatrix & A, const Vector & r, Vector & x) {
 #elif defined HPCG_USE_SVE
 		return ComputeSYMGS_TDG_SVE(A, r, x);
 #else
-		return ComputeSYMGS_TDG(A, r, x);
+		return ComputeSYMGS_TDG(A, r, x, trace);
 #endif
 	}
 #ifdef HPCG_USE_NEON
@@ -1555,6 +1555,6 @@ int ComputeSYMGS( const SparseMatrix & A, const Vector & r, Vector & x) {
 #elif defined HPCG_USE_SVE
 	return ComputeSYMGS_BLOCK_SVE(A, r, x);
 #else
-	return ComputeSYMGS_BLOCK(A, r, x);
+	return ComputeSYMGS_BLOCK(A, r, x, trace);
 #endif
 }

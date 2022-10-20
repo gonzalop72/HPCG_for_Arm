@@ -17,6 +17,8 @@
 #include "SparseMatrix.hpp"
 #include "Vector.hpp"
 
-int ComputeMG(const SparseMatrix  & A, const Vector & r, Vector & x);
+#include "InstrumentationData.hpp"
+
+int ComputeMG(const SparseMatrix  & A, const Vector & r, Vector & x, TraceData& trace);
 
 #endif // COMPUTEMG_HPP

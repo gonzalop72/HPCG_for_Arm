@@ -79,6 +79,8 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
  double xNorm2, yNorm2;
  double ANorm = 2 * 26.0;
 
+ TraceData tdDisabled;
+
  // Next, compute x'*A*y
  ComputeDotProduct(nrow, y_ncol, y_ncol, yNorm2, t4, A.isDotProductOptimized);
  int ierr = ComputeSPMV(A, y_ncol, z_ncol); // z_nrow = A*y_overlap
@@ -102,14 +104,14 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
  // Test symmetry of multi-grid
 
  // Compute x'*Minv*y
- ierr = ComputeMG(A, y_ncol, z_ncol); // z_ncol = Minv*y_ncol
+ ierr = ComputeMG(A, y_ncol, z_ncol, tdDisabled); // z_ncol = Minv*y_ncol
  if (ierr) HPCG_fout << "Error in call to MG: " << ierr << ".\n" << endl;
  double xtMinvy = 0.0;
  ierr = ComputeDotProduct(nrow, x_ncol, z_ncol, xtMinvy, t4, A.isDotProductOptimized); // x'*Minv*y
  if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
  // Next, compute z'*Minv*x
- ierr = ComputeMG(A, x_ncol, z_ncol); // z_ncol = Minv*x_ncol
+ ierr = ComputeMG(A, x_ncol, z_ncol, tdDisabled); // z_ncol = Minv*x_ncol
  if (ierr) HPCG_fout << "Error in call to MG: " << ierr << ".\n" << endl;
  double ytMinvx = 0.0;
  ierr = ComputeDotProduct(nrow, y_ncol, z_ncol, ytMinvx, t4, A.isDotProductOptimized); // y'*Minv*x

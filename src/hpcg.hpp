@@ -40,6 +40,8 @@ struct HPCG_Params_STRUCT {
   int pz; //!< Partition in the z processor dimension, default is npz
   local_int_t zl; //!< nz for processors in the z dimension with value less than pz
   local_int_t zu; //!< nz for processors in the z dimension with value greater than pz
+ 
+  int lvl_Trace = 1;
 };
 /*!
   HPCG_Params is a shorthand for HPCG_Params_STRUCT

@@ -61,6 +61,15 @@ using std::endl;
 #include "TestSymmetry.hpp"
 #include "TestNorms.hpp"
 
+#include <cmath>
+#include <cfloat>
+
+#ifdef LIKWID_PERFMON
+#include "likwid.h"
+#endif
+
+#include "InstrumentationData.hpp"
+
 /*!
   Main driver program: Construct synthetic problem, run V&V tests, compute benchmark parameters, run benchmark, report results.
 
@@ -71,6 +80,27 @@ using std::endl;
 
 */
 int main(int argc, char * argv[]) {
+
+#ifdef LIKWID_PERFMON
+LIKWID_MARKER_INIT;
+#endif
+
+#pragma omp parallel 
+{
+  //LIKWID_MARKER_THREADINIT; 
+  #ifdef LIKWID_INSTRUMENTATION
+  LIKWID_MARKER_REGISTER("symgs_tdg");
+  LIKWID_MARKER_REGISTER("spmv_tdg");
+  LIKWID_MARKER_REGISTER("rest_tdg");
+  LIKWID_MARKER_REGISTER("prol_tdg");
+  LIKWID_MARKER_REGISTER("symgs2_tdg");
+  LIKWID_MARKER_REGISTER("symgs_bl");
+  LIKWID_MARKER_REGISTER("spmv_bl");
+  LIKWID_MARKER_REGISTER("rest_bl");
+  LIKWID_MARKER_REGISTER("prol_bl");
+  LIKWID_MARKER_REGISTER("symgs2_bl");
+  #endif
+}
 
 #ifndef HPCG_NO_MPI
   MPI_Init(&argc, &argv);
@@ -139,7 +169,7 @@ int main(int argc, char * argv[]) {
   int numberOfMgLevels = 4; // Number of levels including first
   SparseMatrix * curLevelMatrix = &A;
   for (int level = 1; level< numberOfMgLevels; ++level) {
-    GenerateCoarseProblem(*curLevelMatrix);
+    GenerateCoarseProblem(*curLevelMatrix, level);
     curLevelMatrix = curLevelMatrix->Ac; // Make the just-constructed coarse grid the next level
   }
 
@@ -275,13 +305,15 @@ int main(int argc, char * argv[]) {
   int optNiters = refMaxIters;
   double opt_worst_time = 0.0;
 
+  TraceData tdDisabled;
+
   std::vector< double > opt_times(9,0.0);
 
   // Compute the residual reduction and residual count for the user ordering and optimized kernels.
   for (int i=0; i< numberOfCalls; ++i) {
     ZeroVector(x); // start x at all zeros
     double last_cummulative_time = opt_times[0];
-    ierr = CG( A, data, b, x, optMaxIters, refTolerance, niters, normr, normr0, &opt_times[0], true);
+    ierr = CG( A, data, b, x, optMaxIters, refTolerance, niters, normr, normr0, &opt_times[0], true, tdDisabled);
     if (ierr) ++err_count; // count the number of errors in CG
     if (normr / normr0 > refTolerance) ++tolerance_failures; // the number of failures to reduce residual
 
@@ -331,9 +363,13 @@ int main(int argc, char * argv[]) {
   testnorms_data.samples = numberOfCgSets;
   testnorms_data.values = new double[numberOfCgSets];
 
+  TraceData tdEnabled; 
+  tdEnabled.enabled = true;
+  tdEnabled.level = params.lvl_Trace;
+
   for (int i=0; i< numberOfCgSets; ++i) {
     ZeroVector(x); // Zero out x
-    ierr = CG( A, data, b, x, optMaxIters, optTolerance, niters, normr, normr0, &times[0], true);
+    ierr = CG( A, data, b, x, optMaxIters, optTolerance, niters, normr, normr0, &times[0], true, tdEnabled);
     if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
     if (rank==0) HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr/normr0 << "]" << endl;
     testnorms_data.values[i] = normr/normr0; // Record scaled residual from this run
@@ -376,5 +412,10 @@ int main(int argc, char * argv[]) {
 #ifndef HPCG_NO_MPI
   MPI_Finalize();
 #endif
+
+#ifdef LIKWID_PERFMON
+  LIKWID_MARKER_CLOSE;
+#endif
+
   return 0;
 }

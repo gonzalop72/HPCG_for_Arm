@@ -55,6 +55,8 @@ using std::endl;
 #include "hpcg.hpp"
 #endif
 
+#include "ReportFunctions.hpp"
+
 /*!
  Creates a YAML file and writes the information about the HPCG run, its results, and validity.
 
@@ -435,6 +437,10 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 #endif
       doc.get("Final Summary")->add("Please review the YAML file contents","You may NOT submit these results for consideration.");
     }
+
+    ReportInstrumentation(A, doc);
+
+    ReportEnvironment(A, doc);
 
     std::string yaml = doc.generate();
 #ifdef HPCG_DEBUG
