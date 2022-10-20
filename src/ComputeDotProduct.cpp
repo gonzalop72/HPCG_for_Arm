@@ -82,7 +82,7 @@ int ComputeDotProduct(const local_int_t n, const Vector & x, const Vector & y,
 	double *yv = y.values;
 	double local_result = 0.0;
 
-#ifdef HPCG_USE_SVE
+#if defined HPCG_USE_SVE && !defined HPCG_MAN_OPT_DDOT
 	if ( xv == yv ) {
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel for reduction(+:local_result)
@@ -112,12 +112,12 @@ int ComputeDotProduct(const local_int_t n, const Vector & x, const Vector & y,
 #elif defined HPCG_USE_DDOT_ARMPL
 	local_result = cblas_ddot(n, xv, 1, yv, 1);
 #elif defined HPCG_MAN_OPT_DDOT
-		double local_result0 = 0.0, local_result1=0.0, local_result2=0.0, local_result3=0.0;
+	double local_result0 = 0.0, local_result1=0.0, local_result2=0.0, local_result3=0.0;
 	if (yv == xv) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for reduction (+:local_result)
+#pragma omp parallel for reduction (+:local_result0,local_result1,local_result2,local_result3)
 #endif //HPCG_NO_OPENMP
-		for ( local_int_t i = 0; i < n; i++ ) {
+		for ( local_int_t i = 0; i < n; i+=4 ) {
             local_result0 += xv[i+0] * xv[i+0];
             local_result1 += xv[i+1] * xv[i+1];
             local_result2 += xv[i+2] * xv[i+2];
