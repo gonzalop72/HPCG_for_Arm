@@ -43,6 +43,8 @@
 #include "ExchangeHalo.hpp"
 #endif
 
+#include "likwid_instrumentation.hpp"
+
 /**************************************************************************************************/
 /**************************************************************************************************/
 /**************************************************************************************************/
@@ -67,6 +69,8 @@ int ComputeSYMGS_TDG_SVE(const SparseMatrix & A, const Vector & r, Vector & x, T
 	const double * const rv = r.values;
 	double * const xv = x.values;
 	double **matrixDiagonal = A.matrixDiagonal;
+
+LIKWID_START(trace.enabled, "symgs_tdg");
 
 	/*
 	 * FORWARD SWEEP
@@ -133,6 +137,7 @@ int ComputeSYMGS_TDG_SVE(const SparseMatrix & A, const Vector & r, Vector & x, T
 			xv[row] = sum / currentDiagonal;
 		}
 	}
+LIKWID_STOP(trace.enabled, "symgs_tdg");
 
 	return 0;
 }
@@ -143,7 +148,7 @@ int ComputeSYMGS_TDG_SVE(const SparseMatrix & A, const Vector & r, Vector & x, T
 /*
  * TDG FUSED SYMGS-SPMV VERSION
  */
-int ComputeFusedSYMGS_SPMV_SVE(const SparseMatrix & A, const Vector & r, Vector & x, Vector & y) {
+int ComputeFusedSYMGS_SPMV_SVE(const SparseMatrix & A, const Vector & r, Vector & x, Vector & y, TraceData& trace) {
 	assert(x.localLength == A.localNumberOfColumns);
 
 #ifndef HPCG_NO_MPI
@@ -234,7 +239,7 @@ int ComputeFusedSYMGS_SPMV_SVE(const SparseMatrix & A, const Vector & r, Vector 
 /*
  * BLOCK COLORED VERSION
  */
-int ComputeSYMGS_BLOCK_SVE(const SparseMatrix & A, const Vector & r, Vector & x ) {
+int ComputeSYMGS_BLOCK_SVE(const SparseMatrix & A, const Vector & r, Vector & x, TraceData& trace ) {
 	assert(x.localLength >= A.localNumberOfColumns);
 
 #ifndef HPCG_NO_MPI
@@ -246,6 +251,9 @@ int ComputeSYMGS_BLOCK_SVE(const SparseMatrix & A, const Vector & r, Vector & x 
 	double * const xv = x.values;
 	local_int_t firstBlock = 0;
 	local_int_t lastBlock = firstBlock + A.numberOfBlocksInColor[0];
+
+LIKWID_START(trace.enabled, "symgs_bc");		
+
 	/*
 	 * FORWARD SWEEP
 	 */
@@ -563,6 +571,7 @@ int ComputeSYMGS_BLOCK_SVE(const SparseMatrix & A, const Vector & r, Vector & x 
 			}
 		}
 	}
+LIKWID_STOP(trace.enabled, "symgs_bc");			
 
 	return 0;
 }
@@ -1545,7 +1554,7 @@ int ComputeSYMGS( const SparseMatrix & A, const Vector & r, Vector & x, TraceDat
 #ifdef HPCG_USE_NEON
 		return ComputeSYMGS_TDG_NEON(A, r, x);
 #elif defined HPCG_USE_SVE
-		return ComputeSYMGS_TDG_SVE(A, r, x);
+		return ComputeSYMGS_TDG_SVE(A, r, x, trace);
 #else
 		return ComputeSYMGS_TDG(A, r, x, trace);
 #endif
@@ -1553,7 +1562,7 @@ int ComputeSYMGS( const SparseMatrix & A, const Vector & r, Vector & x, TraceDat
 #ifdef HPCG_USE_NEON
 	return ComputeSYMGS_BLOCK_NEON(A, r, x);
 #elif defined HPCG_USE_SVE
-	return ComputeSYMGS_BLOCK_SVE(A, r, x);
+	return ComputeSYMGS_BLOCK_SVE(A, r, x, trace);
 #else
 	return ComputeSYMGS_BLOCK(A, r, x, trace);
 #endif

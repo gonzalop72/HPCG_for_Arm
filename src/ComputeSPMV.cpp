@@ -277,6 +277,40 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 			sum += A.matrixValues[i][j] * xv[curCol];
 		}
 		yv[i] = sum;
+/*
+	for ( local_int_t i = 0; i < nrow-1; ++i ) {
+		double sum0 = 0.0;
+		double sum1 = 0.0;
+		if (A.nonzerosInRow[i] == A.nonzerosInRow[i+1]) {
+			for ( local_int_t j = 0; j < A.nonzerosInRow[i]; ++j ) {
+				local_int_t curCol0 = A.mtxIndL[i][j];
+				local_int_t curCol1 = A.mtxIndL[i+1][j];
+
+				sum0 += A.matrixValues[i][j] * xv[curCol0];
+				sum1 += A.matrixValues[i+1][j] * xv[curCol1];
+			}
+			yv[i] = sum0;
+			yv[i+1] = sum1;
+			++i;
+		}
+		else {
+			double sum = 0.0;
+			for ( local_int_t j = 0; j < A.nonzerosInRow[i]; ++j ) {
+				local_int_t curCol = A.mtxIndL[i][j];
+				sum += A.matrixValues[i][j] * xv[curCol];
+			}
+			yv[i] = sum;
+			++i;
+			//if (i < nrow) {
+				sum = 0.0;
+				for ( local_int_t j = 0; j < A.nonzerosInRow[i]; ++j ) {
+					local_int_t curCol = A.mtxIndL[i][j];
+					sum += A.matrixValues[i][j] * xv[curCol];
+				}
+				yv[i] = sum;
+			//}
+		}
+*/
 	}
 #endif
 

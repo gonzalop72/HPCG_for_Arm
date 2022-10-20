@@ -54,6 +54,8 @@
 #define TICK()  t0 = mytimer() //!< record current time in 't0'
 #define TOCK(t) t += mytimer() - t0 //!< store time difference in 't' using time in 't0'
 
+#include "likwid_instrumentation.hpp"
+
 /*!
   Routine to compute an approximate solution to Ax = b
 
@@ -144,7 +146,9 @@ int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
       TICK(); ComputeWAXPBY (nrow, 1.0, zOrdered, beta, p, p, A.isWaxpbyOptimized);  TOCK(t2); // p = beta*p + z
     }
 
+    LIKWID_START(trace.enabled, "cg_spmv");
     TICK(); ComputeSPMV(A, p, Ap); TOCK(t3); // Ap = A*p
+    LIKWID_STOP(trace.enabled, "cg_spmv");
     TICK(); ComputeDotProduct(nrow, p, Ap, pAp, t4, A.isDotProductOptimized); TOCK(t1); // alpha = p'*Ap
     alpha = rtz/pAp;
     TICK(); ComputeWAXPBY(nrow, 1.0, xOrdered, alpha, p, xOrdered, A.isWaxpbyOptimized);// x = x + alpha*p

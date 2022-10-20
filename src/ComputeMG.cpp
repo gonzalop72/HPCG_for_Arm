@@ -45,9 +45,7 @@
 #include "ComputeProlongation.hpp"
 #include "mytimer.hpp"
 
-#ifdef LIKWID_PERFMON
-#include "likwid.h"
-#endif
+#include "likwid_instrumentation.hpp"
 
 #ifdef ENABLE_MG_COUNTERS
 MGTimers MGGlobalTimers[10];
@@ -66,14 +64,6 @@ MGTimers MGGlobalTimers[10];
 #define TICK_MG(f)	
 #define TOCK_MG(f, t) 
 #endif
-
-#ifdef LIKWID_INSTRUMENTATION
-#define LIKWID_START(t, s) if(t) { _Pragma("omp parallel") { LIKWID_MARKER_START(s); } }
-#define LIKWID_STOP(t, s) if(t) { _Pragma("omp parallel") { LIKWID_MARKER_STOP(s); } }
-#else
-#define LIKWID_START(t, s)
-#define LIKWID_STOP(t, s)
-#endif //LIKWID_INSTRUMENTATION
 
 int ComputeMG_TDG(const SparseMatrix  & A, const Vector & r, Vector & x, TraceData& trace) {
 	int ierr = 0;
@@ -104,15 +94,15 @@ int ComputeMG_TDG(const SparseMatrix  & A, const Vector & r, Vector & x, TraceDa
 
 #else // if !HPCG_USE_FUSED_SYMGS_SPMV
 
-#ifdef ENABLE_MG_COUNTERS
+#if defined (ENABLE_MG_COUNTERS) || defined (LIKWID_INSTRUMENTATION)
 	bool doTrace = trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level;
 #endif
 
     TICK_MG(trace.enabled);
-	LIKWID_START(doTrace, "symgs_tdg");
+	LIKWID_START(doTrace, "symgs_tdg1");
 		ierr += ComputeSYMGS(A, r, x, trace);
 		if ( ierr != 0 ) return ierr;
-	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "symgs_tdg");
+	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "symgs_tdg1");
     TOCK_MG(trace.enabled, t1);
 
     TICK_MG(trace.enabled);

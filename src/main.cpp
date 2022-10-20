@@ -61,11 +61,13 @@ using std::endl;
 #include "TestSymmetry.hpp"
 #include "TestNorms.hpp"
 
-#include <cmath>
-#include <cfloat>
-
 #ifdef LIKWID_PERFMON
 #include "likwid.h"
+#endif
+
+//#define __PRINT_MATRIX__
+#ifdef __PRINT_MATRIX__
+#include "print_matrix/PrintMatrix.cpp"
 #endif
 
 #include "InstrumentationData.hpp"
@@ -89,6 +91,7 @@ LIKWID_MARKER_INIT;
 {
   //LIKWID_MARKER_THREADINIT; 
   #ifdef LIKWID_INSTRUMENTATION
+  LIKWID_MARKER_REGISTER("cg_spmv");
   LIKWID_MARKER_REGISTER("symgs_tdg");
   LIKWID_MARKER_REGISTER("spmv_tdg");
   LIKWID_MARKER_REGISTER("rest_tdg");
@@ -255,6 +258,9 @@ LIKWID_MARKER_INIT;
   if (rank == 0 && err_count) HPCG_fout << err_count << " error(s) in call(s) to reference CG." << endl;
   double refTolerance = normr / normr0;
 
+#ifdef __PRINT_MATRIX__
+  PrintMatrixMarket(A, "original.mtx");
+#endif
   // Call user-tunable set up function.
   double t7 = mytimer();
   OptimizeProblem(A, data, b, x, xexact);
@@ -268,6 +274,11 @@ LIKWID_MARKER_INIT;
   if (geom->size == 1) WriteProblem(*geom, A, b, x, xexact);
 #endif
 
+#ifdef __PRINT_MATRIX__
+  char const * filename = "range.txt";
+  PrintMatrixMarket(A, "optimized.mtx");
+  //PrintRangeMatrx(A, filename, 144*144*144/2 -50, 144*144*144/2 + 50);
+#endif
 
   //////////////////////////////
   // Validation Testing Phase //

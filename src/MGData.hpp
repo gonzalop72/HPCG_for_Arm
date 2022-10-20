@@ -37,7 +37,7 @@ struct MGData_STRUCT {
    used inside optimized ComputeSPMV().
    */
   void * optimizationData;
-#ifdef ENABLE_MG_COUNTERS
+#if defined (ENABLE_MG_COUNTERS) || defined (LIKWID_INSTRUMENTATION)
     int levelMG=0;
 #endif 
 };
@@ -50,18 +50,14 @@ typedef struct MGData_STRUCT MGData;
  @param[in] f2cOperator -
  @param[out] data the data structure for CG vectors that will be allocated to get it ready for use in CG iterations
  */
-inline void InitializeMGData(local_int_t * f2cOperator, Vector * rc, Vector * xc, Vector * Axf, MGData & data
-#ifdef ENABLE_MG_COUNTERS
-    , int level
-#endif 
- ) {
+inline void InitializeMGData(local_int_t * f2cOperator, Vector * rc, Vector * xc, Vector * Axf, MGData & data, int level) {
   data.numberOfPresmootherSteps = 1;
   data.numberOfPostsmootherSteps = 1;
   data.f2cOperator = f2cOperator; // Space for injection operator
   data.rc = rc;
   data.xc = xc;
   data.Axf = Axf;
-#ifdef ENABLE_MG_COUNTERS
+#if defined (ENABLE_MG_COUNTERS) || defined (LIKWID_INSTRUMENTATION)
   data.levelMG=level;
 #endif 
   return;

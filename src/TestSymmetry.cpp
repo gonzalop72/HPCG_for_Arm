@@ -98,7 +98,10 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
  if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
  testsymmetry_data.depsym_spmv = std::fabs((long double) (xtAy - ytAx))/((xNorm2*ANorm*yNorm2 + yNorm2*ANorm*xNorm2) * (DBL_EPSILON));
- if (testsymmetry_data.depsym_spmv > 1.0) ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
+ if (testsymmetry_data.depsym_spmv > 1.0) {
+  ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
+  HPCG_fout << "Error in Symmetry :: (" << xtAy << "-" << ytAx << ")/(" << xNorm2*ANorm*yNorm2 << "+" << yNorm2*ANorm*xNorm2 << ") * " << DBL_EPSILON << "=" << testsymmetry_data.depsym_spmv <<"\n";
+ }
  if (A.geom->rank==0) HPCG_fout << "Departure from symmetry (scaled) for SpMV abs(x'*A*y - y'*A*x) = " << testsymmetry_data.depsym_spmv << endl;
 
  // Test symmetry of multi-grid
@@ -118,7 +121,10 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
  if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
 
  testsymmetry_data.depsym_mg = std::fabs((long double) (xtMinvy - ytMinvx))/((xNorm2*ANorm*yNorm2 + yNorm2*ANorm*xNorm2) * (DBL_EPSILON));
- if (testsymmetry_data.depsym_mg > 1.0) ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
+ if (testsymmetry_data.depsym_mg > 1.0) {
+   ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
+  HPCG_fout << "Error in Symmetry(2) :: (" << xtMinvy << "-" << ytMinvx << ")/((" << xNorm2*ANorm*yNorm2 << "+" << yNorm2*ANorm*xNorm2 << ") * " << DBL_EPSILON << ") = " << testsymmetry_data.depsym_mg << "\n";
+ }
  if (A.geom->rank==0) HPCG_fout << "Departure from symmetry (scaled) for MG abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data.depsym_mg << endl;
 
  CopyVector(xexact, x_ncol); // Copy exact answer into overlap vector

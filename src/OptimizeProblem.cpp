@@ -376,6 +376,7 @@ int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vec
 
 	// On the finest grid we use TDG algorithm
 	A.TDG = true;
+	if (A.TDG) {
 
 	// Create an auxiliary vector to store the number of dependencies on L for every row
 	//unsigned char *nonzerosInLowerDiagonal = (unsigned char*) calloc(nrow, sizeof(nonzerosInLowerDiagonal));
@@ -598,6 +599,10 @@ int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vec
 	armpl_spmat_hint(A.armpl_mat, ARMPL_SPARSE_HINT_STRUCTURE, ARMPL_SPARSE_STRUCTURE_HPCG);
 	armpl_spmv_optimize(A.armpl_mat);
 #endif
+	}
+	else {
+		OptimizeCoarseProblem(A);
+	}
 
 	if ( A.mgData != 0 ) {
 		// Translate f2cOperator values
