@@ -45,6 +45,14 @@ void ReportEnvironment(const SparseMatrix& A, OutputFile& doc) {
     optimizations += "DDOT,";
     doc.get("ARM Configuration")->add("DDOT optimized",true);
 #endif
+#ifdef HPCG_MAN_OPT_SPMV_UNROLL    //2-WAY UNROLLING ON SPMV
+    optimizations += "SPMV,";
+    doc.get("ARM Configuration")->add("SPMV optimized",true);
+#endif
+#ifdef HPCG_MAN_OPT_SCHEDULE_ON    //schedule(runtime)
+    optimizations += "SCH,";
+    doc.get("ARM Configuration")->add("Runtime Scheduling",true);
+#endif
     doc.get("ARM Configuration")->add("Optimizations", optimizations);
 
     //////// environment values

@@ -71,6 +71,12 @@ the target system.
 @see ComputeSPMV_ref
 */
 
+#ifdef HPCG_MAN_OPT_SCHEDULE_ON
+	#define SCHEDULE_CONF	schedule(runtime)
+#else
+	#define SCHEDULE_CONF
+#endif
+
 int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 
 	assert(x.localLength >= A.localNumberOfColumns);
@@ -85,7 +91,7 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 
 #if defined(HPCG_USE_NEON) && !defined(HPCG_USE_ARMPL_SPMV)
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE_CONF
 #endif
 	for ( local_int_t i = 0; i < nrow-1; i+=2 ) {
 		float64x2_t sum0 = vdupq_n_f64(0.0);
@@ -180,7 +186,7 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 
 	if ( nrow % 4 == 0 ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE_CONF
 #endif
 		for ( local_int_t i = 0; i < nrow-3; i+=4 ) {
 			local_int_t maxnnz01 = A.nonzerosInRow[i  ] > A.nonzerosInRow[i+1] ? A.nonzerosInRow[i  ] : A.nonzerosInRow[i+1];
@@ -220,7 +226,7 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 		}
 	} else if ( nrow % 2 == 0 ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE_CONF
 #endif
 		for ( local_int_t i = 0; i < nrow-1; i+=2 ) {
 			local_int_t maxnnz = A.nonzerosInRow[i] > A.nonzerosInRow[i+1] ? A.nonzerosInRow[i] : A.nonzerosInRow[i+1];
@@ -244,7 +250,7 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 		}
 	} else {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE_CONF
 #endif
 		for ( local_int_t i = 0; i < nrow; i++ ) {
 			local_int_t maxnnz = A.nonzerosInRow[i];
@@ -266,18 +272,11 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 
 	armpl_spmv_exec_d(ARMPL_SPARSE_OPERATION_NOTRANS, alpha, A.armpl_mat, xv, beta, yv);
 
-#else
+#elif defined(HPCG_MAN_OPT_SPMV_UNROLL)
+
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE_CONF
 #endif
-	for ( local_int_t i = 0; i < nrow; i++ ) {
-		double sum = 0.0;
-		for ( local_int_t j = 0; j < A.nonzerosInRow[i]; j++ ) {
-			local_int_t curCol = A.mtxIndL[i][j];
-			sum += A.matrixValues[i][j] * xv[curCol];
-		}
-		yv[i] = sum;
-/*
 	for ( local_int_t i = 0; i < nrow-1; ++i ) {
 		double sum0 = 0.0;
 		double sum1 = 0.0;
@@ -310,7 +309,18 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 				yv[i] = sum;
 			//}
 		}
-*/
+	}
+#else
+#ifndef HPCG_NO_OPENMP
+#pragma omp parallel for SCHEDULE_CONF
+#endif
+	for ( local_int_t i = 0; i < nrow; i++ ) {
+		double sum = 0.0;
+		for ( local_int_t j = 0; j < A.nonzerosInRow[i]; j++ ) {
+			local_int_t curCol = A.mtxIndL[i][j];
+			sum += A.matrixValues[i][j] * xv[curCol];
+		}
+		yv[i] = sum;
 	}
 #endif
 

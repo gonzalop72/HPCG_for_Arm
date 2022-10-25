@@ -108,7 +108,9 @@ HPCG_LIBS     =
 #    *) Not generate debugging output.
 #
 HPCG_OPTS     = -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI
-#-DHPCG_MAN_OPT_DDOT
+# -DHPCG_MAN_OPT_DDOT           4-WAY UNROLLING ON DDOT
+# -DHPCG_MAN_OPT_SPMV_UNROLL    2-WAY UNROLLING ON SPMV
+# -DHPCG_MAN_OPT_SCHEDULE_ON    schedule(runtime)
 # INSTRUMENTATION
 #       -DENABLE_MG_COUNTERS        Enable counters for Multigrid (don't use along with LIKWID instrumentation)
 #       -DLIKWID_INSTRUMENTATION    Enables likwid instrumentation in code (you need to enable likwid)
