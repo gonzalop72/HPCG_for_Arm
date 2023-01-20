@@ -83,7 +83,7 @@ int ComputeWAXPBY(const local_int_t n, const double alpha, const Vector & x,
 	const double * const yv = y.values;
 	double * const wv = w.values;
 
-#ifdef TODO_DOES_NOT_WORK //HPCG_USE_SVE
+#if (defined __armclang_version__ || defined __FUJITSU) && defined HPCG_USE_SVE
 	if ( alpha == 1.0 && beta == 1.0 ) {
 		// w[i] = xv[i] + yv[i]
 #ifndef HPCG_NO_OPENMP

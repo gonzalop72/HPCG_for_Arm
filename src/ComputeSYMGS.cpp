@@ -45,6 +45,12 @@
 
 #include "likwid_instrumentation.hpp"
 
+#ifdef HPCG_MAN_OPT_SCHEDULE_ON
+	#define SCHEDULE(T)	schedule(T)
+#else
+	#define SCHEDULE(T)
+#endif
+
 /**************************************************************************************************/
 /**************************************************************************************************/
 /**************************************************************************************************/
@@ -53,8 +59,14 @@
 /**************************************************************************************************/
 /**************************************************************************************************/
 
+#include "arm_sve.h"
 #ifdef HPCG_USE_SVE
 #include "arm_sve.h"
+
+inline void SYMGS_VERSION_1(const SparseMatrix& A, double * const& xv, const double * const& rv);	//UNROLL-2
+inline void SYMGS_VERSION_2(const SparseMatrix& A, double * const& xv, const double * const& rv);	//UNROLL-2 V2
+inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& xv, const double * const& rv);	//UNROLL-4 - OPTIMUM
+inline void SYMGS_VERSION_4(const SparseMatrix& A, double * const& xv, const double * const& rv);	//UNROLL-6
 
 /*
  * TDG VERSION
@@ -72,14 +84,84 @@ int ComputeSYMGS_TDG_SVE(const SparseMatrix & A, const Vector & r, Vector & x, T
 
 LIKWID_START(trace.enabled, "symgs_tdg");
 
+#ifndef TEST_XX
+SYMGS_VERSION_3(A, xv, rv);
+#else
+
+//#pragma statement scache_isolate_way L2=10
+//#pragma statement scache_isolate_assign xv
 	/*
 	 * FORWARD SWEEP
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+
+		local_int_t totalSize = A.tdg[l].size();
+		local_int_t size1 = 2*(totalSize/2);
+		//#pragma loop nounroll
+		//#pragma loop nounroll_and_jam
+		//if((A.tdg[l].size()%2) == 0) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel
+{
+#pragma omp for nowait SCHEDULE(runtime)
 #endif
-		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
+		for ( local_int_t i = 0; i < size1; i+=2 ) {
+			local_int_t row_1 = A.tdg[l][i];
+			local_int_t row_2 = A.tdg[l][i+1];
+			const double * const currentValues_1 = A.matrixValues[row_1];
+			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+			svfloat64_t contribs_1 = svdup_f64(0.0);
+
+			const double * const currentValues_2 = A.matrixValues[row_2];
+			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+			svfloat64_t contribs_2 = svdup_f64(0.0);
+			
+			const int maxNumberOfNonzeros = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);
+
+			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+				
+				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+
+				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+
+				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+
+				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+			}
+
+			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+			double sum_1 = rv[row_1] - totalContribution_1;
+
+			sum_1 += xv[row_1] * currentDiagonal_1;
+			xv[row_1] = sum_1 / currentDiagonal_1;
+
+			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+			double sum_2 = rv[row_2] - totalContribution_2;
+
+			sum_2 += xv[row_2] * currentDiagonal_2;
+			xv[row_2] = sum_2 / currentDiagonal_2;
+		}
+		//}
+		//else
+		//{
+#ifndef HPCG_NO_OPENMP
+//#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp single 
+{
+#endif
+		if (size1 < totalSize) {
+			local_int_t i = size1;
+		//for ( local_int_t i = size1; i < totalSize; i++ ) {
 			local_int_t row = A.tdg[l][i];
 			const double * const currentValues = A.matrixValues[row];
 			const local_int_t * const currentColIndices = A.mtxIndL[row];
@@ -102,7 +184,12 @@ LIKWID_START(trace.enabled, "symgs_tdg");
 
 			sum += xv[row] * currentDiagonal;
 			xv[row] = sum / currentDiagonal;
+		//}
 		}
+#ifndef HPCG_NO_OPENMP
+}
+}
+#endif
 	}
 
 	/*
@@ -110,7 +197,7 @@ LIKWID_START(trace.enabled, "symgs_tdg");
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -136,7 +223,48 @@ LIKWID_START(trace.enabled, "symgs_tdg");
 			sum += xv[row] * currentDiagonal;
 			xv[row] = sum / currentDiagonal;
 		}
+
+/*#ifndef HPCG_NO_OPENMP
+#pragma omp parallel for SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = size1-1; i >= 0; i-= 2 ) {
+			local_int_t row_1 = A.tdg[l][i];
+			local_int_t row_2 = A.tdg[l][i-1];
+			const double * const currentValues_1 = A.matrixValues[row_1];
+			const double * const currentValues_2 = A.matrixValues[row_2];
+			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+			svfloat64_t contribs_1 = svdup_f64(0.0);
+			svfloat64_t contribs_2 = svdup_f64(0.0);
+
+			//#pragma loop nounroll
+			//#pragma loop nounroll_and_jam
+			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+				
+				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+			}
+
+			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+			double sum = rv[row] - totalContribution;
+
+			sum += xv[row] * currentDiagonal;
+			xv[row] = sum / currentDiagonal;
+		}*/
 	}
+//#pragma statement end_scache_isolate_assign
+//#pragma statement end_scache_isolate_way
+
+#endif //TEST_XX
+
 LIKWID_STOP(trace.enabled, "symgs_tdg");
 
 	return 0;
@@ -165,7 +293,7 @@ int ComputeFusedSYMGS_SPMV_SVE(const SparseMatrix & A, const Vector & r, Vector 
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
@@ -198,7 +326,7 @@ int ComputeFusedSYMGS_SPMV_SVE(const SparseMatrix & A, const Vector & r, Vector 
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size(); i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -263,7 +391,7 @@ LIKWID_START(trace.enabled, "symgs_bc");
 			lastBlock = firstBlock + A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block < lastBlock; block += A.chunkSize ) { // for each superblock with the same color
 			local_int_t firstRow = block * A.blockSize;
@@ -423,7 +551,7 @@ LIKWID_START(trace.enabled, "symgs_bc");
 			lastBlock = firstBlock - A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block > lastBlock; block -= A.chunkSize ) {
 			local_int_t firstRow = ((block+1) * A.blockSize) - 1;
@@ -609,7 +737,7 @@ int ComputeSYMGS_TDG_NEON(const SparseMatrix & A, const Vector & r, Vector & x) 
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
@@ -646,7 +774,7 @@ int ComputeSYMGS_TDG_NEON(const SparseMatrix & A, const Vector & r, Vector & x) 
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -706,7 +834,7 @@ int ComputeFusedSYMGS_SPMV_NEON(const SparseMatrix & A, const Vector & r, Vector
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
@@ -743,7 +871,7 @@ int ComputeFusedSYMGS_SPMV_NEON(const SparseMatrix & A, const Vector & r, Vector
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -812,7 +940,7 @@ int ComputeSYMGS_BLOCK_NEON(const SparseMatrix & A, const Vector & r, Vector & x
 			lastBlock = firstBlock + A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block < lastBlock; block += A.chunkSize ) { // for each super block with the same color
 			local_int_t firstRow = block * A.blockSize;
@@ -1019,7 +1147,7 @@ int ComputeSYMGS_BLOCK_NEON(const SparseMatrix & A, const Vector & r, Vector & x
 			lastBlock = firstBlock - A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block > lastBlock; block -= A.chunkSize ) { // we skip a whole superblock on each iteration
 			local_int_t firstRow = ((block+1) * A.blockSize) - 1; // this is the last row of the last block (i.e., next block first row - 1)
@@ -1247,7 +1375,7 @@ int ComputeFusedSYMGS_SPMV ( const SparseMatrix & A, const Vector & r, Vector & 
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
@@ -1271,7 +1399,7 @@ int ComputeFusedSYMGS_SPMV ( const SparseMatrix & A, const Vector & r, Vector & 
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -1307,13 +1435,22 @@ int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, Tra
 	double * const xv = x.values;
 	double **matrixDiagonal = A.matrixDiagonal;
 
+/*#ifndef HPCG_NO_OPENMP
+#pragma omp parallel SCHEDULE(runtime)
+{
+#endif
+*/
+#pragma statement scache_isolate_way L2=10
+#pragma statement scache_isolate_assign xv
+
 	/*
 	 * FORWARD
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
+		#pragma loop unroll_and_jam(4)
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
 			const double * const currentValues = A.matrixValues[row];
@@ -1336,8 +1473,9 @@ int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, Tra
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
+		#pragma loop unroll_and_jam(4)
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
 			const double * const currentValues = A.matrixValues[row];
@@ -1354,6 +1492,12 @@ int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, Tra
 			xv[row] = sum / currentDiagonal;
 		}
 	}
+
+	#pragma statement end_scache_isolate_assign
+	#pragma statement end_scache_isolate_way
+/*#ifndef HPCG_NO_OPENMP
+}
+#endif*/
 
 	return 0;
 }
@@ -1382,7 +1526,7 @@ int ComputeSYMGS_BLOCK( const SparseMatrix & A, const Vector & r, Vector & x, Tr
 			lastBlock = firstBlock + A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block < lastBlock; block += A.chunkSize ) {
 			local_int_t firstRow = block * A.blockSize;
@@ -1451,7 +1595,7 @@ int ComputeSYMGS_BLOCK( const SparseMatrix & A, const Vector & r, Vector & x, Tr
 			lastBlock = firstBlock - A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for
+#pragma omp parallel for SCHEDULE(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block > lastBlock; block -= A.chunkSize ) {
 			local_int_t firstRow = ((block+1) * A.blockSize) - 1; // this is the last row of the last block
@@ -1566,4 +1710,1064 @@ int ComputeSYMGS( const SparseMatrix & A, const Vector & r, Vector & x, TraceDat
 #else
 	return ComputeSYMGS_BLOCK(A, r, x, trace);
 #endif
+}
+
+inline void SYMGS_VERSION_1(const SparseMatrix& A, double * const& xv, const double * const& rv) {
+	
+	double **matrixDiagonal = A.matrixDiagonal;
+
+	/*
+	 * FORWARD SWEEP
+	 */
+	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+		local_int_t tdgLevelSize = A.tdg[l].size();
+		if((tdgLevelSize%2) == 0) {
+#ifndef HPCG_NO_OPENMP
+#pragma omp parallel for SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = 0; i < tdgLevelSize; i+=2 ) {
+			local_int_t row_1 = A.tdg[l][i];
+			local_int_t row_2 = A.tdg[l][i+1];
+			const double * const currentValues_1 = A.matrixValues[row_1];
+			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+			svfloat64_t contribs_1 = svdup_f64(0.0);
+
+			const double * const currentValues_2 = A.matrixValues[row_2];
+			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+			svfloat64_t contribs_2 = svdup_f64(0.0);
+			
+			const int maxNumberOfNonzeros = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);
+
+			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+				
+				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+
+				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+
+				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+
+				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+			}
+
+			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+			double sum_1 = rv[row_1] - totalContribution_1;
+
+			sum_1 += xv[row_1] * currentDiagonal_1;
+			xv[row_1] = sum_1 / currentDiagonal_1;
+
+			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+			double sum_2 = rv[row_2] - totalContribution_2;
+
+			sum_2 += xv[row_2] * currentDiagonal_2;
+			xv[row_2] = sum_2 / currentDiagonal_2;
+		}
+		}
+		else
+		{
+#ifndef HPCG_NO_OPENMP
+#pragma omp parallel for SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = 0; i < tdgLevelSize; i++ ) {
+			local_int_t row = A.tdg[l][i];
+			const double * const currentValues = A.matrixValues[row];
+			const local_int_t * const currentColIndices = A.mtxIndL[row];
+			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+			const double currentDiagonal = matrixDiagonal[row][0];
+			svfloat64_t contribs = svdup_f64(0.0);
+
+			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+				
+				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+			}
+
+			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+			double sum = rv[row] - totalContribution;
+
+			sum += xv[row] * currentDiagonal;
+			xv[row] = sum / currentDiagonal;
+		}
+		}
+	}
+
+	/*
+	 * BACKWARD SWEEP
+	 */
+	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+		local_int_t tdgLevelSize = A.tdg[l].size();
+		if((tdgLevelSize%2) == 0) {		
+#ifndef HPCG_NO_OPENMP
+#pragma omp parallel for SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = tdgLevelSize-1; i >= 0; i-= 2 ) {
+			local_int_t row_1 = A.tdg[l][i];
+			local_int_t row_2 = A.tdg[l][i-1];
+			const double * const currentValues_1 = A.matrixValues[row_1];
+			const double * const currentValues_2 = A.matrixValues[row_2];
+			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+			svfloat64_t contribs_1 = svdup_f64(0.0);
+			svfloat64_t contribs_2 = svdup_f64(0.0);
+
+			const int maxNumberOfNonzeros = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);				
+							
+			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+				
+				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+
+				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+			}
+
+			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+			double sum_1 = rv[row_1] - totalContribution_1;
+			double sum_2 = rv[row_2] - totalContribution_2;
+
+			sum_1 += xv[row_1] * currentDiagonal_1;
+			sum_2 += xv[row_2] * currentDiagonal_2;
+			xv[row_1] = sum_1 / currentDiagonal_1;
+			xv[row_2] = sum_2 / currentDiagonal_2;
+		}
+		}
+		else
+		{
+#ifndef HPCG_NO_OPENMP
+#pragma omp parallel for SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = tdgLevelSize-1; i >= 0; i-- ) {
+			local_int_t row = A.tdg[l][i];
+			const double * const currentValues = A.matrixValues[row];
+			const local_int_t * const currentColIndices = A.mtxIndL[row];
+			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+			const double currentDiagonal = matrixDiagonal[row][0];
+			svfloat64_t contribs = svdup_f64(0.0);
+
+			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+				
+				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+			}
+
+			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+			double sum = rv[row] - totalContribution;
+
+			sum += xv[row] * currentDiagonal;
+			xv[row] = sum / currentDiagonal;
+		}
+		}
+	}
+}
+
+inline void SYMGS_VERSION_2(const SparseMatrix& A, double * const& xv, const double * const& rv) {
+	
+	double **matrixDiagonal = A.matrixDiagonal;
+
+	/*
+	 * FORWARD SWEEP
+	 */
+	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+		local_int_t tdgLevelSize = A.tdg[l].size();
+		local_int_t maxLevelSize = 2*(tdgLevelSize / 2);
+
+#ifndef HPCG_NO_OPENMP
+	#pragma omp parallel
+	{
+	#pragma omp for nowait SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = 0; i < maxLevelSize; i+=2 ) {
+			local_int_t row_1 = A.tdg[l][i];
+			local_int_t row_2 = A.tdg[l][i+1];
+			const double * const currentValues_1 = A.matrixValues[row_1];
+			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+			svfloat64_t contribs_1 = svdup_f64(0.0);
+
+			const double * const currentValues_2 = A.matrixValues[row_2];
+			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+			svfloat64_t contribs_2 = svdup_f64(0.0);
+			
+			const int maxNumberOfNonzeros = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);
+
+			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+				
+				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+
+				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+
+				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+
+				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+			}
+
+			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+			double sum_1 = rv[row_1] - totalContribution_1;
+
+			sum_1 += xv[row_1] * currentDiagonal_1;
+			xv[row_1] = sum_1 / currentDiagonal_1;
+
+			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+			double sum_2 = rv[row_2] - totalContribution_2;
+
+			sum_2 += xv[row_2] * currentDiagonal_2;
+			xv[row_2] = sum_2 / currentDiagonal_2;
+		}
+
+		#pragma omp single 
+		if (maxLevelSize < tdgLevelSize) {
+			local_int_t i = maxLevelSize;
+
+			local_int_t row = A.tdg[l][i];
+			const double * const currentValues = A.matrixValues[row];
+			const local_int_t * const currentColIndices = A.mtxIndL[row];
+			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+			const double currentDiagonal = matrixDiagonal[row][0];
+			svfloat64_t contribs = svdup_f64(0.0);
+
+			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+				
+				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+			}
+
+			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+			double sum = rv[row] - totalContribution;
+
+			sum += xv[row] * currentDiagonal;
+			xv[row] = sum / currentDiagonal;
+		}
+#ifndef HPCG_NO_OPENMP
+	}
+#endif
+	}
+
+	/*
+	 * BACKWARD SWEEP
+	 */
+	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+		local_int_t tdgLevelSize = A.tdg[l].size();
+		local_int_t maxLevelSize = 2*(tdgLevelSize / 2);
+
+#ifndef HPCG_NO_OPENMP
+#pragma omp parallel 
+	{
+		#pragma omp single nowait 
+		{
+#endif
+		if (tdgLevelSize > maxLevelSize) {
+			local_int_t i = maxLevelSize-1;
+
+			local_int_t row = A.tdg[l][i];
+			const double * const currentValues = A.matrixValues[row];
+			const local_int_t * const currentColIndices = A.mtxIndL[row];
+			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+			const double currentDiagonal = matrixDiagonal[row][0];
+			svfloat64_t contribs = svdup_f64(0.0);
+
+			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+				
+				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+			}
+
+			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+			double sum = rv[row] - totalContribution;
+
+			sum += xv[row] * currentDiagonal;
+			xv[row] = sum / currentDiagonal;
+		}
+#ifndef HPCG_NO_OPENMP
+		}
+#pragma omp for SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = maxLevelSize-1; i >= 0; i-= 2 ) {
+			local_int_t row_1 = A.tdg[l][i];
+			local_int_t row_2 = A.tdg[l][i-1];
+			const double * const currentValues_1 = A.matrixValues[row_1];
+			const double * const currentValues_2 = A.matrixValues[row_2];
+			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+			svfloat64_t contribs_1 = svdup_f64(0.0);
+			svfloat64_t contribs_2 = svdup_f64(0.0);
+
+			const int maxNumberOfNonzeros = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);				
+							
+			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+				
+				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+
+				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+			}
+
+			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+			double sum_1 = rv[row_1] - totalContribution_1;
+			double sum_2 = rv[row_2] - totalContribution_2;
+
+			sum_1 += xv[row_1] * currentDiagonal_1;
+			sum_2 += xv[row_2] * currentDiagonal_2;
+			xv[row_1] = sum_1 / currentDiagonal_1;
+			xv[row_2] = sum_2 / currentDiagonal_2;
+		}
+#ifndef HPCG_NO_OPENMP
+	}
+#endif
+	}
+}
+
+inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& prxv, const double * const& rv) {
+	
+	double **matrixDiagonal = A.matrixDiagonal;
+	double *xv = prxv;
+
+//#pragma statement scache_isolate_way L2=10
+//#pragma statement scache_isolate_assign xv
+#ifndef HPCG_NO_OPENMP
+	#pragma omp parallel
+	{
+#endif
+	/*
+	 * FORWARD SWEEP
+	 */
+	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+		local_int_t tdgLevelSize = A.tdg[l].size();
+		local_int_t maxLevelSize = 4*(tdgLevelSize / 4);
+
+#ifndef HPCG_NO_OPENMP
+	//#pragma loop nounroll
+	#pragma omp for nowait SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = 0; i < maxLevelSize; i+=4 ) {
+			local_int_t row_1 = A.tdg[l][i];
+			local_int_t row_2 = A.tdg[l][i+1];
+			local_int_t row_3 = A.tdg[l][i+2];
+			local_int_t row_4 = A.tdg[l][i+3];
+			const double * const currentValues_1 = A.matrixValues[row_1];
+			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+			svfloat64_t contribs_1 = svdup_f64(0.0);
+
+			const double * const currentValues_2 = A.matrixValues[row_2];
+			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+			svfloat64_t contribs_2 = svdup_f64(0.0);
+
+			const double * const currentValues_3 = A.matrixValues[row_3];
+			const local_int_t * const currentColIndices_3 = A.mtxIndL[row_3];
+			const int currentNumberOfNonzeros_3 = A.nonzerosInRow[row_3];
+			const double currentDiagonal_3 = matrixDiagonal[row_3][0];
+			svfloat64_t contribs_3 = svdup_f64(0.0);
+
+			const double * const currentValues_4 = A.matrixValues[row_4];
+			const local_int_t * const currentColIndices_4 = A.mtxIndL[row_4];
+			const int currentNumberOfNonzeros_4 = A.nonzerosInRow[row_4];
+			const double currentDiagonal_4 = matrixDiagonal[row_4][0];
+			svfloat64_t contribs_4 = svdup_f64(0.0);
+
+			const int maxNumberOfNonzeros1 = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);
+			const int maxNumberOfNonzeros2 = std::max(currentNumberOfNonzeros_3, currentNumberOfNonzeros_4);
+			const int maxNumberOfNonzeros = std::max(maxNumberOfNonzeros1, maxNumberOfNonzeros2);
+
+			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+				
+				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+
+				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+
+				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+
+				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+
+				svbool_t pg_3 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_3);
+				svfloat64_t mtxValues_3 = svld1_f64(pg_3, &currentValues_3[j]);
+				svuint64_t indices_3 = svld1sw_u64(pg_3, &currentColIndices_3[j]);
+				svfloat64_t xvv_3 = svld1_gather_u64index_f64(pg_3, xv, indices_3);
+
+				contribs_3 = svmla_f64_m(pg_3, contribs_3, xvv_3, mtxValues_3);
+
+				svbool_t pg_4 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_4);
+				svfloat64_t mtxValues_4 = svld1_f64(pg_4, &currentValues_4[j]);
+				svuint64_t indices_4 = svld1sw_u64(pg_4, &currentColIndices_4[j]);
+				svfloat64_t xvv_4 = svld1_gather_u64index_f64(pg_4, xv, indices_4);
+
+				contribs_4 = svmla_f64_m(pg_4, contribs_4, xvv_4, mtxValues_4);
+			}
+
+			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+			double sum_1 = rv[row_1] - totalContribution_1;
+
+			sum_1 += xv[row_1] * currentDiagonal_1;
+			xv[row_1] = sum_1 / currentDiagonal_1;
+
+			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+			double sum_2 = rv[row_2] - totalContribution_2;
+
+			sum_2 += xv[row_2] * currentDiagonal_2;
+			xv[row_2] = sum_2 / currentDiagonal_2;
+
+			double totalContribution_3 = svaddv_f64(svptrue_b64(), contribs_3);
+			double sum_3 = rv[row_3] - totalContribution_3;
+
+			sum_3 += xv[row_3] * currentDiagonal_3;
+			xv[row_3] = sum_3 / currentDiagonal_3;
+
+			double totalContribution_4 = svaddv_f64(svptrue_b64(), contribs_4);
+			double sum_4 = rv[row_4] - totalContribution_4;
+
+			sum_4 += xv[row_4] * currentDiagonal_4;
+			xv[row_4] = sum_4 / currentDiagonal_4;
+
+		}
+
+//#pragma omp single
+		if (maxLevelSize < tdgLevelSize) {
+/************
+#ifndef HPCG_NO_OPENMP
+//#pragma loop nounroll
+#pragma omp for SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = maxLevelSize; i < tdgLevelSize; i++ ) {
+
+			local_int_t row = A.tdg[l][i];
+			const double * const currentValues = A.matrixValues[row];
+			const local_int_t * const currentColIndices = A.mtxIndL[row];
+			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+			const double currentDiagonal = matrixDiagonal[row][0];
+			svfloat64_t contribs = svdup_f64(0.0);
+
+			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+				
+				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+			}
+
+			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+			double sum = rv[row] - totalContribution;
+
+			sum += xv[row] * currentDiagonal;
+			xv[row] = sum / currentDiagonal;
+		}
+*******/
+		#pragma omp sections nowait
+		{
+			#pragma omp section 
+			{
+				local_int_t i = maxLevelSize;
+				local_int_t row = A.tdg[l][i];
+				const double * const currentValues = A.matrixValues[row];
+				const local_int_t * const currentColIndices = A.mtxIndL[row];
+				const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+				const double currentDiagonal = matrixDiagonal[row][0];
+				svfloat64_t contribs = svdup_f64(0.0);
+
+				for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+					svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+					
+					svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+					svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+					svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+					contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+				}
+
+				double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+				double sum = rv[row] - totalContribution;
+
+				sum += xv[row] * currentDiagonal;
+				xv[row] = sum / currentDiagonal;
+			}
+			#pragma omp section 
+			{
+				local_int_t i = maxLevelSize + 1;
+				if (i < tdgLevelSize) {
+				local_int_t row = A.tdg[l][i];
+				const double * const currentValues = A.matrixValues[row];
+				const local_int_t * const currentColIndices = A.mtxIndL[row];
+				const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+				const double currentDiagonal = matrixDiagonal[row][0];
+				svfloat64_t contribs = svdup_f64(0.0);
+
+				for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+					svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+					
+					svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+					svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+					svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+					contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+				}
+
+				double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+				double sum = rv[row] - totalContribution;
+
+				sum += xv[row] * currentDiagonal;
+				xv[row] = sum / currentDiagonal;
+				}
+			}
+			#pragma omp section 
+			{
+				local_int_t i = maxLevelSize + 2;
+				if (i < tdgLevelSize) {
+				local_int_t row = A.tdg[l][i];
+				const double * const currentValues = A.matrixValues[row];
+				const local_int_t * const currentColIndices = A.mtxIndL[row];
+				const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+				const double currentDiagonal = matrixDiagonal[row][0];
+				svfloat64_t contribs = svdup_f64(0.0);
+
+				for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+					svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+					
+					svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+					svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+					svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+					contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+				}
+
+				double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+				double sum = rv[row] - totalContribution;
+
+				sum += xv[row] * currentDiagonal;
+				xv[row] = sum / currentDiagonal;
+				}
+			}
+		}
+
+/***********/
+#ifndef HPCG_NO_OPENMP
+	}
+	#pragma omp barrier
+#endif
+	}
+
+	/*
+	 * BACKWARD SWEEP
+	 */
+	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+		local_int_t tdgLevelSize = A.tdg[l].size();
+		local_int_t maxLevelSize = 4*(tdgLevelSize / 4);
+
+#ifndef HPCG_NO_OPENMP
+		//#pragma omp single nowait 
+		//{
+		//#pragma loop nounroll
+		#pragma omp for nowait SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = tdgLevelSize-1; i >= maxLevelSize; i-- ) {
+
+			local_int_t row = A.tdg[l][i];
+			const double * const currentValues = A.matrixValues[row];
+			const local_int_t * const currentColIndices = A.mtxIndL[row];
+			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+			const double currentDiagonal = matrixDiagonal[row][0];
+			svfloat64_t contribs = svdup_f64(0.0);
+
+			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+				
+				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+			}
+
+			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+			double sum = rv[row] - totalContribution;
+
+			sum += xv[row] * currentDiagonal;
+			xv[row] = sum / currentDiagonal;
+		}
+#ifndef HPCG_NO_OPENMP
+		//}
+//#pragma loop nounroll
+#pragma omp for SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = maxLevelSize-1; i >= 0; i-= 4 ) {
+			local_int_t row_1 = A.tdg[l][i];
+			local_int_t row_2 = A.tdg[l][i-1];
+			local_int_t row_3 = A.tdg[l][i-2];
+			local_int_t row_4 = A.tdg[l][i-3];
+			const double * const currentValues_1 = A.matrixValues[row_1];
+			const double * const currentValues_2 = A.matrixValues[row_2];
+			const double * const currentValues_3 = A.matrixValues[row_3];
+			const double * const currentValues_4 = A.matrixValues[row_4];
+			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+			const local_int_t * const currentColIndices_3 = A.mtxIndL[row_3];
+			const local_int_t * const currentColIndices_4 = A.mtxIndL[row_4];
+			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+			const int currentNumberOfNonzeros_3 = A.nonzerosInRow[row_3];
+			const int currentNumberOfNonzeros_4 = A.nonzerosInRow[row_4];
+			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+			const double currentDiagonal_3 = matrixDiagonal[row_3][0];
+			const double currentDiagonal_4 = matrixDiagonal[row_4][0];
+			svfloat64_t contribs_1 = svdup_f64(0.0);
+			svfloat64_t contribs_2 = svdup_f64(0.0);
+			svfloat64_t contribs_3 = svdup_f64(0.0);
+			svfloat64_t contribs_4 = svdup_f64(0.0);
+
+			const int maxNumberOfNonzeros1 = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);				
+			const int maxNumberOfNonzeros2 = std::max(currentNumberOfNonzeros_3, currentNumberOfNonzeros_4);				
+			const int maxNumberOfNonzeros = std::max(maxNumberOfNonzeros1, maxNumberOfNonzeros2);				
+							
+			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+				svbool_t pg_3 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_3);
+				svbool_t pg_4 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_4);
+				
+				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+				svfloat64_t mtxValues_3 = svld1_f64(pg_3, &currentValues_3[j]);
+				svfloat64_t mtxValues_4 = svld1_f64(pg_4, &currentValues_4[j]);
+				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+				svuint64_t indices_3 = svld1sw_u64(pg_3, &currentColIndices_3[j]);
+				svuint64_t indices_4 = svld1sw_u64(pg_4, &currentColIndices_4[j]);
+				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+				svfloat64_t xvv_3 = svld1_gather_u64index_f64(pg_3, xv, indices_3);
+				svfloat64_t xvv_4 = svld1_gather_u64index_f64(pg_4, xv, indices_4);
+
+				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+				contribs_3 = svmla_f64_m(pg_3, contribs_3, xvv_3, mtxValues_3);
+				contribs_4 = svmla_f64_m(pg_4, contribs_4, xvv_4, mtxValues_4);
+			}
+
+			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+			double totalContribution_3 = svaddv_f64(svptrue_b64(), contribs_3);
+			double totalContribution_4 = svaddv_f64(svptrue_b64(), contribs_4);
+			double sum_1 = rv[row_1] - totalContribution_1;
+			double sum_2 = rv[row_2] - totalContribution_2;
+			double sum_3 = rv[row_3] - totalContribution_3;
+			double sum_4 = rv[row_4] - totalContribution_4;
+
+			sum_1 += xv[row_1] * currentDiagonal_1;
+			sum_2 += xv[row_2] * currentDiagonal_2;
+			sum_3 += xv[row_3] * currentDiagonal_3;
+			sum_4 += xv[row_4] * currentDiagonal_4;
+			xv[row_1] = sum_1 / currentDiagonal_1;
+			xv[row_2] = sum_2 / currentDiagonal_2;
+			xv[row_3] = sum_3 / currentDiagonal_3;
+			xv[row_4] = sum_4 / currentDiagonal_4;
+		}
+#ifndef HPCG_NO_OPENMP
+	}
+#endif
+	}
+
+//#pragma statement end_scache_isolate_assign
+//#pragma statement end_scache_isolate_way	
+}
+/////////////
+inline void SYMGS_VERSION_4(const SparseMatrix& A, double * const& xv, const double * const& rv) {
+	
+	double **matrixDiagonal = A.matrixDiagonal;
+
+	/*
+	 * FORWARD SWEEP
+	 */
+	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+		local_int_t tdgLevelSize = A.tdg[l].size();
+		local_int_t maxLevelSize = 6*(tdgLevelSize / 6);
+
+#ifndef HPCG_NO_OPENMP
+	#pragma omp parallel
+	{
+	#pragma omp for nowait SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = 0; i < maxLevelSize; i+=6 ) {
+			local_int_t row_1 = A.tdg[l][i];
+			local_int_t row_2 = A.tdg[l][i+1];
+			local_int_t row_3 = A.tdg[l][i+2];
+			local_int_t row_4 = A.tdg[l][i+3];
+			local_int_t row_5 = A.tdg[l][i+4];
+			local_int_t row_6 = A.tdg[l][i+5];
+			const double * const currentValues_1 = A.matrixValues[row_1];
+			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+			svfloat64_t contribs_1 = svdup_f64(0.0);
+
+			const double * const currentValues_2 = A.matrixValues[row_2];
+			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+			svfloat64_t contribs_2 = svdup_f64(0.0);
+
+			const double * const currentValues_3 = A.matrixValues[row_3];
+			const local_int_t * const currentColIndices_3 = A.mtxIndL[row_3];
+			const int currentNumberOfNonzeros_3 = A.nonzerosInRow[row_3];
+			const double currentDiagonal_3 = matrixDiagonal[row_3][0];
+			svfloat64_t contribs_3 = svdup_f64(0.0);
+
+			const double * const currentValues_4 = A.matrixValues[row_4];
+			const local_int_t * const currentColIndices_4 = A.mtxIndL[row_4];
+			const int currentNumberOfNonzeros_4 = A.nonzerosInRow[row_4];
+			const double currentDiagonal_4 = matrixDiagonal[row_4][0];
+			svfloat64_t contribs_4 = svdup_f64(0.0);
+
+			const double * const currentValues_5 = A.matrixValues[row_5];
+			const local_int_t * const currentColIndices_5 = A.mtxIndL[row_5];
+			const int currentNumberOfNonzeros_5 = A.nonzerosInRow[row_5];
+			const double currentDiagonal_5 = matrixDiagonal[row_5][0];
+			svfloat64_t contribs_5 = svdup_f64(0.0);
+
+			const double * const currentValues_6 = A.matrixValues[row_6];
+			const local_int_t * const currentColIndices_6 = A.mtxIndL[row_6];
+			const int currentNumberOfNonzeros_6 = A.nonzerosInRow[row_6];
+			const double currentDiagonal_6 = matrixDiagonal[row_6][0];
+			svfloat64_t contribs_6 = svdup_f64(0.0);
+
+			const int maxNumberOfNonzeros1 = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);
+			const int maxNumberOfNonzeros2 = std::max(currentNumberOfNonzeros_3, currentNumberOfNonzeros_4);
+			const int maxNumberOfNonzeros3 = std::max(currentNumberOfNonzeros_5, currentNumberOfNonzeros_6);
+			const int maxNumberOfNonzeros4 = std::max(maxNumberOfNonzeros1, maxNumberOfNonzeros2);
+			const int maxNumberOfNonzeros = std::max(maxNumberOfNonzeros4, maxNumberOfNonzeros3);
+
+			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);		
+				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+
+				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+
+				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+
+				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+
+				svbool_t pg_3 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_3);
+				svfloat64_t mtxValues_3 = svld1_f64(pg_3, &currentValues_3[j]);
+				svuint64_t indices_3 = svld1sw_u64(pg_3, &currentColIndices_3[j]);
+				svfloat64_t xvv_3 = svld1_gather_u64index_f64(pg_3, xv, indices_3);
+
+				contribs_3 = svmla_f64_m(pg_3, contribs_3, xvv_3, mtxValues_3);
+
+				svbool_t pg_4 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_4);
+				svfloat64_t mtxValues_4 = svld1_f64(pg_4, &currentValues_4[j]);
+				svuint64_t indices_4 = svld1sw_u64(pg_4, &currentColIndices_4[j]);
+				svfloat64_t xvv_4 = svld1_gather_u64index_f64(pg_4, xv, indices_4);
+
+				contribs_4 = svmla_f64_m(pg_4, contribs_4, xvv_4, mtxValues_4);
+
+				svbool_t pg_5 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_5);
+				svfloat64_t mtxValues_5 = svld1_f64(pg_5, &currentValues_5[j]);
+				svuint64_t indices_5 = svld1sw_u64(pg_5, &currentColIndices_5[j]);
+				svfloat64_t xvv_5 = svld1_gather_u64index_f64(pg_5, xv, indices_5);
+
+				contribs_5 = svmla_f64_m(pg_5, contribs_5, xvv_5, mtxValues_5);
+
+				svbool_t pg_6 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_6);
+				svfloat64_t mtxValues_6 = svld1_f64(pg_6, &currentValues_6[j]);
+				svuint64_t indices_6 = svld1sw_u64(pg_6, &currentColIndices_6[j]);
+				svfloat64_t xvv_6 = svld1_gather_u64index_f64(pg_6, xv, indices_6);
+
+				contribs_6 = svmla_f64_m(pg_6, contribs_6, xvv_6, mtxValues_6);
+			}
+
+			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+			double sum_1 = rv[row_1] - totalContribution_1;
+
+			sum_1 += xv[row_1] * currentDiagonal_1;
+			xv[row_1] = sum_1 / currentDiagonal_1;
+
+			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+			double sum_2 = rv[row_2] - totalContribution_2;
+
+			sum_2 += xv[row_2] * currentDiagonal_2;
+			xv[row_2] = sum_2 / currentDiagonal_2;
+
+			double totalContribution_3 = svaddv_f64(svptrue_b64(), contribs_3);
+			double sum_3 = rv[row_3] - totalContribution_3;
+
+			sum_3 += xv[row_3] * currentDiagonal_3;
+			xv[row_3] = sum_3 / currentDiagonal_3;
+
+			double totalContribution_4 = svaddv_f64(svptrue_b64(), contribs_4);
+			double sum_4 = rv[row_4] - totalContribution_4;
+
+			sum_4 += xv[row_4] * currentDiagonal_4;
+			xv[row_4] = sum_4 / currentDiagonal_4;
+
+			double totalContribution_5 = svaddv_f64(svptrue_b64(), contribs_5);
+			double sum_5 = rv[row_5] - totalContribution_5;
+
+			sum_5 += xv[row_5] * currentDiagonal_5;
+			xv[row_5] = sum_5 / currentDiagonal_5;
+
+			double totalContribution_6 = svaddv_f64(svptrue_b64(), contribs_6);
+			double sum_6 = rv[row_6] - totalContribution_6;
+
+			sum_6 += xv[row_6] * currentDiagonal_6;
+			xv[row_6] = sum_6 / currentDiagonal_6;
+		}
+
+//#pragma omp single
+		if (maxLevelSize < tdgLevelSize) {
+#ifndef HPCG_NO_OPENMP
+#pragma omp for SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = maxLevelSize; i < tdgLevelSize; i++ ) {
+
+			local_int_t row = A.tdg[l][i];
+			const double * const currentValues = A.matrixValues[row];
+			const local_int_t * const currentColIndices = A.mtxIndL[row];
+			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+			const double currentDiagonal = matrixDiagonal[row][0];
+			svfloat64_t contribs = svdup_f64(0.0);
+
+			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+				
+				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+			}
+
+			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+			double sum = rv[row] - totalContribution;
+
+			sum += xv[row] * currentDiagonal;
+			xv[row] = sum / currentDiagonal;
+		}
+		}
+#ifndef HPCG_NO_OPENMP
+	}
+#endif
+	}
+
+	/*
+	 * BACKWARD SWEEP
+	 */
+	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+		local_int_t tdgLevelSize = A.tdg[l].size();
+		local_int_t maxLevelSize = 6*(tdgLevelSize / 6);
+
+#ifndef HPCG_NO_OPENMP
+#pragma omp parallel 
+	{
+		//#pragma omp single nowait 
+		//{
+		#pragma omp for nowait SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = tdgLevelSize-1; i >= maxLevelSize; i-- ) {
+
+			local_int_t row = A.tdg[l][i];
+			const double * const currentValues = A.matrixValues[row];
+			const local_int_t * const currentColIndices = A.mtxIndL[row];
+			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+			const double currentDiagonal = matrixDiagonal[row][0];
+			svfloat64_t contribs = svdup_f64(0.0);
+
+			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+				
+				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+
+				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+			}
+
+			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+			double sum = rv[row] - totalContribution;
+
+			sum += xv[row] * currentDiagonal;
+			xv[row] = sum / currentDiagonal;
+		}
+#ifndef HPCG_NO_OPENMP
+		//}
+#pragma omp for SCHEDULE(runtime)
+#endif
+		for ( local_int_t i = maxLevelSize-1; i >= 0; i-= 6 ) {
+			local_int_t row_1 = A.tdg[l][i];
+			local_int_t row_2 = A.tdg[l][i-1];
+			local_int_t row_3 = A.tdg[l][i-2];
+			local_int_t row_4 = A.tdg[l][i-3];
+			local_int_t row_5 = A.tdg[l][i-4];
+			local_int_t row_6 = A.tdg[l][i-5];
+			const double * const currentValues_1 = A.matrixValues[row_1];
+			const double * const currentValues_2 = A.matrixValues[row_2];
+			const double * const currentValues_3 = A.matrixValues[row_3];
+			const double * const currentValues_4 = A.matrixValues[row_4];
+			const double * const currentValues_5 = A.matrixValues[row_5];
+			const double * const currentValues_6 = A.matrixValues[row_6];
+			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+			const local_int_t * const currentColIndices_3 = A.mtxIndL[row_3];
+			const local_int_t * const currentColIndices_4 = A.mtxIndL[row_4];
+			const local_int_t * const currentColIndices_5 = A.mtxIndL[row_5];
+			const local_int_t * const currentColIndices_6 = A.mtxIndL[row_6];
+			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+			const int currentNumberOfNonzeros_3 = A.nonzerosInRow[row_3];
+			const int currentNumberOfNonzeros_4 = A.nonzerosInRow[row_4];
+			const int currentNumberOfNonzeros_5 = A.nonzerosInRow[row_5];
+			const int currentNumberOfNonzeros_6 = A.nonzerosInRow[row_6];
+			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+			const double currentDiagonal_3 = matrixDiagonal[row_3][0];
+			const double currentDiagonal_4 = matrixDiagonal[row_4][0];
+			const double currentDiagonal_5 = matrixDiagonal[row_5][0];
+			const double currentDiagonal_6 = matrixDiagonal[row_6][0];
+			svfloat64_t contribs_1 = svdup_f64(0.0);
+			svfloat64_t contribs_2 = svdup_f64(0.0);
+			svfloat64_t contribs_3 = svdup_f64(0.0);
+			svfloat64_t contribs_4 = svdup_f64(0.0);
+			svfloat64_t contribs_5 = svdup_f64(0.0);
+			svfloat64_t contribs_6 = svdup_f64(0.0);
+
+			const int maxNumberOfNonzeros1 = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);				
+			const int maxNumberOfNonzeros2 = std::max(currentNumberOfNonzeros_3, currentNumberOfNonzeros_4);				
+			const int maxNumberOfNonzeros3 = std::max(currentNumberOfNonzeros_5, currentNumberOfNonzeros_6);				
+			const int maxNumberOfNonzeros4 = std::max(maxNumberOfNonzeros1, maxNumberOfNonzeros2);				
+			const int maxNumberOfNonzeros = std::max(maxNumberOfNonzeros3, maxNumberOfNonzeros4);				
+							
+			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+				svbool_t pg_3 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_3);
+				svbool_t pg_4 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_4);
+				svbool_t pg_5 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_5);
+				svbool_t pg_6 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_6);
+				
+				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+				svfloat64_t mtxValues_3 = svld1_f64(pg_3, &currentValues_3[j]);
+				svfloat64_t mtxValues_4 = svld1_f64(pg_4, &currentValues_4[j]);
+				svfloat64_t mtxValues_5 = svld1_f64(pg_5, &currentValues_5[j]);
+				svfloat64_t mtxValues_6 = svld1_f64(pg_6, &currentValues_6[j]);
+				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+				svuint64_t indices_3 = svld1sw_u64(pg_3, &currentColIndices_3[j]);
+				svuint64_t indices_4 = svld1sw_u64(pg_4, &currentColIndices_4[j]);
+				svuint64_t indices_5 = svld1sw_u64(pg_5, &currentColIndices_5[j]);
+				svuint64_t indices_6 = svld1sw_u64(pg_6, &currentColIndices_6[j]);
+				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+				svfloat64_t xvv_3 = svld1_gather_u64index_f64(pg_3, xv, indices_3);
+				svfloat64_t xvv_4 = svld1_gather_u64index_f64(pg_4, xv, indices_4);
+				svfloat64_t xvv_5 = svld1_gather_u64index_f64(pg_5, xv, indices_5);
+				svfloat64_t xvv_6 = svld1_gather_u64index_f64(pg_6, xv, indices_6);
+
+				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+				contribs_3 = svmla_f64_m(pg_3, contribs_3, xvv_3, mtxValues_3);
+				contribs_4 = svmla_f64_m(pg_4, contribs_4, xvv_4, mtxValues_4);
+				contribs_5 = svmla_f64_m(pg_5, contribs_5, xvv_5, mtxValues_5);
+				contribs_6 = svmla_f64_m(pg_6, contribs_6, xvv_6, mtxValues_6);
+			}
+
+			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+			double totalContribution_3 = svaddv_f64(svptrue_b64(), contribs_3);
+			double totalContribution_4 = svaddv_f64(svptrue_b64(), contribs_4);
+			double totalContribution_5 = svaddv_f64(svptrue_b64(), contribs_5);
+			double totalContribution_6 = svaddv_f64(svptrue_b64(), contribs_6);
+			double sum_1 = rv[row_1] - totalContribution_1;
+			double sum_2 = rv[row_2] - totalContribution_2;
+			double sum_3 = rv[row_3] - totalContribution_3;
+			double sum_4 = rv[row_4] - totalContribution_4;
+			double sum_5 = rv[row_5] - totalContribution_5;
+			double sum_6 = rv[row_6] - totalContribution_6;
+
+			sum_1 += xv[row_1] * currentDiagonal_1;
+			sum_2 += xv[row_2] * currentDiagonal_2;
+			sum_3 += xv[row_3] * currentDiagonal_3;
+			sum_4 += xv[row_4] * currentDiagonal_4;
+			sum_5 += xv[row_5] * currentDiagonal_5;
+			sum_6 += xv[row_6] * currentDiagonal_6;
+			xv[row_1] = sum_1 / currentDiagonal_1;
+			xv[row_2] = sum_2 / currentDiagonal_2;
+			xv[row_3] = sum_3 / currentDiagonal_3;
+			xv[row_4] = sum_4 / currentDiagonal_4;
+			xv[row_5] = sum_5 / currentDiagonal_5;
+			xv[row_6] = sum_6 / currentDiagonal_6;
+		}
+#ifndef HPCG_NO_OPENMP
+	}
+#endif
+	}
 }

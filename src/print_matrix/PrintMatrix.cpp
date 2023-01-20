@@ -78,3 +78,24 @@ void PrintMatrixMarket(const SparseMatrix& A, const char* filename)
 
     fclose(fp);
 }
+
+
+void PrintTDGGraph(SparseMatrix& A, const char* filename) {
+
+    auto fp = fopen(filename, "w");
+    if (fp == NULL) {
+        printf("Error saving matrix file\n");
+        return;
+    }
+
+    local_int_t linePos = 0;
+    for(auto line : A.tdg) {
+        fprintf(fp,"line [%d](%d):", linePos++, line.size());
+        for(auto val : line) { //local_int_t
+            fprintf(fp, "%d,", val);
+        }
+        fprintf(fp, "\n");
+    }
+
+    fclose(fp);
+}

@@ -438,7 +438,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
       doc.get("Final Summary")->add("Please review the YAML file contents","You may NOT submit these results for consideration.");
     }
 
-    ReportInstrumentation(A, doc);
+    ReportInstrumentation(A, doc, numberOfMgLevels, numberOfCgSets, optMaxIters) ;
 
     ReportEnvironment(A, doc);
 

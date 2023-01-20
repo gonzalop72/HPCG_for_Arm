@@ -43,6 +43,22 @@
 #include "armpl_sparse.h"
 #endif
 
+#ifdef PRINT_TDG_GRAPH
+#include "print_matrix/PrintMatrix.cpp"
+#endif
+
+#define MAN_OPTIMAL_SPMV_STRUCTURE
+//Í#define TEST_REORG 
+#ifdef TEST_REORG
+
+//#include <fstream>
+//#include "hpcg.hpp"
+
+#include <list>
+std::vector<local_int_t> mutate_list(std::vector<local_int_t>& listRef);
+std::vector<local_int_t> mutate_list2(std::vector<local_int_t>& listRef);
+#endif
+
 /*!
   Optimizes the data structures used for CG iteration to increase the
   performance of the benchmark version of the preconditioned CG algorithm.
@@ -443,6 +459,11 @@ int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vec
 			}
 		}
 
+#ifdef TEST_REORG
+		//reorganizes the list
+		rowsInLevel = mutate_list(rowsInLevel);
+#endif
+
 		// Update some information
 		for ( local_int_t i = 0; i < rowsInLevel.size(); i++ ) {
 			rowsProcessed++;
@@ -462,8 +483,9 @@ int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vec
 	//free(depsVisited);
 	//free(nonzerosInLowerDiagonal);
 	//free(processed);
-
-
+#ifdef PRINT_TDG_GRAPH
+	PrintTDGGraph(A, "tgd_graph.txt");
+#endif
 	// Now we need to create some structures to translate from old and new order (yes, we will reorder the matrix)
 	A.whichNewRowIsOldRow = std::vector<local_int_t>(A.localNumberOfColumns);
 	A.whichOldRowIsNewRow = std::vector<local_int_t>(A.localNumberOfColumns);
@@ -511,6 +533,7 @@ int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vec
 	}
 
 	// time to replace structures
+#ifdef MAN_OPTIMAL_SPMV_STRUCTURE
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel for
 #endif
@@ -540,6 +563,46 @@ int OptimizeProblem(SparseMatrix & A, CGData & data, Vector & b, Vector & x, Vec
 			}
 		}
 	}
+#else
+	//#ifndef HPCG_NO_OPENMP
+	//#pragma omp parallel for
+	//#endif
+	double* bufferPos = A.matrixValues[0];
+	local_int_t* bufferIdx = A.mtxIndL[0];
+
+	for ( local_int_t i = 0; i < nrow; i++ ) {
+		A.nonzerosInRow[i] = nonzerosInRow[i];
+		for ( local_int_t j = 0; j < A.nonzerosInRow[i]; j++ ) {
+			A.matrixValues[i][j] = matrixValues[i][j];
+			A.mtxIndL[i][j] = mtxIndL[i][j];
+		}
+		// Put some zeros on padding positions
+		/*for ( local_int_t j = A.nonzerosInRow[i]; j < 27; j++ ) {
+			A.matrixValues[i][j] = 0.0;
+			A.mtxIndL[i][j] = 0;
+		}*/
+		bufferPos += A.nonzerosInRow[i];
+		bufferIdx += A.nonzerosInRow[i];
+		if (i-1<nrow) {
+			A.matrixValues[i+1] = bufferPos;
+			A.mtxIndL[i+1] = bufferIdx;
+		}
+	}
+
+	//free(matrixValues);
+	//free(mtxIndL);
+	//free(nonzerosInRow);
+
+	// Regenerate the diagonal
+	for ( local_int_t i = 0; i < nrow; i++ ) {
+		for ( local_int_t j = 0; j < A.nonzerosInRow[i]; j++ ) {
+			local_int_t curCol = A.mtxIndL[i][j];
+			if ( i == curCol ) {
+				A.matrixDiagonal[i] = &A.matrixValues[i][j];
+			}
+		}
+	}
+#endif
 
 	// Translate TDG row IDs
 	oldRow = 0;
@@ -624,3 +687,62 @@ double OptimizeProblemMemoryUse(const SparseMatrix & A) {
 	return 0.0;
 
 }
+
+#ifdef TEST_REORG
+std::vector<local_int_t> mutate_list(std::vector<local_int_t>& listRef) {
+    auto list = std::list<local_int_t>(listRef.begin(),listRef.end());
+    auto sortedList = std::vector<local_int_t>();
+    auto iter = list.begin();
+    while (iter != list.end()) {
+        int value = *iter;
+        list.erase(iter);
+        sortedList.push_back(value);
+
+        int val1 = value + 144*(144-2);
+        int val2 = value + 144-2;
+        auto it1 = std::find(list.begin(), list.end(), val1);
+        if (it1 != list.end()) {
+
+            list.erase(it1);
+            sortedList.push_back(val1);
+        }
+        auto it2 = std::find(list.begin(), list.end(), val2);
+        if (it2 != list.end()) {
+            iter = it2;
+        }
+        else {
+            iter = list.begin();
+        }
+    }
+    return sortedList;
+}
+
+std::vector<local_int_t> mutate_list2(std::vector<local_int_t>& listRef) {
+    auto list = std::list<local_int_t>(listRef.begin(), listRef.end());
+    auto sortedList = std::vector<local_int_t>();
+
+    auto iter = list.begin();
+    while (iter != list.end()) {
+        int value = *iter;
+        list.erase(iter);
+        sortedList.push_back(value);
+
+        int val1 = value + 144-2;
+        auto it1 = std::find(list.begin(), list.end(), val1);
+        if (it1 != list.end()) {
+            iter = it1;
+        }
+        else {
+            int val2 = value + 144*(144-2);
+            auto it2 = std::find(list.begin(), list.end(), val2);
+            if (it2 != list.end()) {
+                iter = it2;
+            }
+            else {
+                iter = list.begin();
+            }
+        }
+    }
+    return sortedList;
+}
+#endif
