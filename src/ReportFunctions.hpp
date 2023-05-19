@@ -249,3 +249,26 @@ void ReportInstrumentation(const SparseMatrix& A, OutputFile& doc, int numberOfM
     }
 #endif
 }
+
+#ifdef CONVERGENCE_TEST
+void PrintConvergenceData(OutputFile& doc, const SparseMatrix& A, const TraceData& trace) {
+
+    doc.add("Convergence Data","");
+    auto mgPerf = doc.get("Convergence Data");
+    int i=0;
+    std::string total;
+    total += std::to_string(A.geom->npx) +",";
+    total += std::to_string(A.geom->npy) +",";
+    total += std::to_string(A.geom->npz) +",,";
+
+    total += std::to_string(A.geom->nx) +",";
+    total += std::to_string(A.geom->ny) +",";
+    total += std::to_string(A.geom->nz) +",,";
+
+    for (const double& val : trace.convergence_list) {
+        total += std::to_string(val) + ",";
+        i++;
+    } 
+    mgPerf->add("Data", total);
+}
+#endif

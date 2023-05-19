@@ -74,7 +74,7 @@ using std::endl;
   @see YAML_Doc
 */
 void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgSets, int refMaxIters,int optMaxIters, double times[],
-    const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure, bool quickPath) {
+    const TestCGData & testcg_data, const TestSymmetryData & testsymmetry_data, const TestNormsData & testnorms_data, int global_failure, bool quickPath, const TraceData& trace) {
 
   double minOfficialTime = 1800; // Any official benchmark result must run at least this many seconds
 
@@ -441,6 +441,10 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     ReportInstrumentation(A, doc, numberOfMgLevels, numberOfCgSets, optMaxIters) ;
 
     ReportEnvironment(A, doc);
+
+#ifdef CONVERGENCE_TEST
+    PrintConvergenceData(doc, A, trace);
+#endif
 
     std::string yaml = doc.generate();
 #ifdef HPCG_DEBUG
