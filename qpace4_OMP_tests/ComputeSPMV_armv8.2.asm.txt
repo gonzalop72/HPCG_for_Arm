@@ -1,0 +1,493 @@
+	.arch armv8.2-a+crc+sve
+	.file	"ComputeSPMV.cpp"
+	.text
+	.align	2
+	.p2align 4,,11
+	.type	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.0, %function
+_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.0:
+.LFB1943:
+	.cfi_startproc
+	.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
+	stp	x29, x30, [sp, -80]!
+	.cfi_def_cfa_offset 80
+	.cfi_offset 29, -80
+	.cfi_offset 30, -72
+	mov	x29, sp
+	stp	x21, x22, [sp, 32]
+	.cfi_offset 21, -48
+	.cfi_offset 22, -40
+	mov	x22, x0
+	stp	x19, x20, [sp, 16]
+	.cfi_offset 19, -64
+	.cfi_offset 20, -56
+	bl	omp_get_num_threads
+	mov	w19, w0
+	bl	omp_get_thread_num
+	mov	w1, w0
+	ldr	w0, [x22, 24]
+	cmp	w0, 0
+	add	w2, w0, 3
+	csel	w3, w2, w0, lt
+	asr	w4, w3, 2
+	sdiv	w5, w4, w19
+	msub	w6, w5, w19, w4
+	cmp	w1, w6
+	blt	.L2
+.L8:
+	madd	w7, w5, w1, w6
+	add	w8, w5, w7
+	cmp	w7, w8
+	bge	.L1
+	ldp	x20, x3, [x22]
+	ptrue	p4.b, all
+	lsl	w9, w7, 2
+	ldr	x21, [x22, 16]
+	lsl	w19, w8, 2
+	sbfiz	x10, x9, 3, 32
+	stp	x23, x24, [sp, 48]
+	.cfi_offset 24, -24
+	.cfi_offset 23, -32
+	add	x22, x21, 24
+	ldr	x11, [x20, 48]
+	add	x24, x21, 8
+	add	x23, x21, 16
+	stp	x25, x26, [sp, 64]
+	.cfi_offset 26, -8
+	.cfi_offset 25, -16
+	neg	w25, w11
+	add	x11, x11, x9, sxtw
+	.p2align 3,,7
+.L5:
+	ldrb	w6, [x11, 1]
+	add	x13, x10, 8
+	ldrb	w7, [x11]
+	add	x12, x10, 16
+	ldrb	w8, [x11, 3]
+	add	x26, x10, 24
+	ldrb	w9, [x11, 2]
+	cmp	w7, w6
+	csel	w14, w7, w6, hi
+	cmp	w9, w8
+	and	w15, w14, 255
+	csel	w16, w9, w8, hi
+	and	w17, w16, 255
+	cmp	w15, w17
+	csel	w5, w15, w17, ge
+	cbz	w5, .L12
+	ldp	x1, x2, [x20, 64]
+	mov	z2.d, #0
+	mov	w0, 0
+	mov	z5.d, z2.d
+	mov	z4.d, z2.d
+	mov	z3.d, z2.d
+	ldr	x30, [x1, x13]
+	ldr	x17, [x2, x13]
+	ldr	x16, [x2, x12]
+	ldr	x14, [x1, x12]
+	ldr	x18, [x2, x10]
+	ldr	x15, [x2, x26]
+	ldr	x13, [x1, x26]
+	ldr	x12, [x1, x10]
+	.p2align 3,,7
+.L7:
+	sbfiz	x2, x0, 2, 32
+	whilelt	p3.d, w0, w7
+	sbfiz	x1, x0, 3, 32
+	add	x26, x12, x2
+	add	x4, x18, x1
+	whilelt	p2.d, w0, w6
+	whilelt	p1.d, w0, w9
+	whilelt	p0.d, w0, w8
+	ld1sw	z0.d, p3/z, [x26]
+	ld1d	z1.d, p3/z, [x4]
+	add	x26, x30, x2
+	add	x4, x17, x1
+	incd	x0
+	ld1sw	z7.d, p2/z, [x26]
+	ld1d	z17.d, p2/z, [x4]
+	add	x26, x14, x2
+	add	x4, x16, x1
+	add	x2, x13, x2
+	add	x1, x15, x1
+	ld1d	z6.d, p3/z, [x3, z0.d, lsl 3]
+	ld1d	z16.d, p2/z, [x3, z7.d, lsl 3]
+	ld1sw	z18.d, p1/z, [x26]
+	ld1d	z20.d, p1/z, [x4]
+	ld1d	z19.d, p1/z, [x3, z18.d, lsl 3]
+	ld1sw	z21.d, p0/z, [x2]
+	ld1d	z23.d, p0/z, [x1]
+	ld1d	z22.d, p0/z, [x3, z21.d, lsl 3]
+	fmla	z3.d, p3/m, z1.d, z6.d
+	fmla	z4.d, p2/m, z17.d, z16.d
+	fmla	z5.d, p1/m, z20.d, z19.d
+	fmla	z2.d, p0/m, z23.d, z22.d
+	cmp	w5, w0
+	bgt	.L7
+.L6:
+	faddv	d24, p4, z3.d
+	str	d24, [x21, x10]
+	faddv	d25, p4, z4.d
+	str	d25, [x24, x10]
+	add	x11, x11, 4
+	faddv	d26, p4, z5.d
+	str	d26, [x23, x10]
+	faddv	d27, p4, z2.d
+	add	w6, w25, w11
+	str	d27, [x22, x10]
+	add	x10, x10, 32
+	cmp	w19, w6
+	bgt	.L5
+	ldp	x23, x24, [sp, 48]
+	.cfi_restore 24
+	.cfi_restore 23
+	ldp	x25, x26, [sp, 64]
+	.cfi_restore 26
+	.cfi_restore 25
+.L1:
+	ldp	x19, x20, [sp, 16]
+	ldp	x21, x22, [sp, 32]
+	ldp	x29, x30, [sp], 80
+	.cfi_restore 30
+	.cfi_restore 29
+	.cfi_restore 21
+	.cfi_restore 22
+	.cfi_restore 19
+	.cfi_restore 20
+	.cfi_def_cfa_offset 0
+	ret
+	.p2align 2,,3
+.L12:
+	.cfi_def_cfa_offset 80
+	.cfi_offset 19, -64
+	.cfi_offset 20, -56
+	.cfi_offset 21, -48
+	.cfi_offset 22, -40
+	.cfi_offset 23, -32
+	.cfi_offset 24, -24
+	.cfi_offset 25, -16
+	.cfi_offset 26, -8
+	.cfi_offset 29, -80
+	.cfi_offset 30, -72
+	mov	z2.d, #0
+	mov	z5.d, z2.d
+	mov	z4.d, z2.d
+	mov	z3.d, z2.d
+	b	.L6
+.L2:
+	.cfi_restore 23
+	.cfi_restore 24
+	.cfi_restore 25
+	.cfi_restore 26
+	add	w5, w5, 1
+	mov	w6, 0
+	b	.L8
+	.cfi_endproc
+.LFE1943:
+	.size	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.0, .-_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.0
+	.align	2
+	.p2align 4,,11
+	.type	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.1, %function
+_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.1:
+.LFB1944:
+	.cfi_startproc
+	.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
+	stp	x29, x30, [sp, -32]!
+	.cfi_def_cfa_offset 32
+	.cfi_offset 29, -32
+	.cfi_offset 30, -24
+	mov	x29, sp
+	stp	x19, x20, [sp, 16]
+	.cfi_offset 19, -16
+	.cfi_offset 20, -8
+	mov	x20, x0
+	bl	omp_get_num_threads
+	mov	w19, w0
+	bl	omp_get_thread_num
+	ldr	w2, [x20, 24]
+	mov	w1, w0
+	add	w3, w2, w2, lsr 31
+	asr	w4, w3, 1
+	sdiv	w5, w4, w19
+	msub	w6, w5, w19, w4
+	cmp	w0, w6
+	blt	.L14
+.L20:
+	madd	w0, w5, w1, w6
+	add	w7, w5, w0
+	cmp	w0, w7
+	bge	.L13
+	ldp	x16, x30, [x20]
+	ptrue	p2.b, all
+	lsl	w8, w0, 1
+	ldr	x15, [x20, 16]
+	sxtw	x8, w8
+	add	x13, x8, 1
+	lsl	w14, w7, 1
+	ldr	x17, [x16, 48]
+	lsl	x13, x13, 3
+	add	x18, x17, 1
+	.p2align 3,,7
+.L17:
+	ldrb	w20, [x18, x8]
+	ldrb	w19, [x17, x8]
+	cmp	w19, w20
+	csel	w9, w19, w20, hi
+	ands	w3, w9, 255
+	beq	.L23
+	ldp	x1, x10, [x16, 64]
+	mov	z2.d, #0
+	mov	w5, 0
+	mov	z3.d, z2.d
+	ldr	x12, [x1, x8, lsl 3]
+	ldr	x11, [x10, x8, lsl 3]
+	ldr	x6, [x10, x13]
+	ldr	x0, [x1, x13]
+	.p2align 3,,7
+.L19:
+	whilelt	p1.d, w5, w19
+	whilelt	p0.d, w5, w20
+	sbfiz	x2, x5, 2, 32
+	sbfiz	x7, x5, 3, 32
+	incd	x5
+	add	x4, x12, x2
+	add	x9, x0, x2
+	add	x10, x11, x7
+	add	x1, x6, x7
+	ld1sw	z1.d, p1/z, [x4]
+	ld1d	z4.d, p1/z, [x10]
+	ld1d	z5.d, p1/z, [x30, z1.d, lsl 3]
+	ld1sw	z0.d, p0/z, [x9]
+	ld1d	z7.d, p0/z, [x1]
+	ld1d	z6.d, p0/z, [x30, z0.d, lsl 3]
+	fmla	z3.d, p1/m, z4.d, z5.d
+	fmla	z2.d, p0/m, z7.d, z6.d
+	cmp	w3, w5
+	bgt	.L19
+	faddv	d16, p2, z3.d
+	str	d16, [x15, x8, lsl 3]
+	faddv	d17, p2, z2.d
+	add	x8, x8, 2
+	str	d17, [x15, x13]
+	add	x13, x13, 16
+	cmp	w14, w8
+	bgt	.L17
+.L13:
+	ldp	x19, x20, [sp, 16]
+	ldp	x29, x30, [sp], 32
+	.cfi_remember_state
+	.cfi_restore 30
+	.cfi_restore 29
+	.cfi_restore 19
+	.cfi_restore 20
+	.cfi_def_cfa_offset 0
+	ret
+	.p2align 2,,3
+.L23:
+	.cfi_restore_state
+	mov	z2.d, #0
+	mov	z3.d, z2.d
+	faddv	d16, p2, z3.d
+	str	d16, [x15, x8, lsl 3]
+	faddv	d17, p2, z2.d
+	add	x8, x8, 2
+	str	d17, [x15, x13]
+	add	x13, x13, 16
+	cmp	w14, w8
+	bgt	.L17
+	b	.L13
+.L14:
+	add	w5, w5, 1
+	mov	w6, 0
+	b	.L20
+	.cfi_endproc
+.LFE1944:
+	.size	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.1, .-_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.1
+	.align	2
+	.p2align 4,,11
+	.type	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.2, %function
+_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.2:
+.LFB1945:
+	.cfi_startproc
+	.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
+	stp	x29, x30, [sp, -32]!
+	.cfi_def_cfa_offset 32
+	.cfi_offset 29, -32
+	.cfi_offset 30, -24
+	mov	x29, sp
+	stp	x19, x20, [sp, 16]
+	.cfi_offset 19, -16
+	.cfi_offset 20, -8
+	mov	x20, x0
+	bl	omp_get_num_threads
+	mov	w19, w0
+	bl	omp_get_thread_num
+	ldr	w1, [x20, 24]
+	mov	w6, w0
+	sdiv	w8, w1, w19
+	msub	w2, w8, w19, w1
+	cmp	w0, w2
+	blt	.L25
+.L31:
+	madd	w0, w8, w6, w2
+	add	w12, w8, w0
+	cmp	w0, w12
+	bge	.L24
+	ldp	x9, x7, [x20]
+	ptrue	p1.b, all
+	sxtw	x18, w0
+	ldr	x11, [x20, 16]
+	ldr	x10, [x9, 48]
+	.p2align 3,,7
+.L28:
+	ldrb	w13, [x10, x18]
+	cbz	w13, .L34
+	ldp	x3, x4, [x9, 64]
+	mov	z1.d, #0
+	mov	w14, 0
+	ldr	x5, [x3, x18, lsl 3]
+	ldr	x15, [x4, x18, lsl 3]
+	.p2align 3,,7
+.L30:
+	whilelt	p0.d, w14, w13
+	add	x16, x15, x14, sxtw 3
+	add	x17, x5, x14, sxtw 2
+	incd	x14
+	ld1d	z2.d, p0/z, [x16]
+	ld1sw	z0.d, p0/z, [x17]
+	ld1d	z3.d, p0/z, [x7, z0.d, lsl 3]
+	fmla	z1.d, p0/m, z2.d, z3.d
+	cmp	w13, w14
+	bgt	.L30
+	faddv	d4, p1, z1.d
+	str	d4, [x11, x18, lsl 3]
+	add	x18, x18, 1
+	cmp	w12, w18
+	bgt	.L28
+.L24:
+	ldp	x19, x20, [sp, 16]
+	ldp	x29, x30, [sp], 32
+	.cfi_remember_state
+	.cfi_restore 30
+	.cfi_restore 29
+	.cfi_restore 19
+	.cfi_restore 20
+	.cfi_def_cfa_offset 0
+	ret
+	.p2align 2,,3
+.L34:
+	.cfi_restore_state
+	mov	z1.d, #0
+	faddv	d4, p1, z1.d
+	str	d4, [x11, x18, lsl 3]
+	add	x18, x18, 1
+	cmp	w12, w18
+	bgt	.L28
+	b	.L24
+.L25:
+	add	w8, w8, 1
+	mov	w2, 0
+	b	.L31
+	.cfi_endproc
+.LFE1945:
+	.size	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.2, .-_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.2
+	.section	.rodata.str1.8,"aMS",@progbits,1
+	.align	3
+.LC0:
+	.string	"int ComputeSPMV(const SparseMatrix&, Vector&, Vector&)"
+	.align	3
+.LC1:
+	.string	"../src/ComputeSPMV.cpp"
+	.align	3
+.LC2:
+	.string	"x.localLength >= A.localNumberOfColumns"
+	.align	3
+.LC3:
+	.string	"y.localLength >= A.localNumberOfRows"
+	.text
+	.align	2
+	.p2align 4,,11
+	.global	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+	.type	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_, %function
+_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_:
+.LFB1802:
+	.cfi_startproc
+	stp	x29, x30, [sp, -48]!
+	.cfi_def_cfa_offset 48
+	.cfi_offset 29, -48
+	.cfi_offset 30, -40
+	mov	x4, x0
+	mov	x29, sp
+	ldr	w0, [x0, 36]
+	ldr	w3, [x1]
+	cmp	w3, w0
+	blt	.L43
+	ldr	w6, [x2]
+	ldr	w8, [x4, 32]
+	cmp	w6, w8
+	blt	.L44
+	ldr	x11, [x1, 8]
+	ldr	x12, [x2, 8]
+	tst	x8, 3
+	beq	.L45
+	tbz	x8, 0, .L46
+	adrp	x13, _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.2
+	add	x0, x13, :lo12:_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.2
+	mov	w3, 0
+.L42:
+	add	x1, sp, 16
+	mov	w2, 0
+	stp	x4, x11, [sp, 16]
+	str	x12, [sp, 32]
+	str	w8, [sp, 40]
+	bl	GOMP_parallel
+	mov	w0, 0
+	ldp	x29, x30, [sp], 48
+	.cfi_remember_state
+	.cfi_restore 30
+	.cfi_restore 29
+	.cfi_def_cfa_offset 0
+	ret
+	.p2align 2,,3
+.L46:
+	.cfi_restore_state
+	adrp	x14, _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.1
+	mov	w3, 0
+	add	x0, x14, :lo12:_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.1
+	b	.L42
+	.p2align 2,,3
+.L45:
+	adrp	x15, _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.0
+	mov	w3, 0
+	add	x0, x15, :lo12:_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_._omp_fn.0
+	b	.L42
+.L44:
+	adrp	x7, .LC0
+	adrp	x9, .LC1
+	adrp	x10, .LC3
+	add	x3, x7, :lo12:.LC0
+	add	x1, x9, :lo12:.LC1
+	add	x0, x10, :lo12:.LC3
+	mov	w2, 77
+	bl	__assert_fail
+.L43:
+	adrp	x5, .LC2
+	adrp	x2, .LC0
+	adrp	x1, .LC1
+	add	x3, x2, :lo12:.LC0
+	add	x1, x1, :lo12:.LC1
+	add	x0, x5, :lo12:.LC2
+	mov	w2, 76
+	bl	__assert_fail
+	.cfi_endproc
+.LFE1802:
+	.size	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_, .-_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+	.hidden	DW.ref.__gxx_personality_v0
+	.weak	DW.ref.__gxx_personality_v0
+	.section	.data.DW.ref.__gxx_personality_v0,"awG",@progbits,DW.ref.__gxx_personality_v0,comdat
+	.align	3
+	.type	DW.ref.__gxx_personality_v0, %object
+	.size	DW.ref.__gxx_personality_v0, 8
+DW.ref.__gxx_personality_v0:
+	.xword	__gxx_personality_v0
+	.ident	"GCC: (GNU) 10.2.1 20201112 (Red Hat 10.2.1-8)"
+	.section	.note.GNU-stack,"",@progbits
