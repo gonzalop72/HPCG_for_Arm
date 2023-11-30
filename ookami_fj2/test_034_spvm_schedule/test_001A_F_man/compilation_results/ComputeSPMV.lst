@@ -1,0 +1,537 @@
+Fujitsu C/C++ Version 4.7.0   Fri Jul 21 02:56:30 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/ComputeSPMV.cpp
+(line-no.)(optimize)
+        1             /*
+        2              *
+        3              *  SPDX-License-Identifier: Apache-2.0
+        4              *
+        5              *  Copyright (C) 2019, Arm Limited and contributors
+        6              *
+        7              *  Licensed under the Apache License, Version 2.0 (the "License");
+        8              *  you may not use this file except in compliance with the License.
+        9              *  You may obtain a copy of the License at
+       10              *
+       11              *      http://www.apache.org/licenses/LICENSE-2.0
+       12              *
+       13              *  Unless required by applicable law or agreed to in writing, software
+       14              *  distributed under the License is distributed on an "AS IS" BASIS,
+       15              *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       16              *  See the License for the specific language governing permissions and
+       17              *  limitations under the License.
+       18              *
+       19              */
+       20             
+       21             
+       22             //@HEADER
+       23             // ***************************************************
+       24             //
+       25             // HPCG: High Performance Conjugate Gradient Benchmark
+       26             //
+       27             // Contact:
+       28             // Michael A. Heroux ( maherou@sandia.gov)
+       29             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       30             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       31             //
+       32             // ***************************************************
+       33             //@HEADER
+       34             
+       35             /*!
+       36               @file ComputeSPMV.cpp
+       37             
+       38               HPCG routine
+       39               */
+       40             
+       41             #include "ComputeSPMV.hpp"
+       42             #include "ComputeSPMV_ref.hpp"
+       43             #include <cassert>
+       44             #ifndef HPCG_NO_MPI
+       45             #include "ExchangeHalo.hpp"
+       46             #endif
+       47             #ifdef HPCG_USE_NEON
+       48             #include "arm_neon.h"
+       49             #endif
+       50             #ifdef HPCG_USE_SVE
+       51             #include "arm_sve.h"
+       52             #endif
+       53             #ifdef HPCG_USE_ARMPL_SPMV
+       54             #include "armpl_sparse.h"
+       55             #endif
+       56             
+       57             /*!
+       58               Routine to compute sparse matrix vector product y = Ax where:
+       59             Precondition: First call exchange_externals to get off-processor values of x
+       60             
+       61             This routine calls the reference SpMV implementation by default, but
+       62             can be replaced by a custom, optimized routine suited for
+       63             the target system.
+       64             
+       65             @param[in]  A the known system matrix
+       66             @param[in]  x the known vector
+       67             @param[out] y the On exit contains the result: Ax.
+       68             
+       69             @return returns 0 upon success and non-zero otherwise
+       70             
+       71             @see ComputeSPMV_ref
+       72             */
+       73             
+       74             /*#ifdef HPCG_MAN_OPT_SCHEDULE_ON*/
+       75             	#define SCHEDULE(T)	schedule(T)
+       76             /*#elif defined(HPCG_MAN_SPVM_SCHEDULE)
+       77             	#define SCHEDULE(T) schedule(static,720)
+       78             /*#else
+       79             	#define SCHEDULE(T)
+       80             #endif*/
+       81             
+       82             #ifdef SPMV_2_UNROLL
+       83             #define ComputeSPMV_unroll2 ComputeSPMV_manual
+       84             #elif defined SPMV_4_UNROLL
+       85             #define ComputeSPMV_unroll4 ComputeSPMV_manual
+       86             #endif
+       87             inline void ComputeSPMV_manual(const SparseMatrix & A, const double * const xv, double * const yv,	const local_int_t nrow);
+       88             
+       89             #ifdef TEST_SPMV_AS_TDG
+       90             //inline void test_tdg(const SparseMatrix & A, const double * const xv, double * const yv,	const local_int_t nrow);
+       91             #define test_tdg ComputeSPMV_manual
+       92             #endif
+       93             #ifdef TEST_SPMV_AS_TDG_REF
+       94             //inline void test_ref(const SparseMatrix & A, const double * const xv, double * const yv,	const local_int_t nrow);
+       95             #define test_ref ComputeSPMV_manual
+       96             #endif
+       97             
+       98             
+       99             int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
+      100             
+      101             	assert(x.localLength >= A.localNumberOfColumns);
+      102             	assert(y.localLength >= A.localNumberOfRows);
+      103             
+      104             #ifndef HPCG_NO_MPI
+      105             	ExchangeHalo(A,x);
+      106             #endif
+      107             	const double * const xv = x.values;
+      108             	double * const yv = y.values;
+      109             	const local_int_t nrow = A.localNumberOfRows;
+      110             
+      111             #if defined(HPCG_MAN_OPT_SPMV_UNROLL)
+      112             	ComputeSPMV_manual(A, xv, yv, nrow);
+      113             
+      114             #elif defined(HPCG_USE_NEON) && !defined(HPCG_USE_ARMPL_SPMV)
+      115             #ifndef HPCG_NO_OPENMP
+      116             #pragma omp parallel for SCHEDULE(runtime)
+      117             #endif
+      118             	for ( local_int_t i = 0; i < nrow-1; i+=2 ) {
+      119             		float64x2_t sum0 = vdupq_n_f64(0.0);
+      120             		float64x2_t sum1 = vdupq_n_f64(0.0);
+      121             		if ( A.nonzerosInRow[i] == A.nonzerosInRow[i+1] ) {
+      122             			local_int_t j = 0;
+      123             			for ( j = 0; j < A.nonzerosInRow[i]-1; j+=2 ) {
+      124             				float64x2_t values0 = vld1q_f64(&A.matrixValues[i  ][j]);
+      125             				float64x2_t values1 = vld1q_f64(&A.matrixValues[i+1][j]);
+      126             
+      127             				float64x2_t xvValues0 = { xv[A.mtxIndL[i  ][j]], xv[A.mtxIndL[i  ][j+1]] };
+      128             				float64x2_t xvValues1 = { xv[A.mtxIndL[i+1][j]], xv[A.mtxIndL[i+1][j+1]] };
+      129             
+      130             				sum0 = vfmaq_f64(sum0, values0, xvValues0);
+      131             				sum1 = vfmaq_f64(sum1, values1, xvValues1);
+      132             
+      133             			}
+      134             			double s0 = vgetq_lane_f64(sum0, 0) + vgetq_lane_f64(sum0, 1);
+      135             			double s1 = vgetq_lane_f64(sum1, 0) + vgetq_lane_f64(sum1, 1);
+      136             
+      137             			if ( j < A.nonzerosInRow[i] ) {
+      138             				s0 += A.matrixValues[i  ][j] * xv[A.mtxIndL[i  ][j]];
+      139             				s1 += A.matrixValues[i+1][j] * xv[A.mtxIndL[i+1][j]];
+      140             			}
+      141             			yv[i  ] = s0;
+      142             			yv[i+1] = s1;
+      143             		} else if ( A.nonzerosInRow[i] > A.nonzerosInRow[i+1] ) {
+      144             			local_int_t j = 0;
+      145             			for ( j = 0; j < A.nonzerosInRow[i+1]-1; j+=2 ) {
+      146             				float64x2_t values0 = vld1q_f64(&A.matrixValues[i  ][j]);
+      147             				float64x2_t values1 = vld1q_f64(&A.matrixValues[i+1][j]);
+      148             
+      149             				float64x2_t xvValues0 = { xv[A.mtxIndL[i  ][j]], xv[A.mtxIndL[i  ][j+1]] };
+      150             				float64x2_t xvValues1 = { xv[A.mtxIndL[i+1][j]], xv[A.mtxIndL[i+1][j+1]] };
+      151             
+      152             				sum0 = vfmaq_f64(sum0, values0, xvValues0);
+      153             				sum1 = vfmaq_f64(sum1, values1, xvValues1);
+      154             
+      155             			}
+      156             			double s1 = vgetq_lane_f64(sum1, 0) + vgetq_lane_f64(sum1, 1);
+      157             			if ( j < A.nonzerosInRow[i+1] ) {
+      158             				s1 += A.matrixValues[i+1][j] * xv[A.mtxIndL[i+1][j]];
+      159             			}
+      160             
+      161             			for ( ; j < A.nonzerosInRow[i]-1; j+=2 ) {
+      162             				float64x2_t values0 = vld1q_f64(&A.matrixValues[i  ][j]);
+      163             
+      164             				float64x2_t xvValues0 = { xv[A.mtxIndL[i  ][j]], xv[A.mtxIndL[i  ][j+1]] };
+      165             
+      166             				sum0 = vfmaq_f64(sum0, values0, xvValues0);
+      167             			}
+      168             			double s0 = vgetq_lane_f64(sum0, 0) + vgetq_lane_f64(sum0, 1);
+      169             			if ( j < A.nonzerosInRow[i] ) {
+      170             				s0 += A.matrixValues[i  ][j] * xv[A.mtxIndL[i  ][j]];
+      171             			}
+      172             			yv[i  ] = s0;
+      173             			yv[i+1] = s1;
+      174             		} else { // A.nonzerosInRow[i] < A.nonzerosInRow[i+1]
+      175             			local_int_t j = 0;
+      176             			for ( j = 0; j < A.nonzerosInRow[i]-1; j+=2 ) {
+      177             				float64x2_t values0 = vld1q_f64(&A.matrixValues[i  ][j]);
+      178             				float64x2_t values1 = vld1q_f64(&A.matrixValues[i+1][j]);
+      179             
+      180             				float64x2_t xvValues0 = { xv[A.mtxIndL[i  ][j]], xv[A.mtxIndL[i  ][j+1]] };
+      181             				float64x2_t xvValues1 = { xv[A.mtxIndL[i+1][j]], xv[A.mtxIndL[i+1][j+1]] };
+      182             
+      183             				sum0 = vfmaq_f64(sum0, values0, xvValues0);
+      184             				sum1 = vfmaq_f64(sum1, values1, xvValues1);
+      185             
+      186             			}
+      187             			double s0 = vgetq_lane_f64(sum0, 0) + vgetq_lane_f64(sum0, 1);
+      188             			if ( j < A.nonzerosInRow[i] ) {
+      189             				s0 += A.matrixValues[i][j] * xv[A.mtxIndL[i][j]];
+      190             			}
+      191             
+      192             			for ( ; j < A.nonzerosInRow[i+1]-1; j+=2 ) {
+      193             				float64x2_t values1 = vld1q_f64(&A.matrixValues[i+1][j]);
+      194             
+      195             				float64x2_t xvValues1 = { xv[A.mtxIndL[i+1][j]], xv[A.mtxIndL[i+1][j+1]] };
+      196             
+      197             				sum1 = vfmaq_f64(sum1, values1, xvValues1);
+      198             			}
+      199             			double s1 = vgetq_lane_f64(sum1, 0) + vgetq_lane_f64(sum1, 1);
+      200             			if ( j < A.nonzerosInRow[i+1] ) {
+      201             				s1 += A.matrixValues[i+1][j] * xv[A.mtxIndL[i+1][j]];
+      202             			}
+      203             			yv[i  ] = s0;
+      204             			yv[i+1] = s1;
+      205             		}
+      206             	}
+      207             #elif defined(HPCG_USE_SVE) && !defined(HPCG_USE_ARMPL_SPMV)
+      208             
+      209             	if ( nrow % 4 == 0 ) {
+      210             #ifndef HPCG_NO_OPENMP
+      211             #pragma omp parallel for SCHEDULE(runtime)
+      212             #endif
+      213             		for ( local_int_t i = 0; i < nrow-3; i+=4 ) {
+      214             			local_int_t maxnnz01 = A.nonzerosInRow[i  ] > A.nonzerosInRow[i+1] ? A.nonzerosInRow[i  ] : A.nonzerosInRow[i+1];
+      215             			local_int_t maxnnz23 = A.nonzerosInRow[i+2] > A.nonzerosInRow[i+3] ? A.nonzerosInRow[i+2] : A.nonzerosInRow[i+3];
+      216             			local_int_t maxnnz = maxnnz01 > maxnnz23 ? maxnnz01 : maxnnz23;
+      217             			svfloat64_t svsum0 = svdup_f64(0.0);
+      218             			svfloat64_t svsum1 = svdup_f64(0.0);
+      219             			svfloat64_t svsum2 = svdup_f64(0.0);
+      220             			svfloat64_t svsum3 = svdup_f64(0.0);
+      221             			for ( local_int_t j = 0; j < maxnnz; j += svcntd() ) {
+      222             				svbool_t pg0 = svwhilelt_b64(j, A.nonzerosInRow[i  ]);
+      223             				svbool_t pg1 = svwhilelt_b64(j, A.nonzerosInRow[i+1]);
+      224             				svbool_t pg2 = svwhilelt_b64(j, A.nonzerosInRow[i+2]);
+      225             				svbool_t pg3 = svwhilelt_b64(j, A.nonzerosInRow[i+3]);
+      226             				svfloat64_t values0 = svld1_f64(pg0, &A.matrixValues[i  ][j]);
+      227             				svfloat64_t values1 = svld1_f64(pg1, &A.matrixValues[i+1][j]);
+      228             				svfloat64_t values2 = svld1_f64(pg2, &A.matrixValues[i+2][j]);
+      229             				svfloat64_t values3 = svld1_f64(pg3, &A.matrixValues[i+3][j]);
+      230             				svuint64_t indices0 = svld1sw_u64(pg0, &A.mtxIndL[i  ][j]);
+      231             				svuint64_t indices1 = svld1sw_u64(pg1, &A.mtxIndL[i+1][j]);
+      232             				svuint64_t indices2 = svld1sw_u64(pg2, &A.mtxIndL[i+2][j]);
+      233             				svuint64_t indices3 = svld1sw_u64(pg3, &A.mtxIndL[i+3][j]);
+      234             
+      235             				svfloat64_t svxv0 = svld1_gather_u64index_f64(pg0, xv, indices0);
+      236             				svfloat64_t svxv1 = svld1_gather_u64index_f64(pg1, xv, indices1);
+      237             				svfloat64_t svxv2 = svld1_gather_u64index_f64(pg2, xv, indices2);
+      238             				svfloat64_t svxv3 = svld1_gather_u64index_f64(pg3, xv, indices3);
+      239             				svsum0 = svmla_f64_m(pg0, svsum0, values0, svxv0);
+      240             				svsum1 = svmla_f64_m(pg1, svsum1, values1, svxv1);
+      241             				svsum2 = svmla_f64_m(pg2, svsum2, values2, svxv2);
+      242             				svsum3 = svmla_f64_m(pg3, svsum3, values3, svxv3);
+      243             			}
+      244             			yv[i  ] = svaddv(svptrue_b64(), svsum0);
+      245             			yv[i+1] = svaddv(svptrue_b64(), svsum1);
+      246             			yv[i+2] = svaddv(svptrue_b64(), svsum2);
+      247             			yv[i+3] = svaddv(svptrue_b64(), svsum3);
+      248             		}
+      249             	} else if ( nrow % 2 == 0 ) {
+      250             #ifndef HPCG_NO_OPENMP
+      251             #pragma omp parallel for SCHEDULE(runtime)
+      252             #endif
+      253             		for ( local_int_t i = 0; i < nrow-1; i+=2 ) {
+      254             			local_int_t maxnnz = A.nonzerosInRow[i] > A.nonzerosInRow[i+1] ? A.nonzerosInRow[i] : A.nonzerosInRow[i+1];
+      255             			svfloat64_t svsum0 = svdup_f64(0.0);
+      256             			svfloat64_t svsum1 = svdup_f64(0.0);
+      257             			for ( local_int_t j = 0; j < maxnnz; j += svcntd() ) {
+      258             				svbool_t pg0 = svwhilelt_b64(j, A.nonzerosInRow[i]);
+      259             				svbool_t pg1 = svwhilelt_b64(j, A.nonzerosInRow[i+1]);
+      260             				svfloat64_t values0 = svld1_f64(pg0, &A.matrixValues[i][j]);
+      261             				svfloat64_t values1 = svld1_f64(pg1, &A.matrixValues[i+1][j]);
+      262             				svuint64_t indices0 = svld1sw_u64(pg0, &A.mtxIndL[i][j]);
+      263             				svuint64_t indices1 = svld1sw_u64(pg1, &A.mtxIndL[i+1][j]);
+      264             
+      265             				svfloat64_t svxv0 = svld1_gather_u64index_f64(pg0, xv, indices0);
+      266             				svfloat64_t svxv1 = svld1_gather_u64index_f64(pg1, xv, indices1);
+      267             				svsum0 = svmla_f64_m(pg0, svsum0, values0, svxv0);
+      268             				svsum1 = svmla_f64_m(pg1, svsum1, values1, svxv1);
+      269             			}
+      270             			yv[i] = svaddv(svptrue_b64(), svsum0);
+      271             			yv[i+1] = svaddv(svptrue_b64(), svsum1);
+      272             		}
+      273             	} else {
+      274             #ifndef HPCG_NO_OPENMP
+      275             #pragma omp parallel for SCHEDULE(runtime)
+      276             #endif
+      277             		for ( local_int_t i = 0; i < nrow; i++ ) {
+      278             			local_int_t maxnnz = A.nonzerosInRow[i];
+      279             			svfloat64_t svsum = svdup_f64(0.0);
+      280             			for ( local_int_t j = 0; j < maxnnz; j += svcntd() ) {
+      281             				svbool_t pg = svwhilelt_b64(j, maxnnz);
+      282             				svfloat64_t values = svld1_f64(pg, &A.matrixValues[i][j]);
+      283             				svuint64_t indices = svld1sw_u64(pg, &A.mtxIndL[i][j]);
+      284             
+      285             				svfloat64_t svxv = svld1_gather_u64index_f64(pg, xv, indices);
+      286             				svsum = svmla_f64_m(pg, svsum, values, svxv);
+      287             			}
+      288             			yv[i] = svaddv(svptrue_b64(), svsum);
+      289             		}
+      290             	}
+      291             #elif defined(HPCG_USE_ARMPL_SPMV)
+      292             	double alpha = 1.0;
+      293             	double beta = 0.0;
+      294             
+      295             	armpl_spmv_exec_d(ARMPL_SPARSE_OPERATION_NOTRANS, alpha, A.armpl_mat, xv, beta, yv);
+      296             
+      297             #else
+      298             //#pragma statement scache_isolate_way L2=10
+      299             //#pragma statement scache_isolate_assign xv
+      300             
+      301             #ifndef HPCG_NO_OPENMP
+      302             #pragma omp parallel for SCHEDULE(runtime)
+      303             #endif
+      304             //#pragma loop nounroll
+      305             	for ( local_int_t i = 0; i < nrow; i++ ) {
+      306             		double sum = 0.0;
+      307             		//#pragma fj loop zfill
+      308             	//#pragma loop nounroll
+      309             		for ( local_int_t j = 0; j < A.nonzerosInRow[i]; j++ ) {
+      310             			local_int_t curCol = A.mtxIndL[i][j];
+      311             			sum += A.matrixValues[i][j] * xv[curCol];
+      312             		}
+      313             		yv[i] = sum;
+      314             	}
+      315             	//#pragma statement end_scache_isolate_assign
+      316             	//#pragma statement end_scache_isolate_way
+      317             #endif
+      318             
+      319             	return 0;
+      320             }
+      321             
+      322             #ifdef HPCG_MAN_OPT_SPMV_UNROLL
+      323             inline void ComputeSPMV_unroll2(const SparseMatrix & A, const double * const xv, double * const yv,	const local_int_t nrow) {
+      324             //#pragma fj loop zfill
+      325             //#pragma statement scache_isolate_way L2=10
+      326             //#pragma statement scache_isolate_assign xv
+      327             
+      328             #ifndef HPCG_NO_OPENMP
+      329             #pragma omp parallel for SCHEDULE(runtime)
+      330             #endif
+      331             //#pragma loop nounroll_and_jam
+      332             	for ( local_int_t i = 0; i < nrow-1; i+=2 ) {
+      333             		double sum0 = 0.0;
+      334             		double sum1 = 0.0;
+      335             		if (A.nonzerosInRow[i] == A.nonzerosInRow[i+1]) {
+      336             			for ( local_int_t j = 0; j < A.nonzerosInRow[i]; ++j ) {
+      337             				local_int_t curCol0 = A.mtxIndL[i][j];
+      338             				local_int_t curCol1 = A.mtxIndL[i+1][j];
+      339             
+      340             				sum0 += A.matrixValues[i][j] * xv[curCol0];
+      341             				sum1 += A.matrixValues[i+1][j] * xv[curCol1];
+      342             			}
+      343             		}
+      344             		else {
+      345             			local_int_t min0 = A.nonzerosInRow[i] < A.nonzerosInRow[i+1] ? A.nonzerosInRow[i] : A.nonzerosInRow[i+1];
+      346             			for ( local_int_t j = 0; j < min0; ++j ) {
+      347             				local_int_t curCol0 = A.mtxIndL[i][j];
+      348             				local_int_t curCol1 = A.mtxIndL[i+1][j];
+      349             
+      350             				sum0 += A.matrixValues[i][j] * xv[curCol0];
+      351             				sum1 += A.matrixValues[i+1][j] * xv[curCol1];
+      352             			}
+      353             
+      354             			for ( local_int_t j = min0; j < A.nonzerosInRow[i]; ++j ) {
+      355             				local_int_t curCol = A.mtxIndL[i][j];
+      356             				sum0 += A.matrixValues[i][j] * xv[curCol];
+      357             			}
+      358             			for ( local_int_t j = min0; j < A.nonzerosInRow[i+1]; ++j ) {
+      359             				local_int_t curCol = A.mtxIndL[i+1][j];
+      360             				sum1 += A.matrixValues[i+1][j] * xv[curCol];
+      361             			}
+      362             		}
+      363             		yv[i] = sum0;
+      364             		yv[i+1] = sum1;
+      365             	}
+      366             	//#pragma statement end_scache_isolate_assign
+      367             	//#pragma statement end_scache_isolate_way
+      368             }
+      369             
+      370             inline void ComputeSPMV_unroll4(const SparseMatrix & A, const double * const xv, double * const yv,	const local_int_t nrow) {
+      371             
+      372             #ifndef HPCG_NO_OPENMP
+      373             #pragma omp parallel for SCHEDULE(runtime)
+      374             #endif
+      375             	//#pragma statement scache_isolate_way L2=10
+      376             	//#pragma statement scache_isolate_assign xv
+      377             	#pragma loop nounroll_and_jam
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+      378   p         	for ( local_int_t i = 0; i < nrow-3; i+=4) {
+      379   p         		double sum0 = 0.0, sum1 = 0.0, sum2 = 0.0, sum3 = 0.0;
+      380             
+      381   p         		if ((A.nonzerosInRow[i] == A.nonzerosInRow[i+1]) && (A.nonzerosInRow[i] == A.nonzerosInRow[i+2]) && (A.nonzerosInRow[i] == A.nonzerosInRow[i+3]) ){
+      382             			#pragma fj loop zfill
+      383             			#pragma loop nounroll
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.80, ITR: 48, MVE: 3, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+      384   p      v  			for ( local_int_t j = 0; j < A.nonzerosInRow[i]; ++j ) {
+      385   p      v  				local_int_t curCol0 = A.mtxIndL[i][j];
+      386   p      v  				local_int_t curCol1 = A.mtxIndL[i+1][j];
+      387   p      v  				local_int_t curCol2 = A.mtxIndL[i+2][j];
+      388   p      v  				local_int_t curCol3 = A.mtxIndL[i+3][j];
+      389             
+      390   p      v  				sum0 += A.matrixValues[i][j] * xv[curCol0];
+      391   p      v  				sum1 += A.matrixValues[i+1][j] * xv[curCol1];
+      392   p      v  				sum2 += A.matrixValues[i+2][j] * xv[curCol2];
+      393   p      v  				sum3 += A.matrixValues[i+3][j] * xv[curCol3];
+      394   p      v  			}
+      395             
+      396   p         			yv[i] = sum0;
+      397   p         			yv[i+1] = sum1;
+      398   p         			yv[i+2] = sum2;
+      399   p         			yv[i+3] = sum3;
+      400   p         		}
+      401   p         		else {
+      402             			#pragma fj loop zfill			
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+      403   p         			for ( local_int_t ix = 0; ix < 4; ++ix) {
+      404   p         				double sum = 0.0;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.16, ITR: 192, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+      405   p     8v  				for ( local_int_t j = 0; j < A.nonzerosInRow[i+ix]; ++j ) {
+      406   p     8v  					local_int_t curCol = A.mtxIndL[i+ix][j];
+      407   p     8v  					sum += A.matrixValues[i+ix][j] * xv[curCol];
+      408   p     8v  				}
+      409   p         				yv[i+ix] = sum;
+      410   p         			}
+      411   p         		}
+      412   p         	}
+      413             	//#pragma statement end_scache_isolate_assign
+      414                 //#pragma statement end_scache_isolate_way	
+      415             }
+      416             #endif //HPCG_MAN_OPT_SPMV_UNROLL
+      417             
+      418             inline void test_ref(const SparseMatrix & A, const double * const xv, double * const yv,	const local_int_t nrow) {
+      419             
+      420             #ifndef HPCG_NO_OPENMP
+      421             #pragma omp parallel for SCHEDULE(runtime)
+      422             #endif
+      423             	//#pragma loop nounroll
+      424             	for ( local_int_t i = 0; i < nrow; i++ ) {
+      425             		double sum = 0.0;
+      426             		//#pragma fj loop zfill
+      427             		//#pragma loop nounroll
+      428             		for ( local_int_t j = 0; j < A.nonzerosInRow[i]; j++ ) {
+      429             			local_int_t curCol = A.mtxIndL[i][j];
+      430             			sum += A.matrixValues[i][j] * xv[curCol];
+      431             		}
+      432             		yv[i] = sum;
+      433             	}
+      434             }
+      435             
+      436             inline void test_tdg(const SparseMatrix & A, const double * const xv, double * const yv,	const local_int_t nrow) {
+      437             
+      438             #ifndef HPCG_NO_OPENMP
+      439             #pragma omp parallel
+      440             {
+      441             #endif
+      442             	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+      443             #ifndef HPCG_NO_OPENMP
+      444             #pragma omp for SCHEDULE(runtime)
+      445             #endif
+      446             		//#pragma loop nounroll
+      447             		for ( local_int_t ix = 0; ix < A.tdg[l].size(); ix++ ) {
+      448             			local_int_t i = A.tdg[l][ix];
+      449             			double sum = 0.0;
+      450             
+      451             			//#pragma fj loop zfill
+      452             			//#pragma loop nounroll
+      453             			for ( local_int_t j = 0; j < A.nonzerosInRow[i]; j++ ) {
+      454             				local_int_t curCol = A.mtxIndL[i][j];
+      455             				sum += A.matrixValues[i][j] * xv[curCol];
+      456             			}
+      457             			yv[i] = sum;
+      458             		}
+      459             	}
+      460             #ifndef HPCG_NO_OPENMP
+      461             }
+      462             #endif	
+      463             }
+Total prefetch num: 0
+Optimization messages
+  jwd6004s-i  "../src/ComputeSPMV.cpp", line 384: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSPMV.cpp", line 384: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSPMV.cpp", line 384: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 48.
+  jwd6004s-i  "../src/ComputeSPMV.cpp", line 405: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSPMV.cpp", line 405: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSPMV.cpp", line 405: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 192.
+  jwd8208o-i  "../src/ComputeSPMV.cpp", line 407: Method of calculating sum or product is changed.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DUNROLLING_4_B -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/ComputeSPMV.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

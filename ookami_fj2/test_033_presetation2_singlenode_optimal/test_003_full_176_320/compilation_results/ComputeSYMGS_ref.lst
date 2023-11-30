@@ -1,0 +1,179 @@
+Fujitsu C/C++ Version 4.7.0   Mon Jul 17 06:53:15 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/ComputeSYMGS_ref.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file ComputeSYMGS_ref.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #ifndef HPCG_NO_MPI
+       22             #include "ExchangeHalo.hpp"
+       23             #endif
+       24             #include "ComputeSYMGS_ref.hpp"
+       25             #include <cassert>
+       26             
+       27             /*!
+       28               Computes one step of symmetric Gauss-Seidel:
+       29             
+       30               Assumption about the structure of matrix A:
+       31               - Each row 'i' of the matrix has nonzero diagonal value whose address is matrixDiagonal[i]
+       32               - Entries in row 'i' are ordered such that:
+       33                    - lower triangular terms are stored before the diagonal element.
+       34                    - upper triangular terms are stored after the diagonal element.
+       35                    - No other assumptions are made about entry ordering.
+       36             
+       37               Symmetric Gauss-Seidel notes:
+       38               - We use the input vector x as the RHS and start with an initial guess for y of all zeros.
+       39               - We perform one forward sweep.  x should be initially zero on the first GS sweep, but we do not attempt to exploit this fact.
+       40               - We then perform one back sweep.
+       41               - For simplicity we include the diagonal contribution in the for-j loop, then correct the sum after
+       42             
+       43               @param[in] A the known system matrix
+       44               @param[in] r the input vector
+       45               @param[inout] x On entry, x should contain relevant values, on exit x contains the result of one symmetric GS sweep with r as the RHS.
+       46             
+       47             
+       48               @warning Early versions of this kernel (Version 1.1 and earlier) had the r and x arguments in reverse order, and out of sync with other kernels.
+       49             
+       50               @return returns 0 upon success and non-zero otherwise
+       51             
+       52               @see ComputeSYMGS
+       53             */
+       54             int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {
+       55             
+       56               assert(x.localLength==A.localNumberOfColumns); // Make sure x contain space for halo values
+       57             
+       58             #ifndef HPCG_NO_MPI
+       59               ExchangeHalo(A,x);
+       60             #endif
+       61             
+       62               const local_int_t nrow = A.localNumberOfRows;
+       63               double ** matrixDiagonal = A.matrixDiagonal;  // An array of pointers to the diagonal entries A.matrixValues
+       64               const double * const rv = r.values;
+       65               double * const xv = x.values;
+       66             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       67               for (local_int_t i=0; i< nrow; i++) {
+       68                 const double * const currentValues = A.matrixValues[i];
+       69                 const local_int_t * const currentColIndices = A.mtxIndL[i];
+       70                 const int currentNumberOfNonzeros = A.nonzerosInRow[i];
+       71                 const double  currentDiagonal = matrixDiagonal[i][0]; // Current diagonal value
+       72                 double sum = rv[i]; // RHS value
+       73             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.16, ITR: 192, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       74         8v      for (int j=0; j< currentNumberOfNonzeros; j++) {
+       75         8v        local_int_t curCol = currentColIndices[j];
+       76         8v        sum -= currentValues[j] * xv[curCol];
+       77         8v      }
+       78                 sum += xv[i]*currentDiagonal; // Remove diagonal contribution from previous loop
+       79             
+       80                 xv[i] = sum/currentDiagonal;
+       81             
+       82               }
+       83             
+       84               // Now the back sweep.
+       85             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       86               for (local_int_t i=nrow-1; i>=0; i--) {
+       87                 const double * const currentValues = A.matrixValues[i];
+       88                 const local_int_t * const currentColIndices = A.mtxIndL[i];
+       89                 const int currentNumberOfNonzeros = A.nonzerosInRow[i];
+       90                 const double  currentDiagonal = matrixDiagonal[i][0]; // Current diagonal value
+       91                 double sum = rv[i]; // RHS value
+       92             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.16, ITR: 192, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       93         8v      for (int j = 0; j< currentNumberOfNonzeros; j++) {
+       94         8v        local_int_t curCol = currentColIndices[j];
+       95         8v        sum -= currentValues[j]*xv[curCol];
+       96         8v      }
+       97                 sum += xv[i]*currentDiagonal; // Remove diagonal contribution from previous loop
+       98             
+       99                 xv[i] = sum/currentDiagonal;
+      100               }
+      101             
+      102               return 0;
+      103             }
+      104             
+Total prefetch num: 0
+Optimization messages
+  jwd6004s-i  "../src/ComputeSYMGS_ref.cpp", line 74: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSYMGS_ref.cpp", line 74: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSYMGS_ref.cpp", line 74: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 192.
+  jwd8208o-i  "../src/ComputeSYMGS_ref.cpp", line 76: Method of calculating sum or product is changed.
+  jwd6004s-i  "../src/ComputeSYMGS_ref.cpp", line 93: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSYMGS_ref.cpp", line 93: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSYMGS_ref.cpp", line 93: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 192.
+  jwd8208o-i  "../src/ComputeSYMGS_ref.cpp", line 95: Method of calculating sum or product is changed.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/ComputeSYMGS_ref.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

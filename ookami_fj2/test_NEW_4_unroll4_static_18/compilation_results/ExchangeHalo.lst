@@ -1,0 +1,154 @@
+Fujitsu C/C++ Version 4.7.0   Fri Nov 25 10:52:08 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/ExchangeHalo.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file ExchangeHalo.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             // Compile this routine only if running with MPI
+       22             #ifndef HPCG_NO_MPI
+       23             #include <mpi.h>
+       24             #include "Geometry.hpp"
+       25             #include "ExchangeHalo.hpp"
+       26             #include <cstdlib>
+       27             
+       28             /*!
+       29               Communicates data that is at the border of the part of the domain assigned to this processor.
+       30             
+       31               @param[in]    A The known system matrix
+       32               @param[inout] x On entry: the local vector entries followed by entries to be communicated; on exit: the vector with non-local entries updated by other processors
+       33              */
+       34             void ExchangeHalo(const SparseMatrix & A, Vector & x) {
+       35             
+       36               // Extract Matrix pieces
+       37             
+       38               local_int_t localNumberOfRows = A.localNumberOfRows;
+       39               int num_neighbors = A.numberOfSendNeighbors;
+       40               local_int_t * receiveLength = A.receiveLength;
+       41               local_int_t * sendLength = A.sendLength;
+       42               int * neighbors = A.neighbors;
+       43               double * sendBuffer = A.sendBuffer;
+       44               local_int_t totalToBeSent = A.totalToBeSent;
+       45               local_int_t * elementsToSend = A.elementsToSend;
+       46             
+       47               double * const xv = x.values;
+       48             
+       49               int size, rank; // Number of MPI processes, My process ID
+       50               MPI_Comm_size(MPI_COMM_WORLD, &size);
+       51               MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+       52             
+       53               //
+       54               //  first post receives, these are immediate receives
+       55               //  Do not wait for result to come, will do that at the
+       56               //  wait call below.
+       57               //
+       58             
+       59               int MPI_MY_TAG = 99;
+       60             
+       61               MPI_Request * request = new MPI_Request[num_neighbors];
+       62             
+       63               //
+       64               // Externals are at end of locals
+       65               //
+       66               double * x_external = (double *) xv + localNumberOfRows;
+       67             
+       68               // Post receives first
+       69               // TODO: Thread this loop
+       70               for (int i = 0; i < num_neighbors; i++) {
+       71                 local_int_t n_recv = receiveLength[i];
+       72                 MPI_Irecv(x_external, n_recv, MPI_DOUBLE, neighbors[i], MPI_MY_TAG, MPI_COMM_WORLD, request+i);
+       73                 x_external += n_recv;
+       74               }
+       75             
+       76             
+       77               //
+       78               // Fill up send buffer
+       79               //
+       80             
+       81               // TODO: Thread this loop
+       82               for (local_int_t i=0; i<totalToBeSent; i++) sendBuffer[i] = xv[elementsToSend[i]];
+       83             
+       84               //
+       85               // Send to each neighbor
+       86               //
+       87             
+       88               // TODO: Thread this loop
+       89               for (int i = 0; i < num_neighbors; i++) {
+       90                 local_int_t n_send = sendLength[i];
+       91                 MPI_Send(sendBuffer, n_send, MPI_DOUBLE, neighbors[i], MPI_MY_TAG, MPI_COMM_WORLD);
+       92                 sendBuffer += n_send;
+       93               }
+       94             
+       95               //
+       96               // Complete the reads issued above
+       97               //
+       98             
+       99               MPI_Status status;
+      100               // TODO: Thread this loop
+      101               for (int i = 0; i < num_neighbors; i++) {
+      102                 if ( MPI_Wait(request+i, &status) ) {
+      103                   std::exit(-1); // TODO: have better error exit
+      104                 }
+      105               }
+      106             
+      107               delete [] request;
+      108             
+      109               return;
+      110             }
+      111             #endif
+      112             // ifndef HPCG_NO_MPI
+Total prefetch num: 0
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DHPCG_MAN_OPT_SCHEDULE_ON -I./src -I./src/OOKAMI_OMP_FJ -I/lustre/software/arm/22.1/armpl-22.1.0_AArch64_RHEL-8_arm-linux-compiler_aarch64-linux/include -Kfast -KSVE -Kopenmp -Koptmsg=2 -Nlst=t -Kocl -I../src -o src/ExchangeHalo.o
+    Effective options    : -g0 -mt -Qy -std=gnu++14 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_3_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

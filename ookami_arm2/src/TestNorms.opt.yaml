@@ -1,0 +1,425 @@
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 34 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+    DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 34 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 34 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 34 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 78 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+    DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 78 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 78 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 78 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressCondExecuted
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 90 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          failed to hoist load with loop-invariant address because load is conditionally executed
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 90 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 90 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'hoisting '
+  - Inst:            fneg
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          loop not unrolled
+...
+--- !Passed
+Pass:            gvn
+Name:            LoadElim
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 34, Column: 31 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' eliminated'
+  - String:          ' in favor of '
+  - InfavorOfValue:  load
+...
+--- !Passed
+Pass:            gvn
+Name:            LoadPRE
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 34, Column: 16 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          load eliminated by PRE
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 60 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/TestNorms.cpp', Line: 35, Column: 22 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 60 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/TestNorms.cpp', Line: 35, Column: 22 }
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            InterleavingNotBeneficial
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          the cost-model indicates that interleaving is not beneficial
+...
+--- !Passed
+Pass:            sve-loop-vectorize
+Name:            Vectorized
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'vectorized loop (vectorization width: '
+  - VectorizationFactor: vscale x 2
+  - String:          ', interleaved count: '
+  - InterleaveCount: '1'
+  - String:          ')'
+  - String:          '(runtime checks: '
+  - RTNeeded:        no
+  - String:          ')'
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            InterleavingNotBeneficial
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          the cost-model indicates that interleaving is not beneficial
+...
+--- !Passed
+Pass:            sve-loop-vectorize
+Name:            Vectorized
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'vectorized loop (vectorization width: '
+  - VectorizationFactor: vscale x 2
+  - String:          ', interleaved count: '
+  - InterleaveCount: '1'
+  - String:          ')'
+  - String:          '(runtime checks: '
+  - RTNeeded:        no
+  - String:          ')'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 0, Column: 0 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '9'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 0, Column: 0 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '9'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 43 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '7'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 43 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '7'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 43 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '7'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 43 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '7'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 2 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 31, Column: 1 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - NumVRCopies:     '1'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '6.190476e-01'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 31, Column: 0 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - NumStackBytes:   '0'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 33, Column: 63 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 39, Column: 60 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 34, Column: 62 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/TestNorms.cpp', Line: 31, Column: 0 }
+Function:        _Z9TestNormsR20TestNormsData_STRUCT
+Args:
+  - NumInstructions: '47'
+  - String:          ' instructions in function'
+...

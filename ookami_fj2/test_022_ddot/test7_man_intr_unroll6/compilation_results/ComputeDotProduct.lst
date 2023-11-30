@@ -1,0 +1,539 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov  9 04:32:31 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/ComputeDotProduct.cpp
+(line-no.)(optimize)
+        1             /*
+        2              *
+        3              *  SPDX-License-Identifier: Apache-2.0
+        4              *
+        5              *  Copyright (C) 2019, Arm Limited and contributors
+        6              *
+        7              *  Licensed under the Apache License, Version 2.0 (the "License");
+        8              *  you may not use this file except in compliance with the License.
+        9              *  You may obtain a copy of the License at
+       10              *
+       11              *      http://www.apache.org/licenses/LICENSE-2.0
+       12              *
+       13              *  Unless required by applicable law or agreed to in writing, software
+       14              *  distributed under the License is distributed on an "AS IS" BASIS,
+       15              *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       16              *  See the License for the specific language governing permissions and
+       17              *  limitations under the License.
+       18              *
+       19              */
+       20             
+       21             //@HEADER
+       22             // ***************************************************
+       23             //
+       24             // HPCG: High Performance Conjugate Gradient Benchmark
+       25             //
+       26             // Contact:
+       27             // Michael A. Heroux ( maherou@sandia.gov)
+       28             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       29             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       30             //
+       31             // ***************************************************
+       32             //@HEADER
+       33             
+       34             /*!
+       35              @file ComputeDotProduct.cpp
+       36             
+       37              HPCG routine
+       38              */
+       39             
+       40             #ifndef HPCG_NO_MPI
+       41             #include <mpi.h>
+       42             #include "mytimer.hpp"
+       43             #endif
+       44             #ifndef HPCG_NO_OPENMP
+       45             #include <omp.h>
+       46             #endif
+       47             
+       48             #include "ComputeDotProduct.hpp"
+       49             #include "ComputeDotProduct_ref.hpp"
+       50             #include <cassert>
+       51             #ifdef HPCG_USE_DDOT_ARMPL
+       52             #include "armpl.h"
+       53             #endif
+       54             #ifdef HPCG_USE_SVE
+       55             #include "arm_sve.h"
+       56             #endif
+       57             
+       58             inline double ComputeDotProduct_unrolled(const local_int_t n, const double*xv, const double *yv);
+       59             
+       60             /*!
+       61               Routine to compute the dot product of two vectors.
+       62             
+       63               This routine calls the reference dot-product implementation by default, but
+       64               can be replaced by a custom routine that is optimized and better suited for
+       65               the target system.
+       66             
+       67               @param[in]  n the number of vector elements (on this processor)
+       68               @param[in]  x, y the input vectors
+       69               @param[out] result a pointer to scalar value, on exit will contain the result.
+       70               @param[out] time_allreduce the time it took to perform the communication between processes
+       71               @param[out] isOptimized should be set to false if this routine uses the reference implementation (is not optimized); otherwise leave it unchanged
+       72             
+       73               @return returns 0 upon success and non-zero otherwise
+       74             
+       75               @see ComputeDotProduct_ref
+       76             */
+       77             int ComputeDotProduct(const local_int_t n, const Vector & x, const Vector & y,
+       78                 double & result, double & time_allreduce, bool & isOptimized) {
+       79             
+       80             	assert(x.localLength >= n);
+       81             	assert(y.localLength >= n);
+       82             
+       83             	double *xv = x.values;
+       84             	double *yv = y.values;
+       85             	double local_result = 0.0;
+       86             
+       87             #if defined HPCG_USE_SVE
+       88             	if ( xv == yv ) {
+       89             #ifndef HPCG_NO_OPENMP
+       90             #pragma omp parallel for reduction(+:local_result)
+       91             #endif
+       92             		for ( local_int_t i = 0; i < n; i += svcntd()) {
+       93             			svbool_t pg = svwhilelt_b64(i, n);
+       94             			svfloat64_t svx = svld1_f64(pg, &xv[i]);
+       95             
+       96                         svfloat64_t svlr = svmul_f64_z(pg, svx, svx);
+       97             
+       98                         local_result += svaddv_f64(svptrue_b64(), svlr);
+       99             		}
+      100             	} else {
+      101             #ifndef HPCG_NO_OPENMP
+      102             #pragma omp parallel for reduction(+:local_result)
+      103             #endif
+      104             		for ( local_int_t i = 0; i < n; i += svcntd()) {
+      105             			svbool_t pg = svwhilelt_b64_u64(i, n);
+      106             			svfloat64_t svx = svld1_f64(pg, &xv[i]);
+      107             			svfloat64_t svy = svld1_f64(pg, &yv[i]);
+      108             
+      109                         svfloat64_t svlr = svmul_f64_z(pg, svx, svy);
+      110                         
+      111                         local_result += svaddv_f64(svptrue_b64(), svlr);
+      112             		}
+      113             	}
+      114             #elif defined HPCG_USE_DDOT_ARMPL
+      115             	local_result = cblas_ddot(n, xv, 1, yv, 1);
+      116             #elif defined HPCG_MAN_OPT_DDOT
+      117             	local_result = ComputeDotProduct_unrolled(n, xv, yv);
+      118             /*
+      119             	double local_result0 = 0.0, local_result1=0.0, local_result2=0.0, local_result3=0.0;
+      120             	if (yv == xv) {
+      121             #ifndef HPCG_NO_OPENMP
+      122             #pragma omp parallel for reduction (+:local_result0,local_result1)
+      123             #endif //HPCG_NO_OPENMP
+      124             		for ( local_int_t i = 0; i < n; i+=2 ) {
+      125                         local_result0 += xv[i+0] * xv[i+0];
+      126                         local_result1 += xv[i+1] * xv[i+1];
+      127                     }
+      128             		local_result += local_result0+local_result1;
+      129             	}
+      130             	else {
+      131             #ifndef HPCG_NO_OPENMP
+      132             #pragma omp parallel for reduction (+:local_result0,local_result1)
+      133             #endif //HPCG_NO_OPENMP
+      134             		for ( local_int_t i = 0; i < n; i+=2 ) {
+      135             			local_result0 += xv[i] * yv[i];
+      136             			local_result1 += xv[i+1] * yv[i+1];
+      137             		}
+      138             		local_result += local_result0+local_result1;
+      139             	}
+      140             */
+      141             #else //HPCG_USE_DDOT_ARMPL
+      142             	if ( yv == xv ) {
+      143             #ifndef HPCG_NO_OPENMP
+      144             #pragma omp parallel for reduction (+:local_result)
+      145             //#pragma clang loop vectorize_width(8)
+      146             #endif //HPCG_NO_OPENMP
+      147             		for ( local_int_t i = 0; i < n; i++ ) {
+      148                         local_result += xv[i] * xv[i];
+      149                     }
+      150             	} else {
+      151             #ifndef HPCG_NO_OPENMP
+      152             #pragma omp parallel for reduction (+:local_result)
+      153             //#pragma clang loop vectorize_width(8)
+      154             #endif //HPCG_NO_OPENMP
+      155             		for ( local_int_t i = 0; i < n; i++ ) {
+      156             			local_result += xv[i] * yv[i];
+      157             		}
+      158             	}
+      159             #endif //HPCG_USE_DDOT_ARMPL
+      160             
+      161             #ifndef HPCG_NO_MPI
+      162             	// Use MPI's reduce function to collect all partial sums
+      163             	double t0 = mytimer();
+      164             	double global_result = 0.0;
+      165             	MPI_Allreduce(&local_result, &global_result, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+      166             	result = global_result;
+      167             	time_allreduce += mytimer() - t0;
+      168             #else //HPCG_NO_MPI
+      169             	time_allreduce += 0.0;
+      170             	result = local_result;
+      171             #endif //HPCG_NO_MPI
+      172             
+      173             	return 0;
+      174             }
+      175             
+      176             //2,4,6-way unrolling using intrinsics
+      177             #ifdef HPCG_MAN_OPT_DDOT
+      178             
+      179             #ifdef DDOT_INTRINSICS
+      180             	#include "arm_sve.h"
+      181             
+      182             	#ifdef DDOT_2_UNROLL
+      183             		#define ComputeDotProduct_2_intrinsics_unrolling ComputeDotProduct_unrolled
+      184             	#elif defined DDOT_4_UNROLL
+      185             		#define ComputeDotProduct_4_intrinsics_unrolling ComputeDotProduct_unrolled
+      186             	#elif defined DDOT_6_UNROLL
+      187             		#define ComputeDotProduct_6_intrinsics_unrolling ComputeDotProduct_unrolled
+      188             	#else
+      189             		No valid (1)
+      190             	#endif
+      191             #else
+      192             	#ifdef DDOT_2_UNROLL
+      193             	#define ComputeDotProduct_2_unrolling ComputeDotProduct_unrolled
+      194             	#elif defined DDOT_4_UNROLL
+      195             		#define ComputeDotProduct_4_unrolling ComputeDotProduct_unrolled
+      196             	#elif defined DDOT_6_UNROLL
+      197             		#define ComputeDotProduct_6_unrolling ComputeDotProduct_unrolled
+      198             	#else
+      199             		no valid (2)
+      200             	#endif
+      201             #endif
+      202             
+      203             #ifdef DDOT_INTRINSICS
+      204             inline double ComputeDotProduct_6_intrinsics_unrolling(const local_int_t n, const double*xv, const double *yv) {
+      205             	double local_result=0;
+      206             
+      207             	if ( xv == yv ) {
+      208             #ifndef HPCG_NO_OPENMP
+      209             #pragma omp parallel for reduction(+:local_result)
+      210             #endif
+      211   p      s  		for ( local_int_t i = 0; i < n; i += 6*svcntd()) {
+      212             			//local_int_t ij = i+svcntd();
+      213   p      s  			svbool_t pg0 = svwhilelt_b64_u64(i, n);
+      214   p      s  			svbool_t pg1 = svwhilelt_b64_u64(i+svcntd(), n);
+      215             
+      216   p      s  			svfloat64_t svx0 = svld1_f64(pg0, &xv[i]);
+      217   p      s  			svfloat64_t svx1 = svld1_f64(pg1, &xv[i+svcntd()]);
+      218             
+      219   p      s              svx0 = svmul_f64_z(pg0, svx0, svx0);
+      220   p      s              svx1 = svmul_f64_z(pg1, svx1, svx1);
+      221             
+      222   p      s  			svbool_t pg2 = svwhilelt_b64_u64(i+2*svcntd(), n);
+      223   p      s  			svbool_t pg3 = svwhilelt_b64_u64(i+3*svcntd(), n);			
+      224             
+      225   p      s  			svx1 = svadd_f64_z(svptrue_b64(), svx0, svx1);
+      226             
+      227   p      s  			svfloat64_t svx2 = svld1_f64(pg2, &xv[i+2*svcntd()]);
+      228   p      s  			svfloat64_t svx3 = svld1_f64(pg3, &xv[i+3*svcntd()]);
+      229             
+      230   p      s  			svbool_t pg4 = svwhilelt_b64_u64(i+4*svcntd(), n);
+      231   p      s  			svbool_t pg5 = svwhilelt_b64_u64(i+5*svcntd(), n);			
+      232             
+      233   p      s              svx2 = svmul_f64_z(pg2, svx2, svx2);
+      234   p      s              svx3 = svmul_f64_z(pg3, svx3, svx3);
+      235                         //svx2 = svmla_f64_m(pg2, svx0, svx2, svx2);
+      236                         //svx3 = svmla_f64_m(pg3, svx1, svx3, svx3);
+      237             
+      238   p      s  			svfloat64_t svx4 = svld1_f64(pg4, &xv[i+4*svcntd()]);
+      239   p      s  			svfloat64_t svx5 = svld1_f64(pg5, &xv[i+5*svcntd()]);
+      240             
+      241   p      s  			svx3 = svadd_f64_z(svptrue_b64(), svx2, svx3);
+      242   p      s  			svx3 = svadd_f64_z(svptrue_b64(), svx1, svx3);
+      243             
+      244   p      s              svx4 = svmul_f64_z(pg4, svx4, svx4);
+      245   p      s              svx5 = svmul_f64_z(pg5, svx5, svx5);
+      246             
+      247   p      s  			svx5 = svadd_f64_z(svptrue_b64(), svx4, svx5);
+      248   p      s  			svfloat64_t svlr = svadd_f64_z(svptrue_b64(), svx3, svx5);
+      249             
+      250   p      s              local_result += svaddv_f64(svptrue_b64(), svlr);
+      251   p      s  		}
+      252             	} else {
+      253             #ifndef HPCG_NO_OPENMP
+      254             #pragma omp parallel for reduction(+:local_result)
+      255             #endif
+      256   p      s  		for ( local_int_t i = 0; i < n; i += 6*svcntd()) {
+      257   p      s  			svbool_t pg0 = svwhilelt_b64_u64(i, n);
+      258   p      s  			svbool_t pg1 = svwhilelt_b64_u64(i+svcntd(), n);
+      259             			
+      260   p      s  			svfloat64_t svx0 = svld1_f64(pg0, &xv[i]);
+      261   p      s  			svfloat64_t svx1 = svld1_f64(pg1, &xv[i+svcntd()]);
+      262   p      s  			svfloat64_t svy0 = svld1_f64(pg0, &yv[i]);
+      263   p      s  			svfloat64_t svy1 = svld1_f64(pg1, &yv[i+svcntd()]);
+      264             
+      265   p      s  			svbool_t pg2 = svwhilelt_b64_u64(i+2*svcntd(), n);
+      266   p      s  			svbool_t pg3 = svwhilelt_b64_u64(i+3*svcntd(), n);			
+      267             
+      268   p      s              svx0 = svmul_f64_z(pg0, svx0, svy0);
+      269   p      s              svx1 = svmul_f64_z(pg1, svx1, svy1);
+      270   p      s  			svx1 = svadd_f64_z(svptrue_b64(), svx0, svx1);
+      271             
+      272   p      s  			svfloat64_t svx2 = svld1_f64(pg2, &xv[i+2*svcntd()]);
+      273   p      s  			svfloat64_t svx3 = svld1_f64(pg3, &xv[i+3*svcntd()]);
+      274   p      s  			svfloat64_t svy2 = svld1_f64(pg2, &yv[i+2*svcntd()]);
+      275   p      s  			svfloat64_t svy3 = svld1_f64(pg3, &yv[i+3*svcntd()]);
+      276             
+      277   p      s  			svbool_t pg4 = svwhilelt_b64_u64(i+4*svcntd(), n);
+      278   p      s  			svbool_t pg5 = svwhilelt_b64_u64(i+5*svcntd(), n);
+      279             
+      280   p      s              svx2 = svmul_f64_z(pg2, svx2, svy2);
+      281   p      s              svx3 = svmul_f64_z(pg3, svx3, svy3);
+      282   p      s  			svx3 = svadd_f64_z(svptrue_b64(), svx2, svx3);
+      283             
+      284   p      s  			svx3= svadd_f64_z(svptrue_b64(), svx1, svx3);
+      285             
+      286   p      s  			svfloat64_t svx4 = svld1_f64(pg4, &xv[i+4*svcntd()]);
+      287   p      s  			svfloat64_t svx5 = svld1_f64(pg5, &xv[i+5*svcntd()]);
+      288   p      s  			svfloat64_t svy4 = svld1_f64(pg4, &yv[i+4*svcntd()]);
+      289   p      s  			svfloat64_t svy5 = svld1_f64(pg5, &yv[i+5*svcntd()]);
+      290             			
+      291   p      s              svx4 = svmul_f64_z(pg4, svx4, svy4);
+      292   p      s              svx5 = svmul_f64_z(pg5, svx5, svy5);
+      293   p      s  			svx5 = svadd_f64_z(svptrue_b64(), svx4, svx5);
+      294             
+      295   p      s  			svfloat64_t svlr = svadd_f64_z(svptrue_b64(), svx3, svx5);
+      296             
+      297   p      s  	        local_result += svaddv_f64(svptrue_b64(), svlr);
+      298   p      s  		}
+      299             	}
+      300             
+      301             	return local_result;
+      302             }
+      303             
+      304             inline double ComputeDotProduct_4_intrinsics_unrolling(const local_int_t n, const double*xv, const double *yv) {
+      305             	double local_result=0;
+      306             
+      307             	if ( xv == yv ) {
+      308             #ifndef HPCG_NO_OPENMP
+      309             #pragma omp parallel for reduction(+:local_result)
+      310             #endif
+      311             		for ( local_int_t i = 0; i < n; i += 4*svcntd()) {
+      312             			svbool_t pg0 = svwhilelt_b64_u64(i, n);
+      313             			svbool_t pg1 = svwhilelt_b64_u64(i+svcntd(), n);
+      314             
+      315             			svfloat64_t svx0 = svld1_f64(pg0, &xv[i]);
+      316             			svfloat64_t svx1 = svld1_f64(pg1, &xv[i+svcntd()]);
+      317             
+      318                         svx0 = svmul_f64_z(pg0, svx0, svx0);
+      319                         svx1 = svmul_f64_z(pg1, svx1, svx1);
+      320             			//svx1 = svmla_f64_m(pg1, svx0, svx1, svx1);
+      321             
+      322             			svbool_t pg2 = svwhilelt_b64_u64(i+2*svcntd(), n);
+      323             			svbool_t pg3 = svwhilelt_b64_u64(i+3*svcntd(), n);			
+      324             
+      325             			//svx1 = svadd_f64_z(svptrue_b64(), svx0, svx1);
+      326             
+      327             			svfloat64_t svx2 = svld1_f64(pg2, &xv[i+2*svcntd()]);
+      328             			svfloat64_t svx3 = svld1_f64(pg3, &xv[i+3*svcntd()]);
+      329             			
+      330                         //svx2 = svmul_f64_z(pg2, svx2, svx2);
+      331                         //svx3 = svmul_f64_z(pg3, svx3, svx3);
+      332             			svx2 = svmla_f64_m(pg2, svx0, svx2, svx2);
+      333             			svx3 = svmla_f64_m(pg3, svx1, svx3, svx3);
+      334             
+      335             			//svx3 = svadd_f64_z(svptrue_b64(), svx2, svx3);
+      336             			//svx1 = svadd_f64_z(svptrue_b64(), svx1, svx3);
+      337             			svfloat64_t svl = svadd_f64_z(svptrue_b64(), svx2, svx3);
+      338             
+      339                         local_result += svaddv_f64(svptrue_b64(), svl);
+      340             		}
+      341             	} else {
+      342             #ifndef HPCG_NO_OPENMP
+      343             #pragma omp parallel for reduction(+:local_result)
+      344             #endif
+      345             		for ( local_int_t i = 0; i < n; i += 4*svcntd()) {
+      346             			svbool_t pg0 = svwhilelt_b64_u64(i, n);
+      347             			svbool_t pg1 = svwhilelt_b64_u64(i+svcntd(), n);
+      348             			
+      349             			svfloat64_t svx0 = svld1_f64(pg0, &xv[i]);
+      350             			svfloat64_t svx1 = svld1_f64(pg1, &xv[i+svcntd()]);
+      351             			svfloat64_t svy0 = svld1_f64(pg0, &yv[i]);
+      352             			svfloat64_t svy1 = svld1_f64(pg1, &yv[i+svcntd()]);
+      353             
+      354             			svbool_t pg2 = svwhilelt_b64_u64(i+2*svcntd(), n);
+      355             			svbool_t pg3 = svwhilelt_b64_u64(i+3*svcntd(), n);			
+      356             
+      357                         svx0 = svmul_f64_z(pg0, svx0, svy0);
+      358                         svx1 = svmul_f64_z(pg1, svx1, svy1);
+      359             			//svfloat64_t svl1 = svadd_f64_z(svptrue_b64(), svx0, svx1);
+      360             
+      361             			svfloat64_t svx2 = svld1_f64(pg2, &xv[i+2*svcntd()]);
+      362             			svfloat64_t svx3 = svld1_f64(pg3, &xv[i+3*svcntd()]);
+      363             			svfloat64_t svy2 = svld1_f64(pg2, &yv[i+2*svcntd()]);
+      364             			svfloat64_t svy3 = svld1_f64(pg3, &yv[i+3*svcntd()]);
+      365             
+      366                         //svx2 = svmul_f64_z(pg2, svx2, svy2);
+      367                         //svx3 = svmul_f64_z(pg3, svx3, svy3);
+      368             			//svfloat64_t svl2 = svadd_f64_z(svptrue_b64(), svx2, svx3);
+      369             			svx2 = svmla_f64_m(pg2, svx0, svx2, svy2);
+      370             			svx3 = svmla_f64_m(pg3, svx1, svx3, svy3);
+      371             
+      372             			//svfloat64_t svl = svadd_f64_z(svptrue_b64(), svl1, svl2);
+      373             			svfloat64_t svl = svadd_f64_z(svptrue_b64(), svx3, svx2);
+      374             
+      375             	        local_result += svaddv_f64(svptrue_b64(), svl);
+      376             		}
+      377             	}
+      378             
+      379             	return local_result;
+      380             }
+      381             
+      382             inline double ComputeDotProduct_2_intrinsics_unrolling(const local_int_t n, const double*xv, const double *yv) {
+      383             
+      384             	double local_result=0;
+      385             
+      386             	if ( xv == yv ) {
+      387             #ifndef HPCG_NO_OPENMP
+      388             #pragma omp parallel for reduction(+:local_result)
+      389             #endif
+      390             		for ( local_int_t i = 0; i < n; i += 2*svcntd()) {
+      391             			//svfloat64_t svsum0 = svdup_f64(0.0);
+      392             
+      393             			svbool_t pg0 = svwhilelt_b64_u64(i, n);
+      394             			svbool_t pg1 = svwhilelt_b64_u64(i+svcntd(), n);
+      395             
+      396             			svfloat64_t svx0 = svld1_f64(pg0, &xv[i]);
+      397             			svfloat64_t svx1 = svld1_f64(pg1, &xv[i+svcntd()]);
+      398             
+      399                         svx0 = svmul_f64_z(pg0, svx0, svx0);
+      400                         //svx1 = svmul_f64_z(pg1, svx1, svx1);
+      401             
+      402             			//svx1 = svadd_f64_z(svptrue_b64(), svx0, svx1);
+      403             			svx1 = svmla_f64_m(pg1, svx0, svx1, svx1);
+      404             
+      405                         local_result += svaddv_f64(svptrue_b64(), svx1);
+      406             		}
+      407             	} else {
+      408             #ifndef HPCG_NO_OPENMP
+      409             #pragma omp parallel for reduction(+:local_result)
+      410             #endif
+      411             		for ( local_int_t i = 0; i < n; i += 2*svcntd()) {
+      412             			svbool_t pg0 = svwhilelt_b64_u64(i, n);
+      413             			svbool_t pg1 = svwhilelt_b64_u64(i+svcntd(), n);
+      414             			
+      415             			svfloat64_t svx0 = svld1_f64(pg0, &xv[i]);
+      416             			svfloat64_t svx1 = svld1_f64(pg1, &xv[i+svcntd()]);
+      417             			svfloat64_t svy0 = svld1_f64(pg0, &yv[i]);
+      418             			svfloat64_t svy1 = svld1_f64(pg1, &yv[i+svcntd()]);
+      419             
+      420                         svx0 = svmul_f64_z(pg0, svx0, svy0);
+      421                         //svx1 = svmul_f64_z(pg1, svx1, svy1);
+      422             			//svfloat64_t svl = svadd_f64_z(svptrue_b64(), svx0, svx1);
+      423             			svx0 = svmla_f64_m(pg1, svx0, svx1, svy1);
+      424             
+      425             	        local_result += svaddv_f64(svptrue_b64(), svx0);
+      426             		}
+      427             	}
+      428             
+      429             	return local_result;
+      430             }
+      431             #endif //DDOT_INTRINSICS
+      432             
+      433             inline double ComputeDotProduct_4_unrolling(const local_int_t n, const double*xv, const double *yv) {
+      434             
+      435             	double local_result = 0.0;
+      436             	double local_result0 = 0.0, local_result1=0.0, local_result2=0.0, local_result3=0.0;
+      437             
+      438             	if (yv == xv) {
+      439             #ifndef HPCG_NO_OPENMP
+      440             #pragma omp parallel for reduction (+:local_result0,local_result1,local_result2,local_result3)
+      441             #endif //HPCG_NO_OPENMP
+      442             		for ( local_int_t i = 0; i < n; i+=4 ) {
+      443                         local_result0 += xv[i+0] * xv[i+0];
+      444                         local_result1 += xv[i+1] * xv[i+1];
+      445                         local_result2 += xv[i+2] * xv[i+2];
+      446                         local_result3 += xv[i+3] * xv[i+3];
+      447                     }
+      448             		local_result += local_result0+local_result1+local_result2+local_result3;
+      449             	}
+      450             	else {
+      451             #ifndef HPCG_NO_OPENMP
+      452             #pragma omp parallel for reduction (+:local_result0,local_result1,local_result2,local_result3)
+      453             #endif //HPCG_NO_OPENMP
+      454             		for ( local_int_t i = 0; i < n; i+=4 ) {
+      455             			local_result0 += xv[i] * yv[i];
+      456             			local_result1 += xv[i+1] * yv[i+1];
+      457             			local_result2 += xv[i+2] * yv[i+2];
+      458             			local_result3 += xv[i+3] * yv[i+3];
+      459             		}
+      460             		local_result += local_result0+local_result1+local_result2+local_result3;
+      461             	}
+      462             	return local_result;
+      463             }
+      464             
+      465             inline double ComputeDotProduct_2_unrolling(const local_int_t n, const double*xv, const double *yv) {
+      466             
+      467             	double local_result = 0.0;
+      468             	double local_result0 = 0.0, local_result1=0.0;
+      469             
+      470             	if (yv == xv) {
+      471             #ifndef HPCG_NO_OPENMP
+      472             #pragma omp parallel for reduction (+:local_result0,local_result1)
+      473             #endif //HPCG_NO_OPENMP
+      474             		for ( local_int_t i = 0; i < n; i+=4 ) {
+      475                         local_result0 += xv[i+0] * xv[i+0];
+      476                         local_result1 += xv[i+1] * xv[i+1];
+      477                     }
+      478             		local_result += local_result0+local_result1;
+      479             	}
+      480             	else {
+      481             #ifndef HPCG_NO_OPENMP
+      482             #pragma omp parallel for reduction (+:local_result0,local_result1)
+      483             #endif //HPCG_NO_OPENMP
+      484             		for ( local_int_t i = 0; i < n; i+=2 ) {
+      485             			local_result0 += xv[i] * yv[i];
+      486             			local_result1 += xv[i+1] * yv[i+1];
+      487             		}
+      488             		local_result += local_result0+local_result1;
+      489             	}
+      490             	return local_result;
+      491             }
+      492             #endif //HPCG_MAN_OPT_DDOT
+Total prefetch num: 0
+Optimization messages
+  jwd6142s-i  "../src/ComputeDotProduct.cpp", line 211: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeDotProduct.cpp", line 211: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd6142s-i  "../src/ComputeDotProduct.cpp", line 256: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeDotProduct.cpp", line 256: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DHPCG_MAN_OPT_DDOT -DDDOT_INTRINSICS -DDDOT_6_UNROLL -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Koptmsg=2 -Nlst=t -I../src -o src/ComputeDotProduct.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Knoocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Knozfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

@@ -1,0 +1,137 @@
+Fujitsu C/C++ Version 4.7.0   Tue Jul 18 15:54:32 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/MixedBaseCounter.cpp
+(line-no.)(optimize)
+        1             
+        2             #include <map>
+        3             
+        4             #include "MixedBaseCounter.hpp"
+        5             
+        6             MixedBaseCounter::MixedBaseCounter(int *counts, int length) {
+        7               this->length = length;
+        8             
+        9               int i;
+       10             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       11         2s    for (i = 0; i < 32; ++i) {
+       12         2s      this->max_counts[i] = counts[i];
+       13         2s      this->cur_counts[i] = 0;
+       14         2s    }
+       15               // terminate with 0's
+       16               this->max_counts[i]      = this->cur_counts[i]      = 0;
+       17               this->max_counts[length] = this->cur_counts[length] = 0;
+       18             }
+       19             
+       20             MixedBaseCounter::MixedBaseCounter(MixedBaseCounter & left, MixedBaseCounter & right) {
+       21               this->length = left.length;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       22               for (int i = 0; i < left.length; ++i) {
+       23                 this->max_counts[i] = left.max_counts[i] - right.cur_counts[i];
+       24                 this->cur_counts[i] = 0;
+       25               }
+       26             }
+       27             
+       28             void
+       29             MixedBaseCounter::next() {
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       30               for (int i = 0; i < this->length; ++i) {
+       31                 this->cur_counts[i]++;
+       32                 if (this->cur_counts[i] > this->max_counts[i]) {
+       33                   this->cur_counts[i] = 0;
+       34                   continue;
+       35                 }
+       36                 break;
+       37               }
+       38             }
+       39             
+       40             int
+       41             MixedBaseCounter::is_zero() {
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       42               for (int i = 0; i < this->length; ++i)
+       43                 if (this->cur_counts[i])
+       44                   return 0;
+       45               return 1;
+       46             }
+       47             
+       48             int
+       49             MixedBaseCounter::product(int * multipliers) {
+       50               int k=0, x=1;
+       51             
+       52               for (int i = 0; i < this->length; ++i)
+       53         8s      for (int j = 0; j < this->cur_counts[i]; ++j) {
+       54         8s        k = 1;
+       55         8s        x *= multipliers[i];
+       56         8s      }
+       57             
+       58               return x * k;
+       59             }
+Total prefetch num: 0
+Optimization messages
+  jwd8101o-i  "../src/MixedBaseCounter.cpp", line 0: Inline expansion is applied to the user defined function '_ZN16MixedBaseCounterC1ERS_S0_'.
+  jwd8101o-i  "../src/MixedBaseCounter.cpp", line 0: Inline expansion is applied to the user defined function '_ZN16MixedBaseCounterC1EPii'.
+  jwd8663o-i  "../src/MixedBaseCounter.cpp", line 11: This loop is not software pipelined because the software pipelining does not improve the performance.
+  jwd8202o-i  "../src/MixedBaseCounter.cpp", line 11: Loop unrolling expanding 2 times is applied to this loop.
+  jwd6208s-i  "../src/MixedBaseCounter.cpp", line 12: SIMD conversion is not applied to this loop because the uncertain order of the definition and reference to variable 'this' may cause different results from serial execution.
+  jwd6228s-i  "../src/MixedBaseCounter.cpp", line 12: SIMD conversion is not applied to this loop because the order of the definition and reference to the variable is different from serial execution because of data dependency.
+  jwd6142s-i  "../src/MixedBaseCounter.cpp", line 22: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/MixedBaseCounter.cpp", line 22: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd6142s-i  "../src/MixedBaseCounter.cpp", line 30: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/MixedBaseCounter.cpp", line 30: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd6131s-i  "../src/MixedBaseCounter.cpp", line 42: SIMD conversion is not applied to this loop because the loop has two or more exits.
+  jwd8671o-i  "../src/MixedBaseCounter.cpp", line 42: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8663o-i  "../src/MixedBaseCounter.cpp", line 53: This loop is not software pipelined because the software pipelining does not improve the performance.
+  jwd8202o-i  "../src/MixedBaseCounter.cpp", line 53: Loop unrolling expanding 8 times is applied to this loop.
+  jwd6202s-i  "../src/MixedBaseCounter.cpp", line 55: SIMD conversion is not applied to this loop because the order of the definition and reference to the variable 'x' is different from serial execution because of data dependency.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DUNROLLING_4_B -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/MixedBaseCounter.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

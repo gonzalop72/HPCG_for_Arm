@@ -1,0 +1,236 @@
+Fujitsu C/C++ Version 4.7.0   Wed Oct  4 08:32:44 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/GenerateGeometry.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file GenerateGeometry.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #include <cmath>
+       22             #include <cstdlib>
+       23             #include <cassert>
+       24             
+       25             #include "ComputeOptimalShapeXYZ.hpp"
+       26             #include "GenerateGeometry.hpp"
+       27             
+       28             #ifdef HPCG_DEBUG
+       29             #include <fstream>
+       30             #include "hpcg.hpp"
+       31             using std::endl;
+       32             
+       33             #endif
+       34             
+       35             /*!
+       36               Computes the factorization of the total number of processes into a
+       37               3-dimensional process grid that is as close as possible to a cube. The
+       38               quality of the factorization depends on the prime number structure of the
+       39               total number of processes. It then stores this decompostion together with the
+       40               parallel parameters of the run in the geometry data structure.
+       41             
+       42               @param[in]  size total number of MPI processes
+       43               @param[in]  rank this process' rank among other MPI processes
+       44               @param[in]  numThreads number of OpenMP threads in this process
+       45               @param[in]  pz z-dimension processor ID where second zone of nz values start
+       46               @param[in]  nx, ny, nz number of grid points for each local block in the x, y, and z dimensions, respectively
+       47               @param[out] geom data structure that will store the above parameters and the factoring of total number of processes into three dimensions
+       48             */
+       49             void GenerateGeometry(int size, int rank, int numThreads,
+       50               int pz, local_int_t zl, local_int_t zu,
+       51               local_int_t nx, local_int_t ny, local_int_t nz,
+       52               int npx, int npy, int npz,
+       53               Geometry * geom)
+       54             {
+       55             
+       56               if (npx * npy * npz <= 0 || npx * npy * npz > size)
+       57                 ComputeOptimalShapeXYZ( size, npx, npy, npz );
+       58             
+       59               int * partz_ids = 0;
+       60               local_int_t * partz_nz = 0;
+       61               int npartz = 0;
+       62               if (pz==0) { // No variation in nz sizes
+       63                 npartz = 1;
+       64                 partz_ids = new int[1];
+       65                 partz_nz = new local_int_t[1];
+       66                 partz_ids[0] = npz;
+       67                 partz_nz[0] = nz;
+       68               }
+       69               else {
+       70                 npartz = 2;
+       71                 partz_ids = new int[2];
+       72                 partz_ids[0] = pz;
+       73                 partz_ids[1] = npz;
+       74                 partz_nz = new local_int_t[2];
+       75                 partz_nz[0] = zl;
+       76                 partz_nz[1] = zu;
+       77               }
+       78             //  partz_ids[npartz-1] = npz; // The last element of this array is always npz
+       79               int ipartz_ids = 0;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       80               for (int i=0; i< npartz; ++i) {
+       81                 assert(ipartz_ids<partz_ids[i]);  // Make sure that z partitioning is consistent with computed npz value
+       82                 ipartz_ids = partz_ids[i];
+       83               }
+       84             
+       85               // Now compute this process's indices in the 3D cube
+       86               int ipz = rank/(npx*npy);
+       87               int ipy = (rank-ipz*npx*npy)/npx;
+       88               int ipx = rank%npx;
+       89             
+       90             #ifdef HPCG_DEBUG
+       91               if (rank==0)
+       92                 HPCG_fout   << "size = "<< size << endl
+       93                     << "nx  = " << nx << endl
+       94                     << "ny  = " << ny << endl
+       95                     << "nz  = " << nz << endl
+       96                     << "npx = " << npx << endl
+       97                     << "npy = " << npy << endl
+       98                     << "npz = " << npz << endl;
+       99             
+      100               HPCG_fout    << "For rank = " << rank << endl
+      101                   << "ipx = " << ipx << endl
+      102                   << "ipy = " << ipy << endl
+      103                   << "ipz = " << ipz << endl;
+      104             
+      105               assert(size>=npx*npy*npz);
+      106             #endif
+      107               geom->size = size;
+      108               geom->rank = rank;
+      109               geom->numThreads = numThreads;
+      110               geom->nx = nx;
+      111               geom->ny = ny;
+      112               geom->nz = nz;
+      113               geom->npx = npx;
+      114               geom->npy = npy;
+      115               geom->npz = npz;
+      116               geom->pz = pz;
+      117               geom->npartz = npartz;
+      118               geom->partz_ids = partz_ids;
+      119               geom->partz_nz = partz_nz;
+      120               geom->ipx = ipx;
+      121               geom->ipy = ipy;
+      122               geom->ipz = ipz;
+      123             
+      124             // These values should be defined to take into account changes in nx, ny, nz values
+      125             // due to variable local grid sizes
+      126               global_int_t gnx = npx*nx;
+      127               global_int_t gny = npy*ny;
+      128               //global_int_t gnz = npz*nz;
+      129               // We now permit varying values for nz for any nx-by-ny plane of MPI processes.
+      130               // npartz is the number of different groups of nx-by-ny groups of processes.
+      131               // partz_ids is an array of length npartz where each value indicates the z process of the last process in the ith nx-by-ny group.
+      132               // partz_nz is an array of length npartz containing the value of nz for the ith group.
+      133             
+      134               //        With no variation, npartz = 1, partz_ids[0] = npz, partz_nz[0] = nz
+      135             
+      136               global_int_t gnz = 0;
+      137               ipartz_ids = 0;
+      138             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SOFTWARE PIPELINING(IPC: 2.80, ITR: 8, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+      139         2s    for (int i=0; i< npartz; ++i) {
+      140         2s      ipartz_ids = partz_ids[i] - ipartz_ids;
+      141         2m      gnz += partz_nz[i]*ipartz_ids;
+      142         2v    }
+      143               //global_int_t giz0 = ipz*nz;
+      144               global_int_t giz0 = 0;
+      145               ipartz_ids = 0;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+      146               for (int i=0; i< npartz; ++i) {
+      147                 int ipart_nz = partz_nz[i];
+      148                 if (ipz < partz_ids[i]) {
+      149                   giz0 += (ipz-ipartz_ids)*ipart_nz;
+      150                   break;
+      151                 } else {
+      152                   ipartz_ids = partz_ids[i];
+      153                   giz0 += ipartz_ids*ipart_nz;
+      154                 }
+      155             
+      156               }
+      157               global_int_t gix0 = ipx*nx;
+      158               global_int_t giy0 = ipy*ny;
+      159             
+      160             // Keep these values for later
+      161               geom->gnx = gnx;
+      162               geom->gny = gny;
+      163               geom->gnz = gnz;
+      164               geom->gix0 = gix0;
+      165               geom->giy0 = giy0;
+      166               geom->giz0 = giz0;
+      167             
+      168               return;
+      169             }
+Total prefetch num: 0
+Optimization messages
+  jwd6131s-i  "../src/GenerateGeometry.cpp", line 80: SIMD conversion is not applied to this loop because the loop has two or more exits.
+  jwd8671o-i  "../src/GenerateGeometry.cpp", line 80: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd6302s-i  "../src/GenerateGeometry.cpp", line 139: SIMD conversion is not applied to this loop because the performance of a partial SIMD execution may not be improved.
+  jwd8204o-i  "../src/GenerateGeometry.cpp", line 139: This loop is software pipelined.
+  jwd8205o-i  "../src/GenerateGeometry.cpp", line 139: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 8.
+  jwd6202s-i  "../src/GenerateGeometry.cpp", line 140: SIMD conversion is not applied to this loop because the order of the definition and reference to the variable 'ipartz_ids' is different from serial execution because of data dependency.
+  jwd6131s-i  "../src/GenerateGeometry.cpp", line 146: SIMD conversion is not applied to this loop because the loop has two or more exits.
+  jwd8671o-i  "../src/GenerateGeometry.cpp", line 146: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_4_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DUNROLLING_4_A -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/GenerateGeometry.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

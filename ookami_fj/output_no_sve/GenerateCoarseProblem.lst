@@ -1,0 +1,116 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov  9 03:27:02 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj
+  Source file       : ../src/GenerateCoarseProblem.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file GenerateProblem.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #ifndef HPCG_NO_OPENMP
+       22             #include <omp.h>
+       23             #endif
+       24             
+       25             #include <cassert>
+       26             #include "GenerateCoarseProblem.hpp"
+       27             #include "GenerateGeometry.hpp"
+       28             #include "GenerateProblem.hpp"
+       29             #include "SetupHalo.hpp"
+       30             
+       31             /*!
+       32               Routine to construct a prolongation/restriction operator for a given fine grid matrix
+       33               solution (as computed by a direct solver).
+       34             
+       35               @param[inout]  Af - The known system matrix, on output its coarse operator, fine-to-coarse operator and auxiliary vectors will be defined.
+       36             
+       37               Note that the matrix Af is considered const because the attributes we are modifying are declared as mutable.
+       38             
+       39             */
+       40             
+       41             void GenerateCoarseProblem(const SparseMatrix & Af, int level) {
+       42             
+       43               // Make local copies of geometry information.  Use global_int_t since the RHS products in the calculations
+       44               // below may result in global range values.
+       45               global_int_t nxf = Af.geom->nx;
+       46               global_int_t nyf = Af.geom->ny;
+       47               global_int_t nzf = Af.geom->nz;
+       48             
+       49               local_int_t nxc, nyc, nzc; //Coarse nx, ny, nz
+       50               assert(nxf%2==0); assert(nyf%2==0); assert(nzf%2==0); // Need fine grid dimensions to be divisible by 2
+       51               nxc = nxf/2; nyc = nyf/2; nzc = nzf/2;
+       52               local_int_t * f2cOperator = new local_int_t[Af.localNumberOfRows];
+       53               local_int_t localNumberOfRows = nxc*nyc*nzc; // This is the size of our subblock
+       54               // If this assert fails, it most likely means that the local_int_t is set to int and should be set to long long
+       55               assert(localNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if "int" overflows)
+       56             
+       57               // Use a parallel loop to do initial assignment:
+       58               // distributes the physical placement of arrays of pointers across the memory system
+       59             #ifndef HPCG_NO_OPENMP
+       60          s    #pragma omp parallel for
+       61             #endif
+       62               for (local_int_t i=0; i< localNumberOfRows; ++i) {
+       63                 f2cOperator[i] = 0;
+       64               }
+       65             
+       66             
+       67               // TODO:  This triply nested loop could be flattened or use nested parallelism
+       68             #ifndef HPCG_NO_OPENMP
+       69               #pragma omp parallel for
+       70             #endif
+       71               for (local_int_t izc=0; izc<nzc; ++izc) {
+       72                 local_int_t izf = 2*izc;
+       73                 for (local_int_t iyc=0; iyc<nyc; ++iyc) {
+       74                   local_int_t iyf = 2*iyc;
+       75          s        for (local_int_t ixc=0; ixc<nxc; ++ixc) {
+       76                     local_int_t ixf = 2*ixc;
+       77                     local_int_t currentCoarseRow = izc*nxc*nyc+iyc*nxc+ixc;
+       78                     local_int_t currentFineRow = izf*nxf*nyf+iyf*nxf+ixf;
+       79                     f2cOperator[currentCoarseRow] = currentFineRow;
+       80                   } // end iy loop
+       81                 } // end even iz if statement
+       82               } // end iz loop
+       83             
+       84               // Construct the geometry and linear system
+       85               Geometry * geomc = new Geometry;
+       86               local_int_t zlc = 0; // Coarsen nz for the lower block in the z processor dimension
+       87               local_int_t zuc = 0; // Coarsen nz for the upper block in the z processor dimension
+       88               int pz = Af.geom->pz;
+       89               if (pz>0) {
+       90                 zlc = Af.geom->partz_nz[0]/2; // Coarsen nz for the lower block in the z processor dimension
+       91                 zuc = Af.geom->partz_nz[1]/2; // Coarsen nz for the upper block in the z processor dimension
+       92               }
+       93               GenerateGeometry(Af.geom->size, Af.geom->rank, Af.geom->numThreads, Af.geom->pz, zlc, zuc, nxc, nyc, nzc, Af.geom->npx, Af.geom->npy, Af.geom->npz, geomc);
+       94             
+       95    i          SparseMatrix * Ac = new SparseMatrix;
+       96    i          InitializeSparseMatrix(*Ac, geomc);
+       97               GenerateProblem(*Ac, 0, 0, 0);
+       98               SetupHalo(*Ac);
+       99               Vector *rc = new Vector;
+      100               Vector *xc = new Vector;
+      101               Vector * Axf = new Vector;
+      102    i          InitializeVector(*rc, Ac->localNumberOfRows);
+      103    i          InitializeVector(*xc, Ac->localNumberOfColumns);
+      104    i          InitializeVector(*Axf, Af.localNumberOfColumns);
+      105               Af.Ac = Ac;
+      106               MGData * mgData = new MGData;
+      107    i          InitializeMGData(f2cOperator, rc, xc, Axf, *mgData,level);
+      108               Af.mgData = mgData;
+      109             
+      110               return;
+      111             }

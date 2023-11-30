@@ -1,0 +1,86 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov  9 15:55:17 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj
+  Source file       : ../src/ReadHpcgDat.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             #include <cstdio>
+       16             
+       17             #include "ReadHpcgDat.hpp"
+       18             
+       19             static int
+       20             SkipUntilEol(FILE *stream) {
+       21               int chOrEof;
+       22               bool finished;
+       23             
+       24          s    do {
+       25          s      chOrEof = fgetc( stream );
+       26                 finished = (chOrEof == EOF) || (chOrEof == '\n') || (chOrEof == '\r');
+       27               } while (! finished);
+       28             
+       29               if ('\r' == chOrEof) { // on Windows, \r might be followed by \n
+       30                 int chOrEofExtra = fgetc( stream );
+       31             
+       32                 if ('\n' == chOrEofExtra || EOF == chOrEofExtra)
+       33                   chOrEof = chOrEofExtra;
+       34                 else
+       35                   ungetc(chOrEofExtra, stream);
+       36               }
+       37             
+       38               return chOrEof;
+       39             }
+       40             
+       41             int
+       42             ReadHpcgDat(int *localDimensions, int *secondsPerRun, int *localProcDimensions) {
+       43               FILE * hpcgStream = fopen("hpcg.dat", "r");
+       44             
+       45               if (! hpcgStream)
+       46                 return -1;
+       47             
+       48    i          SkipUntilEol(hpcgStream); // skip the first line
+       49             
+       50    i          SkipUntilEol(hpcgStream); // skip the second line
+       51             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information End >>>
+       52         f     for (int i = 0; i < 3; ++i)
+       53                 if (fscanf(hpcgStream, "%d", localDimensions+i) != 1 || localDimensions[i] < 16)
+       54                   localDimensions[i] = 16;
+       55             
+       56    i          SkipUntilEol( hpcgStream ); // skip the rest of the second line
+       57             
+       58               if (secondsPerRun!=0) { // Only read number of seconds if the pointer is non-zero
+       59                 if (fscanf(hpcgStream, "%d", secondsPerRun) != 1 || secondsPerRun[0] < 0)
+       60                   secondsPerRun[0] = 30 * 60; // 30 minutes
+       61               }
+       62             
+       63    i          SkipUntilEol( hpcgStream ); // skip the rest of the third line
+       64             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information End >>>
+       65         f     for (int i = 0; i < 3; ++i)
+       66                 // the user didn't specify (or values are invalid) process dimensions
+       67                 if (fscanf(hpcgStream, "%d", localProcDimensions+i) != 1 || localProcDimensions[i] < 1)
+       68                   localProcDimensions[i] = 0; // value 0 means: "not specified" and it will be fixed later
+       69             
+       70               fclose(hpcgStream);
+       71             
+       72               return 0;
+       73             }

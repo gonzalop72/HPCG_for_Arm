@@ -1,0 +1,130 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov  2 18:23:10 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj
+  Source file       : ../src/TestCG.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file TestCG.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             // Changelog
+       22             //
+       23             // Version 0.4
+       24             // - Added timing of setup time for sparse MV
+       25             // - Corrected percentages reported for sparse MV with overhead
+       26             //
+       27             /////////////////////////////////////////////////////////////////////////
+       28             
+       29             #include <fstream>
+       30             #include <iostream>
+       31             using std::endl;
+       32             #include <vector>
+       33             #include "hpcg.hpp"
+       34             
+       35             #include "TestCG.hpp"
+       36             #include "CG.hpp"
+       37             
+       38             /*!
+       39               Test the correctness of the Preconditined CG implementation by using a system matrix with a dominant diagonal.
+       40             
+       41               @param[in]    geom The description of the problem's geometry.
+       42               @param[in]    A    The known system matrix
+       43               @param[in]    data the data structure with all necessary CG vectors preallocated
+       44               @param[in]    b    The known right hand side vector
+       45               @param[inout] x    On entry: the initial guess; on exit: the new approximate solution
+       46               @param[out]   testcg_data the data structure with the results of the test including pass/fail information
+       47             
+       48               @return Returns zero on success and a non-zero value otherwise.
+       49             
+       50               @see CG()
+       51              */
+       52             int TestCG(SparseMatrix & A, CGData & data, Vector & b, Vector & x, TestCGData & testcg_data) {
+       53             
+       54             
+       55               // Use this array for collecting timing information
+       56    i          std::vector< double > times(8,0.0);
+       57               // Temporary storage for holding original diagonal and RHS
+       58               Vector origDiagA, exaggeratedDiagA, origB;
+       59    i          InitializeVector(origDiagA, A.localNumberOfRows);
+       60    i          InitializeVector(exaggeratedDiagA, A.localNumberOfRows);
+       61    i          InitializeVector(origB, A.localNumberOfRows);
+       62    i          CopyMatrixDiagonal(A, origDiagA);
+       63    i          CopyVector(origDiagA, exaggeratedDiagA);
+       64    i          CopyVector(b, origB);
+       65             
+       66               // Modify the matrix diagonal to greatly exaggerate diagonal values.
+       67               // CG should converge in about 10 iterations for this problem, regardless of problem size
+       68          s    for (local_int_t i=0; i< A.localNumberOfRows; ++i) {
+       69    i            global_int_t globalRowID = A.localToGlobalMap[i];
+       70                 if (globalRowID<9) {
+       71                   double scale = (globalRowID+2)*1.0e6;
+       72    i              ScaleVectorValue(exaggeratedDiagA, i, scale);
+       73    i              ScaleVectorValue(b, i, scale);
+       74                 } else {
+       75    i              ScaleVectorValue(exaggeratedDiagA, i, 1.0e6);
+       76    i              ScaleVectorValue(b, i, 1.0e6);
+       77                 }
+       78               }
+       79    i          ReplaceMatrixDiagonal(A, exaggeratedDiagA);
+       80             
+       81    i          TraceData tdDisabled;
+       82             
+       83               int niters = 0;
+       84               double normr = 0.0;
+       85               double normr0 = 0.0;
+       86               int maxIters = 50;
+       87               int numberOfCgCalls = 2;
+       88               double tolerance = 1.0e-12; // Set tolerance to reasonable value for grossly scaled diagonal terms
+       89               testcg_data.expected_niters_no_prec = 12; // For the unpreconditioned CG call, we should take about 10 iterations, permit 12
+       90               testcg_data.expected_niters_prec = 2;   // For the preconditioned case, we should take about 1 iteration, permit 2
+       91               testcg_data.niters_max_no_prec = 0;
+       92               testcg_data.niters_max_prec = 0;
+       93               for (int k=0; k<2; ++k) { // This loop tests both unpreconditioned and preconditioned runs
+       94                 int expected_niters = testcg_data.expected_niters_no_prec;
+       95                 if (k==1) expected_niters = testcg_data.expected_niters_prec;
+       96          s      for (int i=0; i< numberOfCgCalls; ++i) {
+       97    i              ZeroVector(x); // Zero out x
+       98    i              int ierr = CG(A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], k==1, tdDisabled);
+       99    i              if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
+      100                   if (niters <= expected_niters) {
+      101                     ++testcg_data.count_pass;
+      102                   } else {
+      103                     ++testcg_data.count_fail;
+      104                   }
+      105                   if (k==0 && niters>testcg_data.niters_max_no_prec) testcg_data.niters_max_no_prec = niters; // Keep track of largest iter count
+      106                   if (k==1 && niters>testcg_data.niters_max_prec) testcg_data.niters_max_prec = niters; // Same for preconditioned run
+      107                   if (A.geom->rank==0) {
+      108    i                HPCG_fout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]" << endl;
+      109                     if (niters > expected_niters)
+      110    i                  HPCG_fout << " Expected " << expected_niters << " iterations.  Performed " << niters << "." << endl;
+      111                   }
+      112                 }
+      113               }
+      114             
+      115               // Restore matrix diagonal and RHS
+      116    i          ReplaceMatrixDiagonal(A, origDiagA);
+      117    i          CopyVector(origB, b);
+      118               // Delete vectors
+      119    i          DeleteVector(origDiagA);
+      120    i          DeleteVector(exaggeratedDiagA);
+      121    i          DeleteVector(origB);
+      122               testcg_data.normr = normr;
+      123             
+      124               return 0;
+      125    i        }

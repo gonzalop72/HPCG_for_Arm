@@ -1,0 +1,142 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov 30 07:41:32 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/ComputeResidual.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file ComputeResidual.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             #ifndef HPCG_NO_MPI
+       21             #include <mpi.h>
+       22             #endif
+       23             #ifndef HPCG_NO_OPENMP
+       24             #include <omp.h>
+       25             #endif
+       26             
+       27             #include "Vector.hpp"
+       28             
+       29             #ifdef HPCG_DETAILED_DEBUG
+       30             #include <fstream>
+       31             #include "hpcg.hpp"
+       32             #endif
+       33             
+       34             #include <cmath>  // needed for fabs
+       35             #include "ComputeResidual.hpp"
+       36             #ifdef HPCG_DETAILED_DEBUG
+       37             #include <iostream>
+       38             #endif
+       39             
+       40             /*!
+       41               Routine to compute the inf-norm difference between two vectors where:
+       42             
+       43               @param[in]  n        number of vector elements (local to this processor)
+       44               @param[in]  v1, v2   input vectors
+       45               @param[out] residual pointer to scalar value; on exit, will contain result: inf-norm difference
+       46             
+       47               @return Returns zero on success and a non-zero value otherwise.
+       48             */
+       49             int ComputeResidual(const local_int_t n, const Vector & v1, const Vector & v2, double & residual) {
+       50             
+       51               double * v1v = v1.values;
+       52               double * v2v = v2.values;
+       53               double local_residual = 0.0;
+       54             
+       55             #ifndef HPCG_NO_OPENMP
+       56               #pragma omp parallel default(none) shared(local_residual, v1v, v2v, n)
+       57               {
+       58                 double threadlocal_residual = 0.0;
+       59                 #pragma omp for
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.75, ITR: 80, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       60   p     2v      for (local_int_t i=0; i<n; i++) {
+       61   p     2v        double diff = std::fabs(v1v[i] - v2v[i]);
+       62   p     2v        if (diff > threadlocal_residual) threadlocal_residual = diff;
+       63   p     2v      }
+       64                 #pragma omp critical
+       65   s             {
+       66   s               if (threadlocal_residual>local_residual) local_residual = threadlocal_residual;
+       67   s             }
+       68               }
+       69             #else // No threading
+       70               for (local_int_t i=0; i<n; i++) {
+       71                 double diff = std::fabs(v1v[i] - v2v[i]);
+       72                 if (diff > local_residual) local_residual = diff;
+       73             #ifdef HPCG_DETAILED_DEBUG
+       74                 HPCG_fout << " Computed, exact, diff = " << v1v[i] << " " << v2v[i] << " " << diff << std::endl;
+       75             #endif
+       76               }
+       77             #endif
+       78             
+       79             #ifndef HPCG_NO_MPI
+       80               // Use MPI's reduce function to collect all partial sums
+       81               double global_residual = 0;
+       82               MPI_Allreduce(&local_residual, &global_residual, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+       83               residual = global_residual;
+       84             #else
+       85               residual = local_residual;
+       86             #endif
+       87             
+       88               return 0;
+       89             }
+Total prefetch num: 0
+Optimization messages
+  jwd6004s-i  "../src/ComputeResidual.cpp", line 60: SIMD conversion is applied to this loop with the loop variable 'i'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeResidual.cpp", line 60: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeResidual.cpp", line 60: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 80.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_SCHEDULE_ON -DENABLE_MG_COUNTERS -I./src -I./src/OOKAMI_OMP_FJ -I/lustre/software/arm/22.1/armpl-22.1.0_AArch64_RHEL-8_arm-linux-compiler_aarch64-linux/include -Kfast -KSVE -Kopenmp -Koptmsg=2 -Nlst=t -Kocl -I../src -o src/ComputeResidual.o
+    Effective options    : -g0 -mt -Qy -std=gnu++14 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_3_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Knozfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

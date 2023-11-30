@@ -1,0 +1,2631 @@
+Fujitsu C/C++ Version 4.7.0   Mon Dec 12 15:47:21 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2_instrumented
+  Source file       : ../src/ComputeSYMGS.cpp
+(line-no.)(optimize)
+        1             /*
+        2              *
+        3              *  SPDX-License-Identifier: Apache-2.0
+        4              *
+        5              *  Copyright (C) 2019, Arm Limited and contributors
+        6              *
+        7              *  Licensed under the Apache License, Version 2.0 (the "License");
+        8              *  you may not use this file except in compliance with the License.
+        9              *  You may obtain a copy of the License at
+       10              *
+       11              *      http://www.apache.org/licenses/LICENSE-2.0
+       12              *
+       13              *  Unless required by applicable law or agreed to in writing, software
+       14              *  distributed under the License is distributed on an "AS IS" BASIS,
+       15              *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       16              *  See the License for the specific language governing permissions and
+       17              *  limitations under the License.
+       18              *
+       19              */
+       20             
+       21             //@HEADER
+       22             // ***************************************************
+       23             //
+       24             // HPCG: High Performance Conjugate Gradient Benchmark
+       25             //
+       26             // Contact:
+       27             // Michael A. Heroux ( maherou@sandia.gov)
+       28             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       29             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       30             //
+       31             // ***************************************************
+       32             //@HEADER
+       33             
+       34             /*!
+       35              @file ComputeSYMGS.cpp
+       36             
+       37              HPCG routine
+       38              */
+       39             
+       40             #include "ComputeSYMGS.hpp"
+       41             #include "ComputeSYMGS_ref.hpp"
+       42             #ifndef HPCG_NO_MPI
+       43             #include "ExchangeHalo.hpp"
+       44             #endif
+       45             
+       46             #include "likwid_instrumentation.hpp"
+       47             
+       48             #ifdef HPCG_MAN_OPT_SCHEDULE_ON
+       49             	#define SCHEDULE(T)	schedule(T)
+       50             #else
+       51             	#define SCHEDULE(T)
+       52             #endif
+       53             
+       54             /**************************************************************************************************/
+       55             /**************************************************************************************************/
+       56             /**************************************************************************************************/
+       57             /* SVE IMPLEMENTATIONS                                                                            */
+       58             /**************************************************************************************************/
+       59             /**************************************************************************************************/
+       60             /**************************************************************************************************/
+       61             
+       62             #ifdef HPCG_USE_SVE
+       63             #include "arm_sve.h"
+       64             
+       65             inline void SYMGS_VERSION_1(const SparseMatrix& A, double * const& xv, const double * const& rv);
+       66             inline void SYMGS_VERSION_2(const SparseMatrix& A, double * const& xv, const double * const& rv);
+       67             inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& xv, const double * const& rv);
+       68             
+       69             /*
+       70              * TDG VERSION
+       71              */
+       72             int ComputeSYMGS_TDG_SVE(const SparseMatrix & A, const Vector & r, Vector & x, TraceData &trace) {
+       73             	assert(x.localLength == A.localNumberOfColumns);
+       74             
+       75             #ifndef HPCG_NO_MPI
+       76             	ExchangeHalo(A, x);
+       77             #endif
+       78             
+       79             	const double * const rv = r.values;
+       80             	double * const xv = x.values;
+       81             	double **matrixDiagonal = A.matrixDiagonal;
+       82             
+       83             LIKWID_START(trace.enabled, "symgs_tdg");
+       84             
+       85             #ifndef TEST_XX
+       86             SYMGS_VERSION_3(A, xv, rv);
+       87             #else
+       88             
+       89             //#pragma statement scache_isolate_way L2=10
+       90             //#pragma statement scache_isolate_assign xv
+       91             	/*
+       92             	 * FORWARD SWEEP
+       93             	 */
+       94             	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+       95             
+       96             		local_int_t totalSize = A.tdg[l].size();
+       97             		local_int_t size1 = 2*(totalSize/2);
+       98             		//#pragma loop nounroll
+       99             		//#pragma loop nounroll_and_jam
+      100             		//if((A.tdg[l].size()%2) == 0) {
+      101             #ifndef HPCG_NO_OPENMP
+      102             #pragma omp parallel
+      103             {
+      104             #pragma omp for nowait SCHEDULE(runtime)
+      105             #endif
+      106             		for ( local_int_t i = 0; i < size1; i+=2 ) {
+      107             			local_int_t row_1 = A.tdg[l][i];
+      108             			local_int_t row_2 = A.tdg[l][i+1];
+      109             			const double * const currentValues_1 = A.matrixValues[row_1];
+      110             			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+      111             			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+      112             			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+      113             			svfloat64_t contribs_1 = svdup_f64(0.0);
+      114             
+      115             			const double * const currentValues_2 = A.matrixValues[row_2];
+      116             			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+      117             			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+      118             			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+      119             			svfloat64_t contribs_2 = svdup_f64(0.0);
+      120             			
+      121             			const int maxNumberOfNonzeros = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);
+      122             
+      123             			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+      124             				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+      125             				
+      126             				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+      127             				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+      128             				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+      129             
+      130             				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+      131             
+      132             				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+      133             				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+      134             				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+      135             				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+      136             
+      137             				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+      138             			}
+      139             
+      140             			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+      141             			double sum_1 = rv[row_1] - totalContribution_1;
+      142             
+      143             			sum_1 += xv[row_1] * currentDiagonal_1;
+      144             			xv[row_1] = sum_1 / currentDiagonal_1;
+      145             
+      146             			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+      147             			double sum_2 = rv[row_2] - totalContribution_2;
+      148             
+      149             			sum_2 += xv[row_2] * currentDiagonal_2;
+      150             			xv[row_2] = sum_2 / currentDiagonal_2;
+      151             		}
+      152             		//}
+      153             		//else
+      154             		//{
+      155             #ifndef HPCG_NO_OPENMP
+      156             //#pragma omp parallel for SCHEDULE(runtime)
+      157             #pragma omp single 
+      158             {
+      159             #endif
+      160             		if (size1 < totalSize) {
+      161             			local_int_t i = size1;
+      162             		//for ( local_int_t i = size1; i < totalSize; i++ ) {
+      163             			local_int_t row = A.tdg[l][i];
+      164             			const double * const currentValues = A.matrixValues[row];
+      165             			const local_int_t * const currentColIndices = A.mtxIndL[row];
+      166             			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+      167             			const double currentDiagonal = matrixDiagonal[row][0];
+      168             			svfloat64_t contribs = svdup_f64(0.0);
+      169             
+      170             			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+      171             				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      172             				
+      173             				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+      174             				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+      175             				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+      176             
+      177             				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+      178             			}
+      179             
+      180             			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+      181             			double sum = rv[row] - totalContribution;
+      182             
+      183             			sum += xv[row] * currentDiagonal;
+      184             			xv[row] = sum / currentDiagonal;
+      185             		//}
+      186             		}
+      187             #ifndef HPCG_NO_OPENMP
+      188             }
+      189             }
+      190             #endif
+      191             	}
+      192             
+      193             	/*
+      194             	 * BACKWARD SWEEP
+      195             	 */
+      196             	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+      197             #ifndef HPCG_NO_OPENMP
+      198             #pragma omp parallel for SCHEDULE(runtime)
+      199             #endif
+      200             		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
+      201             			local_int_t row = A.tdg[l][i];
+      202             			const double * const currentValues = A.matrixValues[row];
+      203             			const local_int_t * const currentColIndices = A.mtxIndL[row];
+      204             			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+      205             			const double currentDiagonal = matrixDiagonal[row][0];
+      206             			svfloat64_t contribs = svdup_f64(0.0);
+      207             
+      208             			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+      209             				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      210             				
+      211             				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+      212             				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+      213             				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+      214             
+      215             				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+      216             			}
+      217             
+      218             			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+      219             			double sum = rv[row] - totalContribution;
+      220             
+      221             			sum += xv[row] * currentDiagonal;
+      222             			xv[row] = sum / currentDiagonal;
+      223             		}
+      224             
+      225             /*#ifndef HPCG_NO_OPENMP
+      226             #pragma omp parallel for SCHEDULE(runtime)
+      227             #endif
+      228             		for ( local_int_t i = size1-1; i >= 0; i-= 2 ) {
+      229             			local_int_t row_1 = A.tdg[l][i];
+      230             			local_int_t row_2 = A.tdg[l][i-1];
+      231             			const double * const currentValues_1 = A.matrixValues[row_1];
+      232             			const double * const currentValues_2 = A.matrixValues[row_2];
+      233             			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+      234             			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+      235             			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+      236             			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+      237             			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+      238             			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+      239             			svfloat64_t contribs_1 = svdup_f64(0.0);
+      240             			svfloat64_t contribs_2 = svdup_f64(0.0);
+      241             
+      242             			//#pragma loop nounroll
+      243             			//#pragma loop nounroll_and_jam
+      244             			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+      245             				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      246             				
+      247             				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+      248             				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+      249             				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+      250             
+      251             				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+      252             			}
+      253             
+      254             			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+      255             			double sum = rv[row] - totalContribution;
+      256             
+      257             			sum += xv[row] * currentDiagonal;
+      258             			xv[row] = sum / currentDiagonal;
+      259             		}*/
+      260             	}
+      261             //#pragma statement end_scache_isolate_assign
+      262             //#pragma statement end_scache_isolate_way
+      263             
+      264             #endif //TEST_XX
+      265             
+      266             LIKWID_STOP(trace.enabled, "symgs_tdg");
+      267             
+      268             	return 0;
+      269             }
+      270             /*
+      271              * END OF TDG VERSION
+      272              */
+      273             
+      274             /*
+      275              * TDG FUSED SYMGS-SPMV VERSION
+      276              */
+      277             int ComputeFusedSYMGS_SPMV_SVE(const SparseMatrix & A, const Vector & r, Vector & x, Vector & y, TraceData& trace) {
+      278             	assert(x.localLength == A.localNumberOfColumns);
+      279             
+      280             #ifndef HPCG_NO_MPI
+      281             	ExchangeHalo(A, x);
+      282             #endif
+      283             
+      284             	const double * const rv = r.values;
+      285             	double * const xv = x.values;
+      286             	double **matrixDiagonal = A.matrixDiagonal;
+      287             	double * const yv = y.values;
+      288             
+      289             	/*
+      290             	 * FORWARD SWEEP
+      291             	 */
+      292    i        	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+      293             #ifndef HPCG_NO_OPENMP
+      294             #pragma omp parallel for SCHEDULE(runtime)
+      295             #endif
+      296   pi        		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
+      297   p         			local_int_t row = A.tdg[l][i];
+      298   p         			const double * const currentValues = A.matrixValues[row];
+      299   p         			const local_int_t * const currentColIndices = A.mtxIndL[row];
+      300   p         			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+      301   p         			const double currentDiagonal = matrixDiagonal[row][0];
+      302   p         			svfloat64_t contribs = svdup_f64(0.0);
+      303             
+      304   p      s  			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+      305   p      s  				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      306             				
+      307   p      s  				svfloat64_t mtxValues = svld1(pg, &currentValues[j]);
+      308   p      s  				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+      309   p      s  				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+      310             
+      311   p      s  				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+      312   p      s  			}
+      313             
+      314   p         			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+      315   p         			double sum = rv[row] - totalContribution;
+      316             
+      317   p         			sum += xv[row] * currentDiagonal;
+      318   p         			xv[row] = sum / currentDiagonal;
+      319   pi        		}
+      320    i        	}
+      321             
+      322             	/*
+      323             	 * BACKWARD SWEEP
+      324             	 */
+      325    i        	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+      326             #ifndef HPCG_NO_OPENMP
+      327             #pragma omp parallel for SCHEDULE(runtime)
+      328             #endif
+      329   pi        		for ( local_int_t i = A.tdg[l].size(); i >= 0; i-- ) {
+      330   p         			local_int_t row = A.tdg[l][i];
+      331   p         			const double * const currentValues = A.matrixValues[row];
+      332   p         			const local_int_t * const currentColIndices = A.mtxIndL[row];
+      333   p         			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+      334   p         			const double currentDiagonal = matrixDiagonal[row][0];
+      335   p         			svfloat64_t contribs = svdup_f64(0.0);
+      336             
+      337   p      s  			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+      338   p      s  				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      339             				
+      340   p      s  				svfloat64_t mtxValues = svld1(pg, &currentValues[j]);
+      341   p      s  				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+      342   p      s  				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+      343             
+      344   p      s  				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+      345   p      s  			}
+      346             
+      347   p         			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+      348   p         			totalContribution -= xv[row] * currentDiagonal; // remove diagonal contribution
+      349   p         			double sum = rv[row] - totalContribution; // substract contributions from RHS
+      350   p         			xv[row] = sum / currentDiagonal; // update row
+      351             
+      352             			// SPMV part
+      353   p         			totalContribution += xv[row] * currentDiagonal; // add updated diagonal contribution
+      354   p         			yv[row] = totalContribution; // update SPMV output vector
+      355             			
+      356   p         		}
+      357             	}
+      358             
+      359             	return 0;
+      360             }
+      361             /*
+      362              * END OF TDG FUSED SYMGS-SPMV VERSION
+      363              */
+      364             
+      365             /*
+      366              * BLOCK COLORED VERSION
+      367              */
+      368             int ComputeSYMGS_BLOCK_SVE(const SparseMatrix & A, const Vector & r, Vector & x, TraceData& trace ) {
+      369             	assert(x.localLength >= A.localNumberOfColumns);
+      370             
+      371             #ifndef HPCG_NO_MPI
+      372             	ExchangeHalo(A, x);
+      373             #endif
+      374             
+      375             	double **matrixDiagonal = A.matrixDiagonal;
+      376             	const double * const rv = r.values;
+      377             	double * const xv = x.values;
+      378             	local_int_t firstBlock = 0;
+      379    i        	local_int_t lastBlock = firstBlock + A.numberOfBlocksInColor[0];
+      380             
+      381             LIKWID_START(trace.enabled, "symgs_bc");		
+      382             
+      383             	/*
+      384             	 * FORWARD SWEEP
+      385             	 */
+      386             	for ( local_int_t color = 0; color < A.numberOfColors; color++ ) { // for each color
+      387             		if ( color > 0 ) {
+      388    i        			firstBlock += A.numberOfBlocksInColor[color-1];
+      389    i        			lastBlock = firstBlock + A.numberOfBlocksInColor[color];
+      390             		}
+      391             #ifndef HPCG_NO_OPENMP
+      392             #pragma omp parallel for SCHEDULE(runtime)
+      393             #endif
+      394   p         		for ( local_int_t block = firstBlock; block < lastBlock; block += A.chunkSize ) { // for each superblock with the same color
+      395   p         			local_int_t firstRow = block * A.blockSize;
+      396   p         			local_int_t firstChunk = firstRow / A.chunkSize;
+      397   p         			local_int_t lastChunk = (firstRow + A.blockSize * A.chunkSize) / A.chunkSize;
+      398             
+      399   p         			for ( local_int_t chunk = firstChunk; chunk < lastChunk; chunk++ ) { // for each chunk of this super block
+      400   p         				local_int_t first = A.chunkSize * chunk;
+      401   p         				local_int_t last = first + A.chunkSize;
+      402   p         				const int currentNumberOfNonzeros = A.nonzerosInChunk[chunk];
+      403   p         				local_int_t i = first;
+      404   p         				if ( A.chunkSize == 4 ) {
+      405   p         					const double * const currentValues0 = A.matrixValues[i  ];
+      406   p         					const double * const currentValues1 = A.matrixValues[i+1];
+      407   p         					const double * const currentValues2 = A.matrixValues[i+2];
+      408   p         					const double * const currentValues3 = A.matrixValues[i+3];
+      409             
+      410   p         					const local_int_t * const currentColIndices0 = A.mtxIndL[i  ];
+      411   p         					const local_int_t * const currentColIndices1 = A.mtxIndL[i+1];
+      412   p         					const local_int_t * const currentColIndices2 = A.mtxIndL[i+2];
+      413   p         					const local_int_t * const currentColIndices3 = A.mtxIndL[i+3];
+      414             
+      415   p         					const double currentDiagonal0 = matrixDiagonal[i  ][0];
+      416   p         					const double currentDiagonal1 = matrixDiagonal[i+1][0];
+      417   p         					const double currentDiagonal2 = matrixDiagonal[i+2][0];
+      418   p         					const double currentDiagonal3 = matrixDiagonal[i+3][0];
+      419             
+      420   p         					svfloat64_t contribs0 = svdup_f64(0.0);
+      421   p         					svfloat64_t contribs1 = svdup_f64(0.0);
+      422   p         					svfloat64_t contribs2 = svdup_f64(0.0);
+      423   p         					svfloat64_t contribs3 = svdup_f64(0.0);
+      424             
+      425   p      s  					for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd() ) {
+      426   p      s  						svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      427             
+      428   p      s  						svfloat64_t values0 = svld1_f64(pg, &currentValues0[j]);
+      429   p      s  						svfloat64_t values1 = svld1_f64(pg, &currentValues1[j]);
+      430   p      s  						svfloat64_t values2 = svld1_f64(pg, &currentValues2[j]);
+      431   p      s  						svfloat64_t values3 = svld1_f64(pg, &currentValues3[j]);
+      432             
+      433   p      s  						svuint64_t indices0 = svld1sw_u64(pg, &currentColIndices0[j]);
+      434   p      s  						svuint64_t indices1 = svld1sw_u64(pg, &currentColIndices1[j]);
+      435   p      s  						svuint64_t indices2 = svld1sw_u64(pg, &currentColIndices2[j]);
+      436   p      s  						svuint64_t indices3 = svld1sw_u64(pg, &currentColIndices3[j]);
+      437             
+      438   p      s  						svfloat64_t xvv0 = svld1_gather_u64index_f64(pg, xv, indices0);
+      439   p      s  						svfloat64_t xvv1 = svld1_gather_u64index_f64(pg, xv, indices1);
+      440   p      s  						svfloat64_t xvv2 = svld1_gather_u64index_f64(pg, xv, indices2);
+      441   p      s  						svfloat64_t xvv3 = svld1_gather_u64index_f64(pg, xv, indices3);
+      442             
+      443   p      s  						contribs0 = svmla_f64_m(pg, contribs0, xvv0, values0);
+      444   p      s  						contribs1 = svmla_f64_m(pg, contribs1, xvv1, values1);
+      445   p      s  						contribs2 = svmla_f64_m(pg, contribs2, xvv2, values2);
+      446   p      s  						contribs3 = svmla_f64_m(pg, contribs3, xvv3, values3);
+      447   p      s  					}
+      448             
+      449   p         					double totalContribution0 = svaddv_f64(svptrue_b64(), contribs0);
+      450   p         					double totalContribution1 = svaddv_f64(svptrue_b64(), contribs1);
+      451   p         					double totalContribution2 = svaddv_f64(svptrue_b64(), contribs2);
+      452   p         					double totalContribution3 = svaddv_f64(svptrue_b64(), contribs3);
+      453             
+      454   p         					double sum0 = rv[i  ] - totalContribution0;
+      455   p         					double sum1 = rv[i+1] - totalContribution1;
+      456   p         					double sum2 = rv[i+2] - totalContribution2;
+      457   p         					double sum3 = rv[i+3] - totalContribution3;
+      458             
+      459   p         					sum0 += xv[i  ] * currentDiagonal0;
+      460   p         					sum1 += xv[i+1] * currentDiagonal1;
+      461   p         					sum2 += xv[i+2] * currentDiagonal2;
+      462   p         					sum3 += xv[i+3] * currentDiagonal3;
+      463             
+      464   p         					xv[i  ] = sum0 / currentDiagonal0;
+      465   p         					xv[i+1] = sum1 / currentDiagonal1;
+      466   p         					xv[i+2] = sum2 / currentDiagonal2;
+      467   p         					xv[i+3] = sum3 / currentDiagonal3;
+      468   p         				} else if ( A.chunkSize == 2 ) {
+      469   p         					const double * const currentValues0 = A.matrixValues[i  ];
+      470   p         					const double * const currentValues1 = A.matrixValues[i+1];
+      471             
+      472   p         					const local_int_t * const currentColIndices0 = A.mtxIndL[i  ];
+      473   p         					const local_int_t * const currentColIndices1 = A.mtxIndL[i+1];
+      474             
+      475   p         					const double currentDiagonal0 = matrixDiagonal[i  ][0];
+      476   p         					const double currentDiagonal1 = matrixDiagonal[i+1][0];
+      477             
+      478   p         					svfloat64_t contribs0 = svdup_f64(0.0);
+      479   p         					svfloat64_t contribs1 = svdup_f64(0.0);
+      480             
+      481   p      s  					for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd() ) {
+      482   p      s  						svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      483             
+      484   p      s  						svfloat64_t values0 = svld1_f64(pg, &currentValues0[j]);
+      485   p      s  						svfloat64_t values1 = svld1_f64(pg, &currentValues1[j]);
+      486             
+      487   p      s  						svuint64_t indices0 = svld1sw_u64(pg, &currentColIndices0[j]);
+      488   p      s  						svuint64_t indices1 = svld1sw_u64(pg, &currentColIndices1[j]);
+      489             
+      490   p      s  						svfloat64_t xvv0 = svld1_gather_u64index_f64(pg, xv, indices0);
+      491   p      s  						svfloat64_t xvv1 = svld1_gather_u64index_f64(pg, xv, indices1);
+      492             
+      493   p      s  						contribs0 = svmla_f64_m(pg, contribs0, xvv0, values0);
+      494   p      s  						contribs1 = svmla_f64_m(pg, contribs1, xvv1, values1);
+      495   p      s  					}
+      496             
+      497   p         					double totalContribution0 = svaddv_f64(svptrue_b64(), contribs0);
+      498   p         					double totalContribution1 = svaddv_f64(svptrue_b64(), contribs1);
+      499             
+      500   p         					double sum0 = rv[i  ] - totalContribution0;
+      501   p         					double sum1 = rv[i+1] - totalContribution1;
+      502             
+      503   p         					sum0 += xv[i  ] * currentDiagonal0;
+      504   p         					sum1 += xv[i+1] * currentDiagonal1;
+      505             
+      506   p         					xv[i  ] = sum0 / currentDiagonal0;
+      507   p         					xv[i+1] = sum1 / currentDiagonal1;
+      508   p         				} else { //A.chunkSize == 1
+      509   p         					const double * const currentValues0 = A.matrixValues[i  ];
+      510             
+      511   p         					const local_int_t * const currentColIndices0 = A.mtxIndL[i  ];
+      512             
+      513   p         					const double currentDiagonal0 = matrixDiagonal[i  ][0];
+      514             
+      515   p         					svfloat64_t contribs0 = svdup_f64(0.0);
+      516             
+      517   p      s  					for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd() ) {
+      518   p      s  						svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      519             
+      520   p      s  						svfloat64_t values0 = svld1_f64(pg, &currentValues0[j]);
+      521             
+      522   p      s  						svuint64_t indices0 = svld1sw_u64(pg, &currentColIndices0[j]);
+      523             
+      524   p      s  						svfloat64_t xvv0 = svld1_gather_u64index_f64(pg, xv, indices0);
+      525             
+      526   p      s  						contribs0 = svmla_f64_m(pg, contribs0, xvv0, values0);
+      527   p      s  					}
+      528             
+      529   p         					double totalContribution0 = svaddv_f64(svptrue_b64(), contribs0);
+      530             
+      531   p         					double sum0 = rv[i  ] - totalContribution0;
+      532             
+      533   p         					sum0 += xv[i  ] * currentDiagonal0;
+      534             
+      535   p         					xv[i  ] = sum0 / currentDiagonal0;
+      536   p         				}
+      537   p         			}
+      538   p         		}
+      539             	}
+      540             
+      541             	firstBlock = A.numberOfBlocks-1;
+      542    i        	lastBlock = firstBlock - A.numberOfBlocksInColor[A.numberOfColors-1];
+      543             	/*
+      544             	 * BACKWARD SWEEP
+      545             	 */
+      546             	for ( local_int_t color = A.numberOfColors-1; color >= 0; color-- ) {
+      547             		if ( color < A.numberOfColors-1 ) {
+      548    i        			firstBlock -= A.numberOfBlocksInColor[color+1];
+      549    i        			lastBlock = firstBlock - A.numberOfBlocksInColor[color];
+      550             		}
+      551             #ifndef HPCG_NO_OPENMP
+      552             #pragma omp parallel for SCHEDULE(runtime)
+      553             #endif
+      554   p         		for ( local_int_t block = firstBlock; block > lastBlock; block -= A.chunkSize ) {
+      555   p         			local_int_t firstRow = ((block+1) * A.blockSize) - 1;
+      556   p         			local_int_t firstChunk = firstRow / A.chunkSize;
+      557   p         			local_int_t lastChunk = (firstRow - A.blockSize * A.chunkSize) / A.chunkSize;
+      558             
+      559   p         			for ( local_int_t chunk = firstChunk; chunk > lastChunk; chunk-- ) {
+      560   p         				local_int_t first = A.chunkSize * chunk;
+      561   p         				local_int_t last = first + A.chunkSize;
+      562             
+      563   p         				const int currentNumberOfNonzeros = A.nonzerosInChunk[chunk];
+      564   p         				local_int_t i = first;
+      565   p         				if ( A.chunkSize == 4 ) {
+      566   p         					const double * const currentValues3 = A.matrixValues[i+3];
+      567   p         					const double * const currentValues2 = A.matrixValues[i+2];
+      568   p         					const double * const currentValues1 = A.matrixValues[i+1];
+      569   p         					const double * const currentValues0 = A.matrixValues[i  ];
+      570             
+      571   p         					const local_int_t * const currentColIndices3 = A.mtxIndL[i+3];
+      572   p         					const local_int_t * const currentColIndices2 = A.mtxIndL[i+2];
+      573   p         					const local_int_t * const currentColIndices1 = A.mtxIndL[i+1];
+      574   p         					const local_int_t * const currentColIndices0 = A.mtxIndL[i  ];
+      575             
+      576   p         					const double currentDiagonal3 = matrixDiagonal[i+3][0];
+      577   p         					const double currentDiagonal2 = matrixDiagonal[i+2][0];
+      578   p         					const double currentDiagonal1 = matrixDiagonal[i+1][0];
+      579   p         					const double currentDiagonal0 = matrixDiagonal[i  ][0];
+      580             
+      581   p         					svfloat64_t contribs3 = svdup_f64(0.0);
+      582   p         					svfloat64_t contribs2 = svdup_f64(0.0);
+      583   p         					svfloat64_t contribs1 = svdup_f64(0.0);
+      584   p         					svfloat64_t contribs0 = svdup_f64(0.0);
+      585             
+      586   p      s  					for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd() ) {
+      587   p      s  						svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      588             
+      589   p      s  						svfloat64_t values3 = svld1_f64(pg, &currentValues3[j]);
+      590   p      s  						svfloat64_t values2 = svld1_f64(pg, &currentValues2[j]);
+      591   p      s  						svfloat64_t values1 = svld1_f64(pg, &currentValues1[j]);
+      592   p      s  						svfloat64_t values0 = svld1_f64(pg, &currentValues0[j]);
+      593             
+      594   p      s  						svuint64_t indices3 = svld1sw_u64(pg, &currentColIndices3[j]);
+      595   p      s  						svuint64_t indices2 = svld1sw_u64(pg, &currentColIndices2[j]);
+      596   p      s  						svuint64_t indices1 = svld1sw_u64(pg, &currentColIndices1[j]);
+      597   p      s  						svuint64_t indices0 = svld1sw_u64(pg, &currentColIndices0[j]);
+      598             
+      599   p      s  						svfloat64_t xvv3 = svld1_gather_u64index_f64(pg, xv, indices3);
+      600   p      s  						svfloat64_t xvv2 = svld1_gather_u64index_f64(pg, xv, indices2);
+      601   p      s  						svfloat64_t xvv1 = svld1_gather_u64index_f64(pg, xv, indices1);
+      602   p      s  						svfloat64_t xvv0 = svld1_gather_u64index_f64(pg, xv, indices0);
+      603             
+      604   p      s  						contribs3 = svmla_f64_m(pg, contribs3, xvv3, values3 );
+      605   p      s  						contribs2 = svmla_f64_m(pg, contribs2, xvv2, values2 );
+      606   p      s  						contribs1 = svmla_f64_m(pg, contribs1, xvv1, values1 );
+      607   p      s  						contribs0 = svmla_f64_m(pg, contribs0, xvv0, values0 );
+      608   p      s  					}
+      609             
+      610   p         					double totalContribution3 = svaddv_f64(svptrue_b64(), contribs3);
+      611   p         					double totalContribution2 = svaddv_f64(svptrue_b64(), contribs2);
+      612   p         					double totalContribution1 = svaddv_f64(svptrue_b64(), contribs1);
+      613   p         					double totalContribution0 = svaddv_f64(svptrue_b64(), contribs0);
+      614             
+      615   p         					double sum3 = rv[i+3] - totalContribution3;
+      616   p         					double sum2 = rv[i+2] - totalContribution2;
+      617   p         					double sum1 = rv[i+1] - totalContribution1;
+      618   p         					double sum0 = rv[i  ] - totalContribution0;
+      619             
+      620   p         					sum3 += xv[i+3] * currentDiagonal3;
+      621   p         					sum2 += xv[i+2] * currentDiagonal2;
+      622   p         					sum1 += xv[i+1] * currentDiagonal1;
+      623   p         					sum0 += xv[i  ] * currentDiagonal0;
+      624             					
+      625   p         					xv[i+3] = sum3 / currentDiagonal3;
+      626   p         					xv[i+2] = sum2 / currentDiagonal2;
+      627   p         					xv[i+1] = sum1 / currentDiagonal1;
+      628   p         					xv[i  ] = sum0 / currentDiagonal0;
+      629   p         				} else if ( A.chunkSize == 2 ) {
+      630   p         					const double * const currentValues1 = A.matrixValues[i+1];
+      631   p         					const double * const currentValues0 = A.matrixValues[i  ];
+      632             
+      633   p         					const local_int_t * const currentColIndices1 = A.mtxIndL[i+1];
+      634   p         					const local_int_t * const currentColIndices0 = A.mtxIndL[i  ];
+      635             
+      636   p         					const double currentDiagonal1 = matrixDiagonal[i+1][0];
+      637   p         					const double currentDiagonal0 = matrixDiagonal[i  ][0];
+      638             
+      639   p         					svfloat64_t contribs1 = svdup_f64(0.0);
+      640   p         					svfloat64_t contribs0 = svdup_f64(0.0);
+      641             
+      642   p      s  					for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd() ) {
+      643   p      s  						svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      644             
+      645   p      s  						svfloat64_t values1 = svld1_f64(pg, &currentValues1[j]);
+      646   p      s  						svfloat64_t values0 = svld1_f64(pg, &currentValues0[j]);
+      647             
+      648   p      s  						svuint64_t indices1 = svld1sw_u64(pg, &currentColIndices1[j]);
+      649   p      s  						svuint64_t indices0 = svld1sw_u64(pg, &currentColIndices0[j]);
+      650             
+      651   p      s  						svfloat64_t xvv1 = svld1_gather_u64index_f64(pg, xv, indices1);
+      652   p      s  						svfloat64_t xvv0 = svld1_gather_u64index_f64(pg, xv, indices0);
+      653             
+      654   p      s  						contribs1 = svmla_f64_m(pg, contribs1, xvv1, values1 );
+      655   p      s  						contribs0 = svmla_f64_m(pg, contribs0, xvv0, values0 );
+      656   p      s  					}
+      657             
+      658   p         					double totalContribution1 = svaddv_f64(svptrue_b64(), contribs1);
+      659   p         					double totalContribution0 = svaddv_f64(svptrue_b64(), contribs0);
+      660             
+      661   p         					double sum1 = rv[i+1] - totalContribution1;
+      662   p         					double sum0 = rv[i  ] - totalContribution0;
+      663             
+      664   p         					sum1 += xv[i+1] * currentDiagonal1;
+      665   p         					sum0 += xv[i  ] * currentDiagonal0;
+      666             					
+      667   p         					xv[i+1] = sum1 / currentDiagonal1;
+      668   p         					xv[i  ] = sum0 / currentDiagonal0;
+      669   p         				} else { // A.chunkSize == 1
+      670   p         					const double * const currentValues0 = A.matrixValues[i  ];
+      671             
+      672   p         					const local_int_t * const currentColIndices0 = A.mtxIndL[i  ];
+      673             
+      674   p         					const double currentDiagonal0 = matrixDiagonal[i  ][0];
+      675             
+      676   p         					svfloat64_t contribs0 = svdup_f64(0.0);
+      677             
+      678   p      s  					for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd() ) {
+      679   p      s  						svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+      680             
+      681   p      s  						svfloat64_t values0 = svld1_f64(pg, &currentValues0[j]);
+      682             
+      683   p      s  						svuint64_t indices0 = svld1sw_u64(pg, &currentColIndices0[j]);
+      684             
+      685   p      s  						svfloat64_t xvv0 = svld1_gather_u64index_f64(pg, xv, indices0);
+      686             
+      687   p      s  						contribs0 = svmla_f64_m(pg, contribs0, xvv0, values0 );
+      688   p      s  					}
+      689             
+      690   p         					double totalContribution0 = svaddv_f64(svptrue_b64(), contribs0);
+      691             
+      692   p         					double sum0 = rv[i  ] - totalContribution0;
+      693             
+      694   p         					sum0 += xv[i  ] * currentDiagonal0;
+      695             					
+      696   p         				}
+      697   p         			}
+      698   p         		}
+      699             	}
+      700             LIKWID_STOP(trace.enabled, "symgs_bc");			
+      701             
+      702             	return 0;
+      703             }
+      704             /*
+      705              * END OF BLOCK COLORED VERSION
+      706              */
+      707             #elif defined(HPCG_USE_NEON)
+      708             
+      709             /**************************************************************************************************/
+      710             /**************************************************************************************************/
+      711             /**************************************************************************************************/
+      712             /* NEON IMPLEMENTATIONS                                                                           */
+      713             /**************************************************************************************************/
+      714             /**************************************************************************************************/
+      715             /**************************************************************************************************/
+      716             
+      717             #include "arm_neon.h"
+      718             
+      719             /*
+      720              * TDG VERSION
+      721              */
+      722             int ComputeSYMGS_TDG_NEON(const SparseMatrix & A, const Vector & r, Vector & x) {
+      723             	assert(x.localLength == A.localNumberOfColumns);
+      724             
+      725             #ifndef HPCG_NO_MPI
+      726             	ExchangeHalo(A, x);
+      727             #endif
+      728             
+      729             	const double * const rv = r.values;
+      730             	double * const xv = x.values;
+      731             	double **matrixDiagonal = A.matrixDiagonal;
+      732             
+      733             	/*
+      734             	 * FORWARD
+      735             	 */
+      736             	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+      737             #ifndef HPCG_NO_OPENMP
+      738             #pragma omp parallel for SCHEDULE(runtime)
+      739             #endif
+      740             		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
+      741             			local_int_t row = A.tdg[l][i];
+      742             			const double * const currentValues = A.matrixValues[row];
+      743             			const local_int_t * const currentColIndices = A.mtxIndL[row];
+      744             			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+      745             			const double currentDiagonal = matrixDiagonal[row][0];
+      746             			float64x2_t contribs = vdupq_n_f64(0.0);
+      747             
+      748             			local_int_t j = 0;
+      749             			for ( j = 0; j < currentNumberOfNonzeros-1; j+=2 ) {
+      750             				// Load the needed j values
+      751             				float64x2_t mtxValues = vld1q_f64(&currentValues[j]);
+      752             				// Load the needed x values
+      753             				double aux[] = { xv[currentColIndices[j]], xv[currentColIndices[j+1]] };
+      754             				float64x2_t xvv = vld1q_f64(aux);
+      755             				// Add the contribution
+      756             				contribs = vfmaq_f64(contribs, mtxValues, xvv);
+      757             			}
+      758             			// reduce contributions
+      759             			double totalContribution = vgetq_lane_f64(contribs, 0) + vgetq_lane_f64(contribs, 1);
+      760             			double sum = rv[row] - totalContribution;
+      761             			// Add missing values from last loop
+      762             			if ( j < currentNumberOfNonzeros ) {
+      763             				sum -= currentValues[j] * xv[currentColIndices[j]];
+      764             			}
+      765             			sum += xv[row] * currentDiagonal; // remove diagonal contribution
+      766             			xv[row] = sum / currentDiagonal; // update row
+      767             		}
+      768             	}
+      769             
+      770             	/*
+      771             	 * BACKWARD
+      772             	 */
+      773             	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+      774             #ifndef HPCG_NO_OPENMP
+      775             #pragma omp parallel for SCHEDULE(runtime)
+      776             #endif
+      777             		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
+      778             			local_int_t row = A.tdg[l][i];
+      779             			const double * const currentValues = A.matrixValues[row];
+      780             			const local_int_t * const currentColIndices = A.mtxIndL[row];
+      781             			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+      782             			const double currentDiagonal = matrixDiagonal[row][0];
+      783             			float64x2_t contribs = vdupq_n_f64(0.0);
+      784             
+      785             			local_int_t j = 0;
+      786             			for ( j = 0; j < currentNumberOfNonzeros-1; j+=2 ) {
+      787             				// Load the needed j values
+      788             				float64x2_t mtxValues = vld1q_f64(&currentValues[j]);
+      789             				// Load the needed x values
+      790             				double aux[] = { xv[currentColIndices[j]], xv[currentColIndices[j+1]] };
+      791             				float64x2_t xvv = vld1q_f64(aux);
+      792             				// Add the contribution
+      793             				contribs = vfmaq_f64(contribs, mtxValues, xvv);
+      794             			}
+      795             			// reduce contributions
+      796             			double totalContribution = vgetq_lane_f64(contribs, 0) + vgetq_lane_f64(contribs, 1);
+      797             			double sum = rv[row] - totalContribution;
+      798             			// Add missing values from last loop
+      799             			if ( j < currentNumberOfNonzeros ) {
+      800             				sum -= currentValues[j] * xv[currentColIndices[j]];
+      801             			}
+      802             			sum += xv[row] * currentDiagonal; // remove diagonal contribution
+      803             			xv[row] = sum / currentDiagonal; // update row
+      804             		}
+      805             	}
+      806             
+      807             	return 0;
+      808             }
+      809             /*
+      810              *
+      811              */
+      812             ////////////////////////////////////////////////////////////////////////////////
+      813             ////////////////////////////////////////////////////////////////////////////////
+      814             ////////////////////////////////////////////////////////////////////////////////
+      815             /*
+      816              * TDG FUSED VERSION
+      817              */
+      818             int ComputeFusedSYMGS_SPMV_NEON(const SparseMatrix & A, const Vector & r, Vector & x, Vector & y) {
+      819             	assert(x.localLength == A.localNumberOfColumns);
+      820             
+      821             #ifndef HPCG_NO_MPI
+      822             	ExchangeHalo(A, x);
+      823             #endif
+      824             
+      825             	const double * const rv = r.values;
+      826             	double * const xv = x.values;
+      827             	double * const yv = y.values;
+      828             	double **matrixDiagonal = A.matrixDiagonal;
+      829             
+      830             	/*
+      831             	 * FORWARD
+      832             	 */
+      833             	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+      834             #ifndef HPCG_NO_OPENMP
+      835             #pragma omp parallel for SCHEDULE(runtime)
+      836             #endif
+      837             		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
+      838             			local_int_t row = A.tdg[l][i];
+      839             			const double * const currentValues = A.matrixValues[row];
+      840             			const local_int_t * const currentColIndices = A.mtxIndL[row];
+      841             			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+      842             			const double currentDiagonal = matrixDiagonal[row][0];
+      843             			float64x2_t contribs = vdupq_n_f64(0.0);
+      844             
+      845             			local_int_t j = 0;
+      846             			for ( j = 0; j < currentNumberOfNonzeros-1; j+=2 ) {
+      847             				// Load the needed j values
+      848             				float64x2_t mtxValues = vld1q_f64(&currentValues[j]);
+      849             				// Load the needed x values
+      850             				double aux[] = { xv[currentColIndices[j]], xv[currentColIndices[j+1]] };
+      851             				float64x2_t xvv = vld1q_f64(aux);
+      852             				// Add the contribution
+      853             				contribs = vfmaq_f64(contribs, mtxValues, xvv);
+      854             			}
+      855             			// reduce contributions
+      856             			double totalContribution = vgetq_lane_f64(contribs, 0) + vgetq_lane_f64(contribs, 1);
+      857             			double sum = rv[row] - totalContribution;
+      858             			// Add missing values from last loop
+      859             			if ( j < currentNumberOfNonzeros ) {
+      860             				sum -= currentValues[j] * xv[currentColIndices[j]];
+      861             			}
+      862             			sum += xv[row] * currentDiagonal; // remove diagonal contribution
+      863             			xv[row] = sum / currentDiagonal; // update row
+      864             		}
+      865             	}
+      866             
+      867             	/*
+      868             	 * BACKWARD (fusing SYMGS and SPMV)
+      869             	 */
+      870             	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+      871             #ifndef HPCG_NO_OPENMP
+      872             #pragma omp parallel for SCHEDULE(runtime)
+      873             #endif
+      874             		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
+      875             			local_int_t row = A.tdg[l][i];
+      876             			const double * const currentValues = A.matrixValues[row];
+      877             			const local_int_t * const currentColIndices = A.mtxIndL[row];
+      878             			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+      879             			const double currentDiagonal = matrixDiagonal[row][0];
+      880             			float64x2_t contribs = vdupq_n_f64(0.0);
+      881             
+      882             			local_int_t j = 0;
+      883             			for ( j = 0; j < currentNumberOfNonzeros-1; j+=2 ) {
+      884             				// Load the needed j values
+      885             				float64x2_t mtxValues = vld1q_f64(&currentValues[j]);
+      886             				// Load the needed x values
+      887             				double aux[] = { xv[currentColIndices[j]], xv[currentColIndices[j+1]] };
+      888             				float64x2_t xvv = vld1q_f64(aux);
+      889             				// Add the contribution
+      890             				contribs = vfmaq_f64(contribs, mtxValues, xvv);
+      891             			}
+      892             			// reduce contributions
+      893             			double totalContribution = vgetq_lane_f64(contribs, 0) + vgetq_lane_f64(contribs, 1);
+      894             			// Add missing values from last loop
+      895             			if ( j < currentNumberOfNonzeros ) {
+      896             				totalContribution += currentValues[j] * xv[currentColIndices[j]];
+      897             			}
+      898             			totalContribution -= xv[row] * currentDiagonal; // remove diagonal contribution
+      899             			double sum = rv[row] - totalContribution; // substract contributions from RHS
+      900             			xv[row] = sum / currentDiagonal; // update row
+      901             			// Fusion part
+      902             			totalContribution += xv[row] * currentDiagonal; // add updated diagonal contribution
+      903             			yv[row] = totalContribution; // update SPMV output vector
+      904             		}
+      905             	}
+      906             
+      907             	return 0;
+      908             }
+      909             /*
+      910              *
+      911              */
+      912             ////////////////////////////////////////////////////////////////////////////////
+      913             ////////////////////////////////////////////////////////////////////////////////
+      914             ////////////////////////////////////////////////////////////////////////////////
+      915             /*
+      916              * BLOCK COLORED VERSION
+      917              */
+      918             int ComputeSYMGS_BLOCK_NEON(const SparseMatrix & A, const Vector & r, Vector & x) {
+      919             
+      920             	assert(x.localLength >= A.localNumberOfColumns);
+      921             	
+      922             #ifndef HPCG_NO_MPI
+      923             	ExchangeHalo(A, x);
+      924             #endif
+      925             
+      926             	double **matrixDiagonal = A.matrixDiagonal;
+      927             	const double * const rv = r.values;
+      928             	double * const xv = x.values;
+      929             
+      930             	local_int_t firstBlock = 0;
+      931             	local_int_t lastBlock = firstBlock + A.numberOfBlocksInColor[0];
+      932             	/*
+      933             	 * FORWARD
+      934             	 */
+      935             	for ( local_int_t color = 0; color < A.numberOfColors; color++ ) { // for each color
+      936             		if ( color > 0 ) {
+      937             			firstBlock += A.numberOfBlocksInColor[color-1];
+      938             			lastBlock = firstBlock + A.numberOfBlocksInColor[color];
+      939             		}
+      940             #ifndef HPCG_NO_OPENMP
+      941             #pragma omp parallel for SCHEDULE(runtime)
+      942             #endif
+      943             		for ( local_int_t block = firstBlock; block < lastBlock; block += A.chunkSize ) { // for each super block with the same color
+      944             			local_int_t firstRow = block * A.blockSize;
+      945             			local_int_t firstChunk = firstRow / A.chunkSize;
+      946             			local_int_t lastChunk = (firstRow + A.blockSize*A.chunkSize) / A.chunkSize;
+      947             
+      948             			for ( local_int_t chunk = firstChunk; chunk < lastChunk; chunk++ ) { // for each chunk of this super block
+      949             				local_int_t first = A.chunkSize * chunk;
+      950             				local_int_t last = first + A.chunkSize;
+      951             
+      952             				const int currentNumberOfNonzeros = A.nonzerosInChunk[chunk];
+      953             				local_int_t i = first;
+      954             				if ( A.chunkSize == 4 ) {
+      955             					const double * const currentValues0 = A.matrixValues[i  ];
+      956             					const double * const currentValues1 = A.matrixValues[i+1];
+      957             					const double * const currentValues2 = A.matrixValues[i+2];
+      958             					const double * const currentValues3 = A.matrixValues[i+3];
+      959             
+      960             					const local_int_t * const currentColIndices0 = A.mtxIndL[i  ];
+      961             					const local_int_t * const currentColIndices1 = A.mtxIndL[i+1];
+      962             					const local_int_t * const currentColIndices2 = A.mtxIndL[i+2];
+      963             					const local_int_t * const currentColIndices3 = A.mtxIndL[i+3];
+      964             
+      965             					const double currentDiagonal[4] = { matrixDiagonal[i  ][0],\
+      966             														matrixDiagonal[i+1][0],\
+      967             														matrixDiagonal[i+2][0],\
+      968             														matrixDiagonal[i+3][0]};
+      969             					float64x2_t diagonal01 = vld1q_f64(&currentDiagonal[0]);
+      970             					float64x2_t diagonal23 = vld1q_f64(&currentDiagonal[2]);
+      971             
+      972             					float64x2_t contribs0 = vdupq_n_f64(0.0);
+      973             					float64x2_t contribs1 = vdupq_n_f64(0.0);
+      974             					float64x2_t contribs2 = vdupq_n_f64(0.0);
+      975             					float64x2_t contribs3 = vdupq_n_f64(0.0);
+      976             
+      977             					float64x2_t vrv01 = vld1q_f64(&rv[i]);
+      978             					float64x2_t vrv23 = vld1q_f64(&rv[i+2]);
+      979             
+      980             					float64x2_t vxv01 = vld1q_f64(&xv[i]);
+      981             					float64x2_t vxv23 = vld1q_f64(&xv[i+2]);
+      982             
+      983             					local_int_t j = 0;
+      984             					for ( j = 0; j < currentNumberOfNonzeros-1; j += 2 ) {
+      985             						// Load values
+      986             						float64x2_t values0 = vld1q_f64(&currentValues0[j]);
+      987             						float64x2_t values1 = vld1q_f64(&currentValues1[j]);
+      988             						float64x2_t values2 = vld1q_f64(&currentValues2[j]);
+      989             						float64x2_t values3 = vld1q_f64(&currentValues3[j]);
+      990             
+      991             						// Load x
+      992             						float64x2_t vxv0 = { xv[currentColIndices0[j]], xv[currentColIndices0[j+1]] };
+      993             						float64x2_t vxv1 = { xv[currentColIndices1[j]], xv[currentColIndices1[j+1]] };
+      994             						float64x2_t vxv2 = { xv[currentColIndices2[j]], xv[currentColIndices2[j+1]] };
+      995             						float64x2_t vxv3 = { xv[currentColIndices3[j]], xv[currentColIndices3[j+1]] };
+      996             
+      997             						// Add contribution
+      998             						contribs0 = vfmaq_f64(contribs0, values0, vxv0);
+      999             						contribs1 = vfmaq_f64(contribs1, values1, vxv1);
+     1000             						contribs2 = vfmaq_f64(contribs2, values2, vxv2);
+     1001             						contribs3 = vfmaq_f64(contribs3, values3, vxv3);
+     1002             					}
+     1003             					// Reduce contribution
+     1004             					// First for i and i+1
+     1005             					float64x2_t totalContribution01;
+     1006             					totalContribution01 = vsetq_lane_f64(vaddvq_f64(contribs0), totalContribution01, 0);
+     1007             					totalContribution01 = vsetq_lane_f64(vaddvq_f64(contribs1), totalContribution01, 1);
+     1008             
+     1009             					// Then for i+2 and i+3
+     1010             					float64x2_t totalContribution23;
+     1011             					totalContribution23 = vsetq_lane_f64(vaddvq_f64(contribs2), totalContribution23, 0);
+     1012             					totalContribution23 = vsetq_lane_f64(vaddvq_f64(contribs3), totalContribution23, 1);
+     1013             
+     1014             					// Substract contributions from RHS
+     1015             					float64x2_t sum01 = vsubq_f64(vrv01, totalContribution01);
+     1016             					float64x2_t sum23 = vsubq_f64(vrv23, totalContribution23);
+     1017             
+     1018             					// Add contributions from missing elements (if any)
+     1019             					if ( j < currentNumberOfNonzeros ) {
+     1020             						// Load current values
+     1021             						float64x2_t values01 = { currentValues0[j], currentValues1[j] };
+     1022             						float64x2_t values23 = { currentValues2[j], currentValues3[j] };
+     1023             
+     1024             						// Load x
+     1025             						float64x2_t vx01 = { xv[currentColIndices0[j]], xv[currentColIndices1[j]] };
+     1026             						float64x2_t vx23 = { xv[currentColIndices2[j]], xv[currentColIndices3[j]] };
+     1027             
+     1028             						// Add contributions
+     1029             						sum01 = vfmsq_f64(sum01, values01, vx01);
+     1030             						sum23 = vfmsq_f64(sum23, values23, vx23);
+     1031             					}
+     1032             
+     1033             					// Remove diagonal contribution and update rows i and i+1
+     1034             					sum01 = vfmaq_f64(sum01, vxv01, diagonal01);
+     1035             					xv[i  ] = vgetq_lane_f64(sum01, 0) / currentDiagonal[0];
+     1036             					xv[i+1] = vgetq_lane_f64(sum01, 1) / currentDiagonal[1];
+     1037             
+     1038             					// Remove diagonal contribution and update rows i+2 and i+3
+     1039             					sum23 = vfmaq_f64(sum23, vxv23, diagonal23);
+     1040             					xv[i+2] = vgetq_lane_f64(sum23, 0) / currentDiagonal[2];
+     1041             					xv[i+3] = vgetq_lane_f64(sum23, 1) / currentDiagonal[3];
+     1042             				} else if ( A.chunkSize == 2 ) {
+     1043             					const double * const currentValues0 = A.matrixValues[i  ];
+     1044             					const double * const currentValues1 = A.matrixValues[i+1];
+     1045             
+     1046             					const local_int_t * const currentColIndices0 = A.mtxIndL[i  ];
+     1047             					const local_int_t * const currentColIndices1 = A.mtxIndL[i+1];
+     1048             
+     1049             					const double currentDiagonal[2] = { matrixDiagonal[i  ][0],\
+     1050             														matrixDiagonal[i+1][0]};
+     1051             					float64x2_t diagonal01 = vld1q_f64(&currentDiagonal[0]);
+     1052             
+     1053             					float64x2_t contribs0 = vdupq_n_f64(0.0);
+     1054             					float64x2_t contribs1 = vdupq_n_f64(0.0);
+     1055             
+     1056             					float64x2_t vrv01 = vld1q_f64(&rv[i]);
+     1057             
+     1058             					float64x2_t vxv01 = vld1q_f64(&xv[i]);
+     1059             
+     1060             					local_int_t j = 0;
+     1061             					for ( j = 0; j < currentNumberOfNonzeros-1; j += 2 ) {
+     1062             						// Load values
+     1063             						float64x2_t values0 = vld1q_f64(&currentValues0[j]);
+     1064             						float64x2_t values1 = vld1q_f64(&currentValues1[j]);
+     1065             
+     1066             						// Load x
+     1067             						float64x2_t vxv0 = { xv[currentColIndices0[j]], xv[currentColIndices0[j+1]] };
+     1068             						float64x2_t vxv1 = { xv[currentColIndices1[j]], xv[currentColIndices1[j+1]] };
+     1069             
+     1070             						// Add contribution
+     1071             						contribs0 = vfmaq_f64(contribs0, values0, vxv0);
+     1072             						contribs1 = vfmaq_f64(contribs1, values1, vxv1);
+     1073             					}
+     1074             					// Reduce contribution
+     1075             					// First for i and i+1
+     1076             					float64x2_t totalContribution01;
+     1077             					totalContribution01 = vsetq_lane_f64(vaddvq_f64(contribs0), totalContribution01, 0);
+     1078             					totalContribution01 = vsetq_lane_f64(vaddvq_f64(contribs1), totalContribution01, 1);
+     1079             
+     1080             					// Substract contributions from RHS
+     1081             					float64x2_t sum01 = vsubq_f64(vrv01, totalContribution01);
+     1082             
+     1083             					// Add contributions from missing elements (if any)
+     1084             					if ( j < currentNumberOfNonzeros ) {
+     1085             						// Load current values
+     1086             						float64x2_t values01 = { currentValues0[j], currentValues1[j] };
+     1087             
+     1088             						// Load x
+     1089             						float64x2_t vx01 = { xv[currentColIndices0[j]], xv[currentColIndices1[j]] };
+     1090             
+     1091             						// Add contributions
+     1092             						sum01 = vfmsq_f64(sum01, values01, vx01);
+     1093             					}
+     1094             
+     1095             					// Remove diagonal contribution and update rows i and i+1
+     1096             					sum01 = vfmaq_f64(sum01, vxv01, diagonal01);
+     1097             					xv[i  ] = vgetq_lane_f64(sum01, 0) / currentDiagonal[0];
+     1098             					xv[i+1] = vgetq_lane_f64(sum01, 1) / currentDiagonal[1];
+     1099             				} else { // A.chunkSize == 1
+     1100             					const double * const currentValues = A.matrixValues[i];
+     1101             					const local_int_t * const currentColIndices = A.mtxIndL[i];
+     1102             					const double currentDiagonal = matrixDiagonal[i][0];
+     1103             					float64x2_t contribs = vdupq_n_f64(0.0);
+     1104             
+     1105             					local_int_t j = 0;
+     1106             					for ( j = 0; j < currentNumberOfNonzeros-1; j += 2 ) {
+     1107             						// Load values
+     1108             						float64x2_t values = vld1q_f64(&currentValues[j]);
+     1109             
+     1110             						// Load x
+     1111             						float64x2_t vxv = { xv[currentColIndices[j]], xv[currentColIndices[j+1]] };
+     1112             
+     1113             						// Add contribution
+     1114             						contribs = vfmaq_f64(contribs, values, vxv);
+     1115             					}
+     1116             					// Reduce contribution
+     1117             					// First for i and i+1
+     1118             					double totalContribution;
+     1119             					totalContribution = vaddvq_f64(contribs);
+     1120             
+     1121             					// Substract contributions from RHS
+     1122             					double sum = rv[i] - totalContribution;
+     1123             
+     1124             					// Add contributions from missing elements (if any)
+     1125             					if ( j < currentNumberOfNonzeros ) {
+     1126             						sum -= currentValues[j] * xv[currentColIndices[j]];
+     1127             					}
+     1128             
+     1129             					// Remove diagonal contribution and update rows i and i+1
+     1130             					sum += xv[i] * currentDiagonal;
+     1131             					xv[i] = sum / currentDiagonal;
+     1132             				}
+     1133             			}
+     1134             		}
+     1135             	}
+     1136             
+     1137             	firstBlock = A.numberOfBlocks-1;
+     1138             	lastBlock = firstBlock - A.numberOfBlocksInColor[A.numberOfColors-1];
+     1139             	/*
+     1140             	 * BACKWARD
+     1141             	 */
+     1142             	for ( local_int_t color = A.numberOfColors-1; color >= 0; color-- ) {
+     1143             		if ( color < A.numberOfColors-1 ) {
+     1144             			firstBlock -= A.numberOfBlocksInColor[color+1];
+     1145             			lastBlock = firstBlock - A.numberOfBlocksInColor[color];
+     1146             		}
+     1147             #ifndef HPCG_NO_OPENMP
+     1148             #pragma omp parallel for SCHEDULE(runtime)
+     1149             #endif
+     1150             		for ( local_int_t block = firstBlock; block > lastBlock; block -= A.chunkSize ) { // we skip a whole superblock on each iteration
+     1151             			local_int_t firstRow = ((block+1) * A.blockSize) - 1; // this is the last row of the last block (i.e., next block first row - 1)
+     1152             			local_int_t firstChunk = firstRow / A.chunkSize; // this is the  chunk of the row above
+     1153             			local_int_t lastChunk = (firstRow - A.blockSize*A.chunkSize) / A.chunkSize; 
+     1154             
+     1155             			for ( local_int_t chunk = firstChunk; chunk > lastChunk; chunk-- ) {
+     1156             				local_int_t first = A.chunkSize * chunk;
+     1157             				local_int_t last = first + A.chunkSize;
+     1158             
+     1159             				const int currentNumberOfNonzeros = A.nonzerosInChunk[chunk];
+     1160             				if ( A.chunkSize == 4 ) {
+     1161             					local_int_t i = last-1-3;
+     1162             
+     1163             					const double * const currentValues3 = A.matrixValues[i+3];
+     1164             					const double * const currentValues2 = A.matrixValues[i+2];
+     1165             					const double * const currentValues1 = A.matrixValues[i+1];
+     1166             					const double * const currentValues0 = A.matrixValues[i  ];
+     1167             
+     1168             					const local_int_t * const currentColIndices3 = A.mtxIndL[i+3];
+     1169             					const local_int_t * const currentColIndices2 = A.mtxIndL[i+2];
+     1170             					const local_int_t * const currentColIndices1 = A.mtxIndL[i+1];
+     1171             					const local_int_t * const currentColIndices0 = A.mtxIndL[i  ];
+     1172             
+     1173             					const double currentDiagonal[4] = {\
+     1174             							matrixDiagonal[i  ][0],\
+     1175             							matrixDiagonal[i+1][0],\
+     1176             							matrixDiagonal[i+2][0],\
+     1177             							matrixDiagonal[i+3][0]};
+     1178             
+     1179             					float64x2_t diagonal01 = vld1q_f64(&currentDiagonal[0]);
+     1180             					float64x2_t diagonal23 = vld1q_f64(&currentDiagonal[2]);
+     1181             
+     1182             					float64x2_t contribs0 = vdupq_n_f64(0.0);
+     1183             					float64x2_t contribs1 = vdupq_n_f64(0.0);
+     1184             					float64x2_t contribs2 = vdupq_n_f64(0.0);
+     1185             					float64x2_t contribs3 = vdupq_n_f64(0.0);
+     1186             
+     1187             					float64x2_t vrv23 = vld1q_f64(&rv[i+2]);
+     1188             					float64x2_t vrv01 = vld1q_f64(&rv[i  ]);
+     1189             
+     1190             					float64x2_t vxv23 = vld1q_f64(&xv[i+2]);
+     1191             					float64x2_t vxv01 = vld1q_f64(&xv[i  ]);
+     1192             
+     1193             					local_int_t j = 0;
+     1194             					for ( j = currentNumberOfNonzeros-2; j >= 0; j -= 2 ) {
+     1195             						// Load values
+     1196             						float64x2_t values0 = vld1q_f64(&currentValues0[j]);
+     1197             						float64x2_t values1 = vld1q_f64(&currentValues1[j]);
+     1198             						float64x2_t values2 = vld1q_f64(&currentValues2[j]);
+     1199             						float64x2_t values3 = vld1q_f64(&currentValues3[j]);
+     1200             
+     1201             						// Load x
+     1202             						float64x2_t vxv0 = { xv[currentColIndices0[j]], xv[currentColIndices0[j+1]] };
+     1203             						float64x2_t vxv1 = { xv[currentColIndices1[j]], xv[currentColIndices1[j+1]] };
+     1204             						float64x2_t vxv2 = { xv[currentColIndices2[j]], xv[currentColIndices2[j+1]] };
+     1205             						float64x2_t vxv3 = { xv[currentColIndices3[j]], xv[currentColIndices3[j+1]] };
+     1206             
+     1207             						// Add contribution
+     1208             						contribs0 = vfmaq_f64(contribs0, values0, vxv0);
+     1209             						contribs1 = vfmaq_f64(contribs1, values1, vxv1);
+     1210             						contribs2 = vfmaq_f64(contribs2, values2, vxv2);
+     1211             						contribs3 = vfmaq_f64(contribs3, values3, vxv3);
+     1212             					}
+     1213             					// Reduce contribution
+     1214             					// First for i and i-1
+     1215             					float64x2_t totalContribution01;
+     1216             					totalContribution01 = vsetq_lane_f64(vaddvq_f64(contribs0), totalContribution01, 0);
+     1217             					totalContribution01 = vsetq_lane_f64(vaddvq_f64(contribs1), totalContribution01, 1);
+     1218             
+     1219             					// Then for i-2 and i-3
+     1220             					float64x2_t totalContribution23;
+     1221             					totalContribution23 = vsetq_lane_f64(vaddvq_f64(contribs2), totalContribution23, 0);
+     1222             					totalContribution23 = vsetq_lane_f64(vaddvq_f64(contribs3), totalContribution23, 1);
+     1223             
+     1224             					// Substract contributions from RHS
+     1225             					float64x2_t sum23 = vsubq_f64(vrv23, totalContribution23);
+     1226             					float64x2_t sum01 = vsubq_f64(vrv01, totalContribution01);
+     1227             
+     1228             					// Add contributions from missing elements (if any)
+     1229             					if ( j == -1 ) {
+     1230             						// Load current values
+     1231             						float64x2_t values23 = { currentValues2[j+1], currentValues3[j+1] };
+     1232             						float64x2_t values01 = { currentValues0[j+1], currentValues1[j+1] };
+     1233             
+     1234             						// Load x
+     1235             						float64x2_t vx23 = { xv[currentColIndices2[j+1]], xv[currentColIndices3[j+1]] };
+     1236             						float64x2_t vx01 = { xv[currentColIndices0[j+1]], xv[currentColIndices1[j+1]] };
+     1237             
+     1238             						// Add contributions
+     1239             						sum23 = vfmsq_f64(sum23, values23, vx23);
+     1240             						sum01 = vfmsq_f64(sum01, values01, vx01);
+     1241             					}
+     1242             
+     1243             					// Remove diagonal contribution and update rows i-2 and i-3
+     1244             					sum23 = vfmaq_f64(sum23, vxv23, diagonal23);
+     1245             					xv[i+3] = vgetq_lane_f64(sum23, 1) / currentDiagonal[3];
+     1246             					xv[i+2] = vgetq_lane_f64(sum23, 0) / currentDiagonal[2];
+     1247             
+     1248             					// Remove diagonal contribution and update rows i and i-1
+     1249             					sum01 = vfmaq_f64(sum01, vxv01, diagonal01);
+     1250             					xv[i+1] = vgetq_lane_f64(sum01, 1) / currentDiagonal[1];
+     1251             					xv[i  ] = vgetq_lane_f64(sum01, 0) / currentDiagonal[0];
+     1252             				} else if ( A.chunkSize == 2 ) {
+     1253             					local_int_t i = last-1-1;
+     1254             
+     1255             					const double * const currentValues1 = A.matrixValues[i+1];
+     1256             					const double * const currentValues0 = A.matrixValues[i  ];
+     1257             
+     1258             					const local_int_t * const currentColIndices1 = A.mtxIndL[i+1];
+     1259             					const local_int_t * const currentColIndices0 = A.mtxIndL[i  ];
+     1260             
+     1261             					const double currentDiagonal[2] = {\
+     1262             							matrixDiagonal[i  ][0],\
+     1263             							matrixDiagonal[i+1][0]};
+     1264             
+     1265             					float64x2_t diagonal01 = vld1q_f64(&currentDiagonal[0]);
+     1266             
+     1267             					float64x2_t contribs0 = vdupq_n_f64(0.0);
+     1268             					float64x2_t contribs1 = vdupq_n_f64(0.0);
+     1269             
+     1270             					float64x2_t vrv01 = vld1q_f64(&rv[i  ]);
+     1271             
+     1272             					float64x2_t vxv01 = vld1q_f64(&xv[i  ]);
+     1273             
+     1274             					local_int_t j = 0;
+     1275             					for ( j = currentNumberOfNonzeros-2; j >= 0; j -= 2 ) {
+     1276             						// Load values
+     1277             						float64x2_t values0 = vld1q_f64(&currentValues0[j]);
+     1278             						float64x2_t values1 = vld1q_f64(&currentValues1[j]);
+     1279             
+     1280             						// Load x
+     1281             						float64x2_t vxv0 = { xv[currentColIndices0[j]], xv[currentColIndices0[j+1]] };
+     1282             						float64x2_t vxv1 = { xv[currentColIndices1[j]], xv[currentColIndices1[j+1]] };
+     1283             
+     1284             						// Add contribution
+     1285             						contribs0 = vfmaq_f64(contribs0, values0, vxv0);
+     1286             						contribs1 = vfmaq_f64(contribs1, values1, vxv1);
+     1287             					}
+     1288             					// Reduce contribution
+     1289             					// First for i and i-1
+     1290             					float64x2_t totalContribution01;
+     1291             					totalContribution01 = vsetq_lane_f64(vaddvq_f64(contribs0), totalContribution01, 0);
+     1292             					totalContribution01 = vsetq_lane_f64(vaddvq_f64(contribs1), totalContribution01, 1);
+     1293             
+     1294             					// Substract contributions from RHS
+     1295             					float64x2_t sum01 = vsubq_f64(vrv01, totalContribution01);
+     1296             
+     1297             					// Add contributions from missing elements (if any)
+     1298             					if ( j == -1 ) {
+     1299             						// Load current values
+     1300             						float64x2_t values01 = { currentValues0[j+1], currentValues1[j+1] };
+     1301             
+     1302             						// Load x
+     1303             						float64x2_t vx01 = { xv[currentColIndices0[j+1]], xv[currentColIndices1[j+1]] };
+     1304             
+     1305             						// Add contributions
+     1306             						sum01 = vfmsq_f64(sum01, values01, vx01);
+     1307             					}
+     1308             
+     1309             					// Remove diagonal contribution and update rows i and i-1
+     1310             					sum01 = vfmaq_f64(sum01, vxv01, diagonal01);
+     1311             					xv[i+1] = vgetq_lane_f64(sum01, 1) / currentDiagonal[1];
+     1312             					xv[i  ] = vgetq_lane_f64(sum01, 0) / currentDiagonal[0];
+     1313             				} else { // A.chunkSize == 1
+     1314             					local_int_t i = last - 1; // == first
+     1315             					const double * const currentValues = A.matrixValues[i];
+     1316             					const local_int_t * const currentColIndices = A.mtxIndL[i];
+     1317             					const double currentDiagonal = matrixDiagonal[i][0];
+     1318             
+     1319             					float64x2_t contribs = vdupq_n_f64(0.0);
+     1320             
+     1321             					local_int_t j = 0;
+     1322             					for ( j = 0; j < currentNumberOfNonzeros-1; j += 2 ) {
+     1323             						// Load values
+     1324             						float64x2_t values = vld1q_f64(&currentValues[j]);
+     1325             
+     1326             						// Load x
+     1327             						float64x2_t vxv = { xv[currentColIndices[j]], xv[currentColIndices[j+1]] };
+     1328             
+     1329             						// Add contribution
+     1330             						contribs = vfmaq_f64(contribs, values, vxv);
+     1331             					}
+     1332             					// Reduce contribution
+     1333             					double totalContribution = vaddvq_f64(contribs);
+     1334             
+     1335             					// Substract contribution from RHS
+     1336             					double sum = rv[i] - totalContribution;
+     1337             
+     1338             					// Add contributions from missing elements (if any)
+     1339             					if ( j < currentNumberOfNonzeros ) {
+     1340             						sum -= currentValues[j] * xv[currentColIndices[j]];
+     1341             					}
+     1342             
+     1343             					// Remove diagonal contribution and updated row i
+     1344             					sum += xv[i] * currentDiagonal;
+     1345             					xv[i] = sum / currentDiagonal;
+     1346             				}
+     1347             			}
+     1348             		}
+     1349             	}
+     1350             
+     1351             	return 0;
+     1352             }
+     1353             /*
+     1354              *
+     1355              */
+     1356             #endif
+     1357             //#else // !HPCG_USE_SVE ! HPCG_USE_NEON
+     1358             
+     1359             int ComputeFusedSYMGS_SPMV ( const SparseMatrix & A, const Vector & r, Vector & x, Vector & y ) {
+     1360             	assert(x.localLength == A.localNumberOfColumns);
+     1361             
+     1362             #ifndef HPCG_NO_MPI
+     1363             	ExchangeHalo(A, x);
+     1364             #endif
+     1365             
+     1366             	const double * const rv = r.values;
+     1367             	double * const xv = x.values;
+     1368             	double * const yv = y.values;
+     1369             	double **matrixDiagonal = A.matrixDiagonal;
+     1370             
+     1371             	/*
+     1372             	 * FORWARD
+     1373             	 */
+     1374    i        	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+     1375             #ifndef HPCG_NO_OPENMP
+     1376             #pragma omp parallel for SCHEDULE(runtime)
+     1377             #endif
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1378   pi        		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
+     1379   p         			local_int_t row = A.tdg[l][i];
+     1380   p         			const double * const currentValues = A.matrixValues[row];
+     1381   p         			const local_int_t * const currentColIndices = A.mtxIndL[row];
+     1382   p         			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+     1383   p         			const double currentDiagonal = matrixDiagonal[row][0];
+     1384   p         			double sum = rv[row];
+     1385             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.16, ITR: 192, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1386   p     8v  			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j++ ) {
+     1387   p     8v  				local_int_t curCol = currentColIndices[j];
+     1388   p     8v  				sum -= currentValues[j] * xv[curCol];
+     1389   p     8v  			}
+     1390   p         			sum += xv[row] * currentDiagonal;
+     1391   p         			xv[row] = sum / currentDiagonal;
+     1392   pi        		}
+     1393    i        	}
+     1394             
+     1395             	/*
+     1396             	 * BACKWARD (fusing SYMGS and SPMV)
+     1397             	 */
+     1398    i        	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+     1399             #ifndef HPCG_NO_OPENMP
+     1400             #pragma omp parallel for SCHEDULE(runtime)
+     1401             #endif
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1402   pi        		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
+     1403   p         			local_int_t row = A.tdg[l][i];
+     1404   p         			const double * const currentValues = A.matrixValues[row];
+     1405   p         			const local_int_t * const currentColIndices = A.mtxIndL[row];
+     1406   p         			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+     1407   p         			const double currentDiagonal = matrixDiagonal[row][0];
+     1408   p         			double sum = 0.0;
+     1409             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.16, ITR: 192, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1410   p     8v  			for ( local_int_t j = currentNumberOfNonzeros-1; j >= 0; j-- ) {
+     1411   p     8v  				local_int_t curCol = currentColIndices[j];
+     1412   p     8v  				sum += currentValues[j] * xv[curCol];
+     1413   p     8v  			}
+     1414   p         			sum -= xv[row] * currentDiagonal;
+     1415   p         			xv[row] = (rv[row] - sum) / currentDiagonal;
+     1416   p         			sum += xv[row] * currentDiagonal;
+     1417   p         			yv[row] = sum;
+     1418   p         		}
+     1419             	}
+     1420             
+     1421             	return 0;
+     1422             }
+     1423             
+     1424             int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, TraceData& trace ) {
+     1425             
+     1426             	assert( x.localLength == A.localNumberOfColumns);
+     1427             
+     1428             #ifndef HPCG_NO_MPI
+     1429             	ExchangeHalo(A,x);
+     1430             #endif
+     1431             
+     1432             	const double * const rv = r.values;
+     1433             	double * const xv = x.values;
+     1434             	double **matrixDiagonal = A.matrixDiagonal;
+     1435             
+     1436             /*#ifndef HPCG_NO_OPENMP
+     1437             #pragma omp parallel SCHEDULE(runtime)
+     1438             {
+     1439             #endif
+     1440             */
+     1441             #pragma statement scache_isolate_way L2=10
+     1442             #pragma statement scache_isolate_assign xv
+     1443             
+     1444             	/*
+     1445             	 * FORWARD
+     1446             	 */
+     1447    i        	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+     1448             #ifndef HPCG_NO_OPENMP
+     1449             #pragma omp parallel for SCHEDULE(runtime)
+     1450             #endif
+     1451             		#pragma loop unroll_and_jam(4)
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1452   pi        		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
+     1453   p         			local_int_t row = A.tdg[l][i];
+     1454   p         			const double * const currentValues = A.matrixValues[row];
+     1455   p         			const local_int_t * const currentColIndices = A.mtxIndL[row];
+     1456   p         			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+     1457   p         			const double currentDiagonal = matrixDiagonal[row][0];
+     1458   p         			double sum = rv[row];
+     1459             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.16, ITR: 192, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1460   p     8v  			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j++ ) {
+     1461   p     8v  				local_int_t curCol = currentColIndices[j];
+     1462   p     8v  				sum -= currentValues[j] * xv[curCol];
+     1463   p     8v  			}
+     1464   p         			sum += xv[row] * currentDiagonal;
+     1465   p         			xv[row] = sum / currentDiagonal;
+     1466   pi        		}
+     1467    i        	}
+     1468             
+     1469             	/*
+     1470             	 * BACKWARD
+     1471             	 */
+     1472    i        	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+     1473             #ifndef HPCG_NO_OPENMP
+     1474             #pragma omp parallel for SCHEDULE(runtime)
+     1475             #endif
+     1476             		#pragma loop unroll_and_jam(4)
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1477   pi        		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
+     1478   p         			local_int_t row = A.tdg[l][i];
+     1479   p         			const double * const currentValues = A.matrixValues[row];
+     1480   p         			const local_int_t * const currentColIndices = A.mtxIndL[row];
+     1481   p         			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+     1482   p         			const double currentDiagonal = matrixDiagonal[row][0];
+     1483   p         			double sum = rv[row];
+     1484             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.16, ITR: 192, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1485   p     8v  			for ( local_int_t j = currentNumberOfNonzeros-1; j >= 0; j-- ) {
+     1486   p     8v  				local_int_t curCol = currentColIndices[j];
+     1487   p     8v  				sum -= currentValues[j] * xv[curCol];
+     1488   p     8v  			}
+     1489   p         			sum += xv[row] * currentDiagonal;
+     1490   p         			xv[row] = sum / currentDiagonal;
+     1491   p         		}
+     1492             	}
+     1493             
+     1494             	#pragma statement end_scache_isolate_assign
+     1495             	#pragma statement end_scache_isolate_way
+     1496             /*#ifndef HPCG_NO_OPENMP
+     1497             }
+     1498             #endif*/
+     1499             
+     1500             	return 0;
+     1501             }
+     1502             
+     1503             int ComputeSYMGS_BLOCK( const SparseMatrix & A, const Vector & r, Vector & x, TraceData& trace ) {
+     1504             
+     1505             	assert(x.localLength >= A.localNumberOfColumns);
+     1506             	
+     1507             #ifndef HPCG_NO_MPI
+     1508             	ExchangeHalo(A, x);
+     1509             #endif
+     1510             
+     1511             	const local_int_t nrow = A.localNumberOfRows;
+     1512             	double **matrixDiagonal = A.matrixDiagonal;
+     1513             	const double * const rv = r.values;
+     1514             	double * const xv = x.values;
+     1515             
+     1516             	local_int_t firstBlock = 0;
+     1517    i        	local_int_t lastBlock = firstBlock + A.numberOfBlocksInColor[0];
+     1518             	/*
+     1519             	 * FORWARD
+     1520             	 */
+     1521             	for ( local_int_t color = 0; color < A.numberOfColors; color++ ) {
+     1522             		if ( color > 0 ) {
+     1523    i        			firstBlock += A.numberOfBlocksInColor[color-1];
+     1524    i        			lastBlock = firstBlock + A.numberOfBlocksInColor[color];
+     1525             		}
+     1526             #ifndef HPCG_NO_OPENMP
+     1527             #pragma omp parallel for SCHEDULE(runtime)
+     1528             #endif
+     1529   p         		for ( local_int_t block = firstBlock; block < lastBlock; block += A.chunkSize ) {
+     1530   p         			local_int_t firstRow = block * A.blockSize;
+     1531   p         			local_int_t firstChunk = firstRow / A.chunkSize;
+     1532   p         			local_int_t lastChunk = (firstRow + A.blockSize*A.chunkSize) / A.chunkSize;
+     1533             
+     1534   p         			for ( local_int_t chunk = firstChunk; chunk < lastChunk; chunk++ ) {
+     1535   p         				local_int_t first = A.chunkSize * chunk;
+     1536   p         				local_int_t last = first + A.chunkSize;
+     1537             
+     1538             				//for ( local_int_t i = first; i < last; i+= (A.chunkSize/2)) {
+     1539   p         				local_int_t i = first;
+     1540   p         				if ( A.chunkSize == 4 ) {
+     1541   p         					double sum0 = rv[i+0];
+     1542   p         					double sum1 = rv[i+1];
+     1543   p         					double sum2 = rv[i+2];
+     1544   p         					double sum3 = rv[i+3];
+     1545             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1546   pi     s  					for ( local_int_t j = 0; j < A.nonzerosInChunk[chunk]; j++ ) {
+     1547   p      s  						sum0 -= A.matrixValues[i+0][j] * xv[A.mtxIndL[i+0][j]];
+     1548   p      s  						sum1 -= A.matrixValues[i+1][j] * xv[A.mtxIndL[i+1][j]];
+     1549   p      s  						sum2 -= A.matrixValues[i+2][j] * xv[A.mtxIndL[i+2][j]];
+     1550   p      s  						sum3 -= A.matrixValues[i+3][j] * xv[A.mtxIndL[i+3][j]];
+     1551   pi     s  					}
+     1552   p         					sum0 += matrixDiagonal[i+0][0] * xv[i+0];
+     1553   p         					xv[i+0] = sum0 / matrixDiagonal[i+0][0];
+     1554   p         					sum1 += matrixDiagonal[i+1][0] * xv[i+1];
+     1555   p         					xv[i+1] = sum1 / matrixDiagonal[i+1][0];
+     1556   p         					sum2 += matrixDiagonal[i+2][0] * xv[i+2];
+     1557   p         					xv[i+2] = sum2 / matrixDiagonal[i+2][0];
+     1558   p         					sum3 += matrixDiagonal[i+3][0] * xv[i+3];
+     1559   p         					xv[i+3] = sum3 / matrixDiagonal[i+3][0];
+     1560   p         				} else if ( A.chunkSize == 2 ) {
+     1561   p         					double sum0 = rv[i+0];
+     1562   p         					double sum1 = rv[i+1];
+     1563             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1564   pi     s  					for ( local_int_t j = 0; j < A.nonzerosInChunk[chunk]; j++ ) {
+     1565   p      s  						sum0 -= A.matrixValues[i+0][j] * xv[A.mtxIndL[i+0][j]];
+     1566   p      s  						sum1 -= A.matrixValues[i+1][j] * xv[A.mtxIndL[i+1][j]];
+     1567   pi     s  					}
+     1568   p         					sum0 += matrixDiagonal[i+0][0] * xv[i+0];
+     1569   p         					xv[i+0] = sum0 / matrixDiagonal[i+0][0];
+     1570   p         					sum1 += matrixDiagonal[i+1][0] * xv[i+1];
+     1571   p         					xv[i+1] = sum1 / matrixDiagonal[i+1][0];
+     1572   p         				} else { // A.chunkSize == 1
+     1573   p         					double sum0 = rv[i+0];
+     1574             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1575   pi     s  					for ( local_int_t j = 0; j < A.nonzerosInChunk[chunk]; j++ ) {
+     1576   p      s  						sum0 -= A.matrixValues[i+0][j] * xv[A.mtxIndL[i+0][j]];
+     1577   pi     s  					}
+     1578   p         					sum0 += matrixDiagonal[i+0][0] * xv[i+0];
+     1579   p         					xv[i+0] = sum0 / matrixDiagonal[i+0][0];
+     1580   p         				}
+     1581   p         			}
+     1582   p         		}
+     1583             	}
+     1584             
+     1585             	firstBlock = A.numberOfBlocks-1;
+     1586    i        	lastBlock = firstBlock - A.numberOfBlocksInColor[A.numberOfColors-1];
+     1587             	/*
+     1588             	 * BACKWARD
+     1589             	 */
+     1590             	for ( local_int_t color = A.numberOfColors-1; color >= 0; color-- ) {
+     1591             		if ( color < A.numberOfColors-1 ) {
+     1592    i        			firstBlock -= A.numberOfBlocksInColor[color+1];
+     1593    i        			lastBlock = firstBlock - A.numberOfBlocksInColor[color];
+     1594             		}
+     1595             #ifndef HPCG_NO_OPENMP
+     1596             #pragma omp parallel for SCHEDULE(runtime)
+     1597             #endif
+     1598   p         		for ( local_int_t block = firstBlock; block > lastBlock; block -= A.chunkSize ) {
+     1599   p         			local_int_t firstRow = ((block+1) * A.blockSize) - 1; // this is the last row of the last block
+     1600   p         			local_int_t firstChunk = firstRow / A.chunkSize; // this is the  chunk of the row above
+     1601   p         			local_int_t lastChunk = (firstRow - A.blockSize*A.chunkSize) / A.chunkSize; 
+     1602             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1603   p         			for ( local_int_t chunk = firstChunk; chunk > lastChunk; chunk-- ) {
+     1604   p         				local_int_t first = A.chunkSize * chunk;
+     1605   p         				local_int_t last = first + A.chunkSize;
+     1606             
+     1607             				//for ( local_int_t i = last-1; i >= first; i -= (A.chunkSize/2)) {
+     1608   p         				local_int_t i = last-1;
+     1609   p         				if ( A.chunkSize == 4 ) {
+     1610   p         					double sum3 = rv[i-3];
+     1611   p         					double sum2 = rv[i-2];
+     1612   p         					double sum1 = rv[i-1];
+     1613   p         					double sum0 = rv[i  ];
+     1614             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.28, ITR: 32, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1615   pi     v  					for ( local_int_t j = A.nonzerosInChunk[chunk]-1; j >= 0; j-- ) {
+     1616   p      v  						sum3 -= A.matrixValues[i-3][j] * xv[A.mtxIndL[i-3][j]];
+     1617   p      v  						sum2 -= A.matrixValues[i-2][j] * xv[A.mtxIndL[i-2][j]];
+     1618   p      v  						sum1 -= A.matrixValues[i-1][j] * xv[A.mtxIndL[i-1][j]];
+     1619   p      v  						sum0 -= A.matrixValues[i  ][j] * xv[A.mtxIndL[i  ][j]];
+     1620   p      v  					}
+     1621   p         					sum3 += matrixDiagonal[i-3][0] * xv[i-3];
+     1622   p         					xv[i-3] = sum3 / matrixDiagonal[i-3][0];
+     1623             
+     1624   p         					sum2 += matrixDiagonal[i-2][0] * xv[i-2];
+     1625   p         					xv[i-2] = sum2 / matrixDiagonal[i-2][0];
+     1626             
+     1627   p         					sum1 += matrixDiagonal[i-1][0] * xv[i-1];
+     1628   p         					xv[i-1] = sum1 / matrixDiagonal[i-1][0];
+     1629             
+     1630   p         					sum0 += matrixDiagonal[i  ][0] * xv[i  ];
+     1631   p         					xv[i  ] = sum0 / matrixDiagonal[i  ][0];
+     1632   p         				} else if ( A.chunkSize == 2 ) {
+     1633   p         					double sum1 = rv[i-1];
+     1634   p         					double sum0 = rv[i  ];
+     1635             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.16, ITR: 96, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1636   pi    4v  					for ( local_int_t j = A.nonzerosInChunk[chunk]-1; j >= 0; j-- ) {
+     1637   p     4v  						sum1 -= A.matrixValues[i-1][j] * xv[A.mtxIndL[i-1][j]];
+     1638   p     4v  						sum0 -= A.matrixValues[i  ][j] * xv[A.mtxIndL[i  ][j]];
+     1639   p     4v  					}
+     1640             
+     1641   p         					sum1 += matrixDiagonal[i-1][0] * xv[i-1];
+     1642   p         					xv[i-1] = sum1 / matrixDiagonal[i-1][0];
+     1643             
+     1644   p         					sum0 += matrixDiagonal[i  ][0] * xv[i  ];
+     1645   p         					xv[i  ] = sum0 / matrixDiagonal[i  ][0];
+     1646   p         				} else { // A.chunkSize == 1
+     1647   p         					double sum0 = rv[i  ];
+     1648             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.16, ITR: 192, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+     1649   pi    8v  					for ( local_int_t j = A.nonzerosInChunk[chunk]-1; j >= 0; j-- ) {
+     1650   p     8v  						sum0 -= A.matrixValues[i  ][j] * xv[A.mtxIndL[i  ][j]];
+     1651   p     8v  					}
+     1652             
+     1653   p         					sum0 += matrixDiagonal[i  ][0] * xv[i  ];
+     1654   p         					xv[i  ] = sum0 / matrixDiagonal[i  ][0];
+     1655   p         				}
+     1656   p         			}
+     1657   p         		}
+     1658             	}
+     1659             
+     1660             	return 0;
+     1661             }
+     1662             //#endif
+     1663             
+     1664             
+     1665             
+     1666             /*!
+     1667               Routine to compute one step of symmetric Gauss-Seidel:
+     1668             
+     1669               Assumption about the structure of matrix A:
+     1670               - Each row 'i' of the matrix has nonzero diagonal value whose address is matrixDiagonal[i]
+     1671               - Entries in row 'i' are ordered such that:
+     1672                    - lower triangular terms are stored before the diagonal element.
+     1673                    - upper triangular terms are stored after the diagonal element.
+     1674                    - No other assumptions are made about entry ordering.
+     1675             
+     1676               Symmetric Gauss-Seidel notes:
+     1677               - We use the input vector x as the RHS and start with an initial guess for y of all zeros.
+     1678               - We perform one forward sweep.  Since y is initially zero we can ignore the upper triangular terms of A.
+     1679               - We then perform one back sweep.
+     1680                    - For simplicity we include the diagonal contribution in the for-j loop, then correct the sum after
+     1681             
+     1682               @param[in] A the known system matrix
+     1683               @param[in] r the input vector
+     1684               @param[inout] x On entry, x should contain relevant values, on exit x contains the result of one symmetric GS sweep with r as the RHS.
+     1685             
+     1686               @return returns 0 upon success and non-zero otherwise
+     1687             
+     1688               @warning Early versions of this kernel (Version 1.1 and earlier) had the r and x arguments in reverse order, and out of sync with other kernels.
+     1689             
+     1690               @see ComputeSYMGS_ref
+     1691             */
+     1692             int ComputeSYMGS( const SparseMatrix & A, const Vector & r, Vector & x, TraceData& trace) {
+     1693             
+     1694             	// This function is just a stub right now which decides which implementation of the SYMGS will be executed (TDG or block coloring)
+     1695             	if ( A.TDG ) {
+     1696             #ifdef HPCG_USE_NEON
+     1697             		return ComputeSYMGS_TDG_NEON(A, r, x);
+     1698             #elif defined HPCG_USE_SVE
+     1699             		return ComputeSYMGS_TDG_SVE(A, r, x, trace);
+     1700             #else
+     1701             		return ComputeSYMGS_TDG(A, r, x, trace);
+     1702             #endif
+     1703             	}
+     1704             #ifdef HPCG_USE_NEON
+     1705             	return ComputeSYMGS_BLOCK_NEON(A, r, x);
+     1706             #elif defined HPCG_USE_SVE
+     1707             	return ComputeSYMGS_BLOCK_SVE(A, r, x, trace);
+     1708             #else
+     1709             	return ComputeSYMGS_BLOCK(A, r, x, trace);
+     1710             #endif
+     1711             }
+     1712             
+     1713             inline void SYMGS_VERSION_1(const SparseMatrix& A, double * const& xv, const double * const& rv) {
+     1714             	
+     1715             	double **matrixDiagonal = A.matrixDiagonal;
+     1716             
+     1717             	/*
+     1718             	 * FORWARD SWEEP
+     1719             	 */
+     1720             	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+     1721             		local_int_t tdgLevelSize = A.tdg[l].size();
+     1722             		if((tdgLevelSize%2) == 0) {
+     1723             #ifndef HPCG_NO_OPENMP
+     1724             #pragma omp parallel for SCHEDULE(runtime)
+     1725             #endif
+     1726             		for ( local_int_t i = 0; i < tdgLevelSize; i+=2 ) {
+     1727             			local_int_t row_1 = A.tdg[l][i];
+     1728             			local_int_t row_2 = A.tdg[l][i+1];
+     1729             			const double * const currentValues_1 = A.matrixValues[row_1];
+     1730             			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+     1731             			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+     1732             			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+     1733             			svfloat64_t contribs_1 = svdup_f64(0.0);
+     1734             
+     1735             			const double * const currentValues_2 = A.matrixValues[row_2];
+     1736             			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+     1737             			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+     1738             			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+     1739             			svfloat64_t contribs_2 = svdup_f64(0.0);
+     1740             			
+     1741             			const int maxNumberOfNonzeros = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);
+     1742             
+     1743             			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+     1744             				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+     1745             				
+     1746             				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+     1747             				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+     1748             				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+     1749             
+     1750             				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+     1751             
+     1752             				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+     1753             				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+     1754             				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+     1755             				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+     1756             
+     1757             				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+     1758             			}
+     1759             
+     1760             			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+     1761             			double sum_1 = rv[row_1] - totalContribution_1;
+     1762             
+     1763             			sum_1 += xv[row_1] * currentDiagonal_1;
+     1764             			xv[row_1] = sum_1 / currentDiagonal_1;
+     1765             
+     1766             			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+     1767             			double sum_2 = rv[row_2] - totalContribution_2;
+     1768             
+     1769             			sum_2 += xv[row_2] * currentDiagonal_2;
+     1770             			xv[row_2] = sum_2 / currentDiagonal_2;
+     1771             		}
+     1772             		}
+     1773             		else
+     1774             		{
+     1775             #ifndef HPCG_NO_OPENMP
+     1776             #pragma omp parallel for SCHEDULE(runtime)
+     1777             #endif
+     1778             		for ( local_int_t i = 0; i < tdgLevelSize; i++ ) {
+     1779             			local_int_t row = A.tdg[l][i];
+     1780             			const double * const currentValues = A.matrixValues[row];
+     1781             			const local_int_t * const currentColIndices = A.mtxIndL[row];
+     1782             			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+     1783             			const double currentDiagonal = matrixDiagonal[row][0];
+     1784             			svfloat64_t contribs = svdup_f64(0.0);
+     1785             
+     1786             			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+     1787             				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+     1788             				
+     1789             				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+     1790             				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+     1791             				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+     1792             
+     1793             				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+     1794             			}
+     1795             
+     1796             			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+     1797             			double sum = rv[row] - totalContribution;
+     1798             
+     1799             			sum += xv[row] * currentDiagonal;
+     1800             			xv[row] = sum / currentDiagonal;
+     1801             		}
+     1802             		}
+     1803             	}
+     1804             
+     1805             	/*
+     1806             	 * BACKWARD SWEEP
+     1807             	 */
+     1808             	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+     1809             		local_int_t tdgLevelSize = A.tdg[l].size();
+     1810             		if((tdgLevelSize%2) == 0) {		
+     1811             #ifndef HPCG_NO_OPENMP
+     1812             #pragma omp parallel for SCHEDULE(runtime)
+     1813             #endif
+     1814             		for ( local_int_t i = tdgLevelSize-1; i >= 0; i-= 2 ) {
+     1815             			local_int_t row_1 = A.tdg[l][i];
+     1816             			local_int_t row_2 = A.tdg[l][i-1];
+     1817             			const double * const currentValues_1 = A.matrixValues[row_1];
+     1818             			const double * const currentValues_2 = A.matrixValues[row_2];
+     1819             			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+     1820             			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+     1821             			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+     1822             			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+     1823             			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+     1824             			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+     1825             			svfloat64_t contribs_1 = svdup_f64(0.0);
+     1826             			svfloat64_t contribs_2 = svdup_f64(0.0);
+     1827             
+     1828             			const int maxNumberOfNonzeros = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);				
+     1829             							
+     1830             			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+     1831             				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+     1832             				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+     1833             				
+     1834             				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+     1835             				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+     1836             				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+     1837             				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+     1838             				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+     1839             				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+     1840             
+     1841             				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+     1842             				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+     1843             			}
+     1844             
+     1845             			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+     1846             			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+     1847             			double sum_1 = rv[row_1] - totalContribution_1;
+     1848             			double sum_2 = rv[row_2] - totalContribution_2;
+     1849             
+     1850             			sum_1 += xv[row_1] * currentDiagonal_1;
+     1851             			sum_2 += xv[row_2] * currentDiagonal_2;
+     1852             			xv[row_1] = sum_1 / currentDiagonal_1;
+     1853             			xv[row_2] = sum_2 / currentDiagonal_2;
+     1854             		}
+     1855             		}
+     1856             		else
+     1857             		{
+     1858             #ifndef HPCG_NO_OPENMP
+     1859             #pragma omp parallel for SCHEDULE(runtime)
+     1860             #endif
+     1861             		for ( local_int_t i = tdgLevelSize-1; i >= 0; i-- ) {
+     1862             			local_int_t row = A.tdg[l][i];
+     1863             			const double * const currentValues = A.matrixValues[row];
+     1864             			const local_int_t * const currentColIndices = A.mtxIndL[row];
+     1865             			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+     1866             			const double currentDiagonal = matrixDiagonal[row][0];
+     1867             			svfloat64_t contribs = svdup_f64(0.0);
+     1868             
+     1869             			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+     1870             				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+     1871             				
+     1872             				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+     1873             				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+     1874             				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+     1875             
+     1876             				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+     1877             			}
+     1878             
+     1879             			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+     1880             			double sum = rv[row] - totalContribution;
+     1881             
+     1882             			sum += xv[row] * currentDiagonal;
+     1883             			xv[row] = sum / currentDiagonal;
+     1884             		}
+     1885             		}
+     1886             	}
+     1887             }
+     1888             
+     1889             inline void SYMGS_VERSION_2(const SparseMatrix& A, double * const& xv, const double * const& rv) {
+     1890             	
+     1891             	double **matrixDiagonal = A.matrixDiagonal;
+     1892             
+     1893             	/*
+     1894             	 * FORWARD SWEEP
+     1895             	 */
+     1896             	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+     1897             		local_int_t tdgLevelSize = A.tdg[l].size();
+     1898             		local_int_t maxLevelSize = 2*(tdgLevelSize / 2);
+     1899             
+     1900             #ifndef HPCG_NO_OPENMP
+     1901             	#pragma omp parallel
+     1902             	{
+     1903             	#pragma omp for nowait SCHEDULE(runtime)
+     1904             #endif
+     1905             		for ( local_int_t i = 0; i < maxLevelSize; i+=2 ) {
+     1906             			local_int_t row_1 = A.tdg[l][i];
+     1907             			local_int_t row_2 = A.tdg[l][i+1];
+     1908             			const double * const currentValues_1 = A.matrixValues[row_1];
+     1909             			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+     1910             			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+     1911             			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+     1912             			svfloat64_t contribs_1 = svdup_f64(0.0);
+     1913             
+     1914             			const double * const currentValues_2 = A.matrixValues[row_2];
+     1915             			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+     1916             			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+     1917             			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+     1918             			svfloat64_t contribs_2 = svdup_f64(0.0);
+     1919             			
+     1920             			const int maxNumberOfNonzeros = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);
+     1921             
+     1922             			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+     1923             				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+     1924             				
+     1925             				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+     1926             				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+     1927             				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+     1928             
+     1929             				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+     1930             
+     1931             				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+     1932             				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+     1933             				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+     1934             				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+     1935             
+     1936             				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+     1937             			}
+     1938             
+     1939             			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+     1940             			double sum_1 = rv[row_1] - totalContribution_1;
+     1941             
+     1942             			sum_1 += xv[row_1] * currentDiagonal_1;
+     1943             			xv[row_1] = sum_1 / currentDiagonal_1;
+     1944             
+     1945             			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+     1946             			double sum_2 = rv[row_2] - totalContribution_2;
+     1947             
+     1948             			sum_2 += xv[row_2] * currentDiagonal_2;
+     1949             			xv[row_2] = sum_2 / currentDiagonal_2;
+     1950             		}
+     1951             
+     1952             		#pragma omp single 
+     1953             		if (maxLevelSize < tdgLevelSize) {
+     1954             			local_int_t i = maxLevelSize;
+     1955             
+     1956             			local_int_t row = A.tdg[l][i];
+     1957             			const double * const currentValues = A.matrixValues[row];
+     1958             			const local_int_t * const currentColIndices = A.mtxIndL[row];
+     1959             			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+     1960             			const double currentDiagonal = matrixDiagonal[row][0];
+     1961             			svfloat64_t contribs = svdup_f64(0.0);
+     1962             
+     1963             			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+     1964             				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+     1965             				
+     1966             				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+     1967             				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+     1968             				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+     1969             
+     1970             				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+     1971             			}
+     1972             
+     1973             			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+     1974             			double sum = rv[row] - totalContribution;
+     1975             
+     1976             			sum += xv[row] * currentDiagonal;
+     1977             			xv[row] = sum / currentDiagonal;
+     1978             		}
+     1979             #ifndef HPCG_NO_OPENMP
+     1980             	}
+     1981             #endif
+     1982             	}
+     1983             
+     1984             	/*
+     1985             	 * BACKWARD SWEEP
+     1986             	 */
+     1987             	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+     1988             		local_int_t tdgLevelSize = A.tdg[l].size();
+     1989             		local_int_t maxLevelSize = 2*(tdgLevelSize / 2);
+     1990             
+     1991             #ifndef HPCG_NO_OPENMP
+     1992             #pragma omp parallel 
+     1993             	{
+     1994             		#pragma omp single nowait 
+     1995             		{
+     1996             #endif
+     1997             		if (tdgLevelSize > maxLevelSize) {
+     1998             			local_int_t i = maxLevelSize-1;
+     1999             
+     2000             			local_int_t row = A.tdg[l][i];
+     2001             			const double * const currentValues = A.matrixValues[row];
+     2002             			const local_int_t * const currentColIndices = A.mtxIndL[row];
+     2003             			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+     2004             			const double currentDiagonal = matrixDiagonal[row][0];
+     2005             			svfloat64_t contribs = svdup_f64(0.0);
+     2006             
+     2007             			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+     2008             				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+     2009             				
+     2010             				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+     2011             				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+     2012             				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+     2013             
+     2014             				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+     2015             			}
+     2016             
+     2017             			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+     2018             			double sum = rv[row] - totalContribution;
+     2019             
+     2020             			sum += xv[row] * currentDiagonal;
+     2021             			xv[row] = sum / currentDiagonal;
+     2022             		}
+     2023             #ifndef HPCG_NO_OPENMP
+     2024             		}
+     2025             #pragma omp for SCHEDULE(runtime)
+     2026             #endif
+     2027             		for ( local_int_t i = maxLevelSize-1; i >= 0; i-= 2 ) {
+     2028             			local_int_t row_1 = A.tdg[l][i];
+     2029             			local_int_t row_2 = A.tdg[l][i-1];
+     2030             			const double * const currentValues_1 = A.matrixValues[row_1];
+     2031             			const double * const currentValues_2 = A.matrixValues[row_2];
+     2032             			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+     2033             			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+     2034             			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+     2035             			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+     2036             			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+     2037             			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+     2038             			svfloat64_t contribs_1 = svdup_f64(0.0);
+     2039             			svfloat64_t contribs_2 = svdup_f64(0.0);
+     2040             
+     2041             			const int maxNumberOfNonzeros = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);				
+     2042             							
+     2043             			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+     2044             				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+     2045             				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+     2046             				
+     2047             				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+     2048             				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+     2049             				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+     2050             				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+     2051             				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+     2052             				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+     2053             
+     2054             				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+     2055             				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+     2056             			}
+     2057             
+     2058             			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+     2059             			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+     2060             			double sum_1 = rv[row_1] - totalContribution_1;
+     2061             			double sum_2 = rv[row_2] - totalContribution_2;
+     2062             
+     2063             			sum_1 += xv[row_1] * currentDiagonal_1;
+     2064             			sum_2 += xv[row_2] * currentDiagonal_2;
+     2065             			xv[row_1] = sum_1 / currentDiagonal_1;
+     2066             			xv[row_2] = sum_2 / currentDiagonal_2;
+     2067             		}
+     2068             #ifndef HPCG_NO_OPENMP
+     2069             	}
+     2070             #endif
+     2071             	}
+     2072             }
+     2073             
+     2074             inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& xv, const double * const& rv) {
+     2075             	
+     2076             	double **matrixDiagonal = A.matrixDiagonal;
+     2077             
+     2078             	/*
+     2079             	 * FORWARD SWEEP
+     2080             	 */
+     2081    i        	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
+     2082             		local_int_t tdgLevelSize = A.tdg[l].size();
+     2083             		local_int_t maxLevelSize = 4*(tdgLevelSize / 4);
+     2084             
+     2085             #ifndef HPCG_NO_OPENMP
+     2086             	#pragma omp parallel
+     2087             	{
+     2088             	#pragma omp for nowait SCHEDULE(runtime)
+     2089             #endif
+     2090   p         		for ( local_int_t i = 0; i < maxLevelSize; i+=4 ) {
+     2091   p         			local_int_t row_1 = A.tdg[l][i];
+     2092   p         			local_int_t row_2 = A.tdg[l][i+1];
+     2093   p         			local_int_t row_3 = A.tdg[l][i+2];
+     2094   p         			local_int_t row_4 = A.tdg[l][i+3];
+     2095   p         			const double * const currentValues_1 = A.matrixValues[row_1];
+     2096   p         			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+     2097   p         			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+     2098   p         			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+     2099   p         			svfloat64_t contribs_1 = svdup_f64(0.0);
+     2100             
+     2101   p         			const double * const currentValues_2 = A.matrixValues[row_2];
+     2102   p         			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+     2103   p         			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+     2104   p         			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+     2105   p         			svfloat64_t contribs_2 = svdup_f64(0.0);
+     2106             
+     2107   p         			const double * const currentValues_3 = A.matrixValues[row_3];
+     2108   p         			const local_int_t * const currentColIndices_3 = A.mtxIndL[row_3];
+     2109   p         			const int currentNumberOfNonzeros_3 = A.nonzerosInRow[row_3];
+     2110   p         			const double currentDiagonal_3 = matrixDiagonal[row_3][0];
+     2111   p         			svfloat64_t contribs_3 = svdup_f64(0.0);
+     2112             
+     2113   p         			const double * const currentValues_4 = A.matrixValues[row_4];
+     2114   p         			const local_int_t * const currentColIndices_4 = A.mtxIndL[row_4];
+     2115   p         			const int currentNumberOfNonzeros_4 = A.nonzerosInRow[row_4];
+     2116   p         			const double currentDiagonal_4 = matrixDiagonal[row_4][0];
+     2117   p         			svfloat64_t contribs_4 = svdup_f64(0.0);
+     2118             
+     2119   p         			const int maxNumberOfNonzeros1 = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);
+     2120   p         			const int maxNumberOfNonzeros2 = std::max(currentNumberOfNonzeros_3, currentNumberOfNonzeros_4);
+     2121   p         			const int maxNumberOfNonzeros = std::max(maxNumberOfNonzeros1, maxNumberOfNonzeros2);
+     2122             
+     2123   p      s  			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+     2124   p      s  				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+     2125             				
+     2126   p      s  				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+     2127   p      s  				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+     2128   p      s  				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+     2129             
+     2130   p      s  				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+     2131             
+     2132   p      s  				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+     2133   p      s  				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+     2134   p      s  				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+     2135   p      s  				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+     2136             
+     2137   p      s  				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+     2138             
+     2139   p      s  				svbool_t pg_3 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_3);
+     2140   p      s  				svfloat64_t mtxValues_3 = svld1_f64(pg_3, &currentValues_3[j]);
+     2141   p      s  				svuint64_t indices_3 = svld1sw_u64(pg_3, &currentColIndices_3[j]);
+     2142   p      s  				svfloat64_t xvv_3 = svld1_gather_u64index_f64(pg_3, xv, indices_3);
+     2143             
+     2144   p      s  				contribs_3 = svmla_f64_m(pg_3, contribs_3, xvv_3, mtxValues_3);
+     2145             
+     2146   p      s  				svbool_t pg_4 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_4);
+     2147   p      s  				svfloat64_t mtxValues_4 = svld1_f64(pg_4, &currentValues_4[j]);
+     2148   p      s  				svuint64_t indices_4 = svld1sw_u64(pg_4, &currentColIndices_4[j]);
+     2149   p      s  				svfloat64_t xvv_4 = svld1_gather_u64index_f64(pg_4, xv, indices_4);
+     2150             
+     2151   p      s  				contribs_4 = svmla_f64_m(pg_4, contribs_4, xvv_4, mtxValues_4);
+     2152   p      s  			}
+     2153             
+     2154   p         			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+     2155   p         			double sum_1 = rv[row_1] - totalContribution_1;
+     2156             
+     2157   p         			sum_1 += xv[row_1] * currentDiagonal_1;
+     2158   p         			xv[row_1] = sum_1 / currentDiagonal_1;
+     2159             
+     2160   p         			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+     2161   p         			double sum_2 = rv[row_2] - totalContribution_2;
+     2162             
+     2163   p         			sum_2 += xv[row_2] * currentDiagonal_2;
+     2164   p         			xv[row_2] = sum_2 / currentDiagonal_2;
+     2165             
+     2166   p         			double totalContribution_3 = svaddv_f64(svptrue_b64(), contribs_3);
+     2167   p         			double sum_3 = rv[row_3] - totalContribution_3;
+     2168             
+     2169   p         			sum_3 += xv[row_3] * currentDiagonal_3;
+     2170   p         			xv[row_3] = sum_3 / currentDiagonal_3;
+     2171             
+     2172   p         			double totalContribution_4 = svaddv_f64(svptrue_b64(), contribs_4);
+     2173   p         			double sum_4 = rv[row_4] - totalContribution_4;
+     2174             
+     2175   p         			sum_4 += xv[row_4] * currentDiagonal_4;
+     2176   p         			xv[row_4] = sum_4 / currentDiagonal_4;
+     2177             
+     2178   p         		}
+     2179             
+     2180             //#pragma omp single
+     2181             		if (maxLevelSize < tdgLevelSize) {
+     2182             #ifndef HPCG_NO_OPENMP
+     2183             #pragma omp for SCHEDULE(runtime)
+     2184             #endif
+     2185   p         		for ( local_int_t i = maxLevelSize; i < tdgLevelSize; i++ ) {
+     2186             
+     2187   p         			local_int_t row = A.tdg[l][i];
+     2188   p         			const double * const currentValues = A.matrixValues[row];
+     2189   p         			const local_int_t * const currentColIndices = A.mtxIndL[row];
+     2190   p         			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+     2191   p         			const double currentDiagonal = matrixDiagonal[row][0];
+     2192   p         			svfloat64_t contribs = svdup_f64(0.0);
+     2193             
+     2194   p      s  			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+     2195   p      s  				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+     2196             				
+     2197   p      s  				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+     2198   p      s  				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+     2199   p      s  				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+     2200             
+     2201   p      s  				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+     2202   p      s  			}
+     2203             
+     2204   p         			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+     2205   p         			double sum = rv[row] - totalContribution;
+     2206             
+     2207   p         			sum += xv[row] * currentDiagonal;
+     2208   p         			xv[row] = sum / currentDiagonal;
+     2209   p         		}
+     2210             		}
+     2211             #ifndef HPCG_NO_OPENMP
+     2212             	}
+     2213             #endif
+     2214    i        	}
+     2215             
+     2216             	/*
+     2217             	 * BACKWARD SWEEP
+     2218             	 */
+     2219    i        	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
+     2220             		local_int_t tdgLevelSize = A.tdg[l].size();
+     2221             		local_int_t maxLevelSize = 4*(tdgLevelSize / 4);
+     2222             
+     2223             #ifndef HPCG_NO_OPENMP
+     2224             #pragma omp parallel 
+     2225             	{
+     2226             		//#pragma omp single nowait 
+     2227             		//{
+     2228             		#pragma omp for nowait SCHEDULE(runtime)
+     2229             #endif
+     2230   p         		for ( local_int_t i = tdgLevelSize-1; i >= maxLevelSize; i-- ) {
+     2231             
+     2232   p         			local_int_t row = A.tdg[l][i];
+     2233   p         			const double * const currentValues = A.matrixValues[row];
+     2234   p         			const local_int_t * const currentColIndices = A.mtxIndL[row];
+     2235   p         			const int currentNumberOfNonzeros = A.nonzerosInRow[row];
+     2236   p         			const double currentDiagonal = matrixDiagonal[row][0];
+     2237   p         			svfloat64_t contribs = svdup_f64(0.0);
+     2238             
+     2239   p      s  			for ( local_int_t j = 0; j < currentNumberOfNonzeros; j += svcntd()) {
+     2240   p      s  				svbool_t pg = svwhilelt_b64_u64(j, currentNumberOfNonzeros);
+     2241             				
+     2242   p      s  				svfloat64_t mtxValues = svld1_f64(pg, &currentValues[j]);
+     2243   p      s  				svuint64_t indices = svld1sw_u64(pg, &currentColIndices[j]);
+     2244   p      s  				svfloat64_t xvv = svld1_gather_u64index_f64(pg, xv, indices);
+     2245             
+     2246   p      s  				contribs = svmla_f64_m(pg, contribs, xvv, mtxValues);
+     2247   p      s  			}
+     2248             
+     2249   p         			double totalContribution = svaddv_f64(svptrue_b64(), contribs);
+     2250   p         			double sum = rv[row] - totalContribution;
+     2251             
+     2252   p         			sum += xv[row] * currentDiagonal;
+     2253   p         			xv[row] = sum / currentDiagonal;
+     2254   p         		}
+     2255             #ifndef HPCG_NO_OPENMP
+     2256             		//}
+     2257             #pragma omp for SCHEDULE(runtime)
+     2258             #endif
+     2259   p         		for ( local_int_t i = maxLevelSize-1; i >= 0; i-= 4 ) {
+     2260   p         			local_int_t row_1 = A.tdg[l][i];
+     2261   p         			local_int_t row_2 = A.tdg[l][i-1];
+     2262   p         			local_int_t row_3 = A.tdg[l][i-2];
+     2263   p         			local_int_t row_4 = A.tdg[l][i-3];
+     2264   p         			const double * const currentValues_1 = A.matrixValues[row_1];
+     2265   p         			const double * const currentValues_2 = A.matrixValues[row_2];
+     2266   p         			const double * const currentValues_3 = A.matrixValues[row_3];
+     2267   p         			const double * const currentValues_4 = A.matrixValues[row_4];
+     2268   p         			const local_int_t * const currentColIndices_1 = A.mtxIndL[row_1];
+     2269   p         			const local_int_t * const currentColIndices_2 = A.mtxIndL[row_2];
+     2270   p         			const local_int_t * const currentColIndices_3 = A.mtxIndL[row_3];
+     2271   p         			const local_int_t * const currentColIndices_4 = A.mtxIndL[row_4];
+     2272   p         			const int currentNumberOfNonzeros_1 = A.nonzerosInRow[row_1];
+     2273   p         			const int currentNumberOfNonzeros_2 = A.nonzerosInRow[row_2];
+     2274   p         			const int currentNumberOfNonzeros_3 = A.nonzerosInRow[row_3];
+     2275   p         			const int currentNumberOfNonzeros_4 = A.nonzerosInRow[row_4];
+     2276   p         			const double currentDiagonal_1 = matrixDiagonal[row_1][0];
+     2277   p         			const double currentDiagonal_2 = matrixDiagonal[row_2][0];
+     2278   p         			const double currentDiagonal_3 = matrixDiagonal[row_3][0];
+     2279   p         			const double currentDiagonal_4 = matrixDiagonal[row_4][0];
+     2280   p         			svfloat64_t contribs_1 = svdup_f64(0.0);
+     2281   p         			svfloat64_t contribs_2 = svdup_f64(0.0);
+     2282   p         			svfloat64_t contribs_3 = svdup_f64(0.0);
+     2283   p         			svfloat64_t contribs_4 = svdup_f64(0.0);
+     2284             
+     2285   p         			const int maxNumberOfNonzeros1 = std::max(currentNumberOfNonzeros_1, currentNumberOfNonzeros_2);				
+     2286   p         			const int maxNumberOfNonzeros2 = std::max(currentNumberOfNonzeros_3, currentNumberOfNonzeros_4);				
+     2287   p         			const int maxNumberOfNonzeros = std::max(maxNumberOfNonzeros1, maxNumberOfNonzeros2);				
+     2288             							
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SPILLS :
+                       <<<      GENERAL   : SPILL 0  FILL 1
+                       <<<      SIMD&FP   : SPILL 0  FILL 0
+                       <<<      SCALABLE  : SPILL 0  FILL 0
+                       <<<      PREDICATE : SPILL 0  FILL 0
+                       <<< Loop-information  End >>>
+     2289   p      s  			for ( local_int_t j = 0; j < maxNumberOfNonzeros; j += svcntd()) {
+     2290   p      s  				svbool_t pg_1 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_1);
+     2291   p      s  				svbool_t pg_2 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_2);
+     2292   p      s  				svbool_t pg_3 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_3);
+     2293   p      s  				svbool_t pg_4 = svwhilelt_b64_u64(j, currentNumberOfNonzeros_4);
+     2294             				
+     2295   p      s  				svfloat64_t mtxValues_1 = svld1_f64(pg_1, &currentValues_1[j]);
+     2296   p      s  				svfloat64_t mtxValues_2 = svld1_f64(pg_2, &currentValues_2[j]);
+     2297   p      s  				svfloat64_t mtxValues_3 = svld1_f64(pg_3, &currentValues_3[j]);
+     2298   p      s  				svfloat64_t mtxValues_4 = svld1_f64(pg_4, &currentValues_4[j]);
+     2299   p      s  				svuint64_t indices_1 = svld1sw_u64(pg_1, &currentColIndices_1[j]);
+     2300   p      s  				svuint64_t indices_2 = svld1sw_u64(pg_2, &currentColIndices_2[j]);
+     2301   p      s  				svuint64_t indices_3 = svld1sw_u64(pg_3, &currentColIndices_3[j]);
+     2302   p      s  				svuint64_t indices_4 = svld1sw_u64(pg_4, &currentColIndices_4[j]);
+     2303   p      s  				svfloat64_t xvv_1 = svld1_gather_u64index_f64(pg_1, xv, indices_1);
+     2304   p      s  				svfloat64_t xvv_2 = svld1_gather_u64index_f64(pg_2, xv, indices_2);
+     2305   p      s  				svfloat64_t xvv_3 = svld1_gather_u64index_f64(pg_3, xv, indices_3);
+     2306   p      s  				svfloat64_t xvv_4 = svld1_gather_u64index_f64(pg_4, xv, indices_4);
+     2307             
+     2308   p      s  				contribs_1 = svmla_f64_m(pg_1, contribs_1, xvv_1, mtxValues_1);
+     2309   p      s  				contribs_2 = svmla_f64_m(pg_2, contribs_2, xvv_2, mtxValues_2);
+     2310   p      s  				contribs_3 = svmla_f64_m(pg_3, contribs_3, xvv_3, mtxValues_3);
+     2311   p      s  				contribs_4 = svmla_f64_m(pg_4, contribs_4, xvv_4, mtxValues_4);
+     2312   p      s  			}
+     2313             
+     2314   p         			double totalContribution_1 = svaddv_f64(svptrue_b64(), contribs_1);
+     2315   p         			double totalContribution_2 = svaddv_f64(svptrue_b64(), contribs_2);
+     2316   p         			double totalContribution_3 = svaddv_f64(svptrue_b64(), contribs_3);
+     2317   p         			double totalContribution_4 = svaddv_f64(svptrue_b64(), contribs_4);
+     2318   p         			double sum_1 = rv[row_1] - totalContribution_1;
+     2319   p         			double sum_2 = rv[row_2] - totalContribution_2;
+     2320   p         			double sum_3 = rv[row_3] - totalContribution_3;
+     2321   p         			double sum_4 = rv[row_4] - totalContribution_4;
+     2322             
+     2323   p         			sum_1 += xv[row_1] * currentDiagonal_1;
+     2324   p         			sum_2 += xv[row_2] * currentDiagonal_2;
+     2325   p         			sum_3 += xv[row_3] * currentDiagonal_3;
+     2326   p         			sum_4 += xv[row_4] * currentDiagonal_4;
+     2327   p         			xv[row_1] = sum_1 / currentDiagonal_1;
+     2328   p         			xv[row_2] = sum_2 / currentDiagonal_2;
+     2329   p         			xv[row_3] = sum_3 / currentDiagonal_3;
+     2330   p         			xv[row_4] = sum_4 / currentDiagonal_4;
+     2331   p         		}
+     2332             #ifndef HPCG_NO_OPENMP
+     2333             	}
+     2334             #endif
+     2335             	}
+     2336             }
+Total prefetch num: 0
+Optimization messages
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 292: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 296: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 296: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 297: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 297: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 304: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 304: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 319: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 319: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 320: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 325: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 329: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 329: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 330: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 330: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 337: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 337: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 379: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 388: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 389: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 402: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 425: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 425: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 481: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 481: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 517: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 517: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 542: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 548: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 549: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 563: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 586: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 586: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 642: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 642: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 678: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 678: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1374: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1378: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1378: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1379: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1379: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6004s-i  "../src/ComputeSYMGS.cpp", line 1386: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSYMGS.cpp", line 1386: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSYMGS.cpp", line 1386: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 192.
+  jwd8208o-i  "../src/ComputeSYMGS.cpp", line 1388: Method of calculating sum or product is changed.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1392: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1392: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1393: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1398: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1402: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1402: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1403: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1403: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6004s-i  "../src/ComputeSYMGS.cpp", line 1410: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSYMGS.cpp", line 1410: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSYMGS.cpp", line 1410: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 192.
+  jwd8208o-i  "../src/ComputeSYMGS.cpp", line 1412: Method of calculating sum or product is changed.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1447: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1452: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1452: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1453: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1453: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6004s-i  "../src/ComputeSYMGS.cpp", line 1460: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSYMGS.cpp", line 1460: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSYMGS.cpp", line 1460: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 192.
+  jwd8208o-i  "../src/ComputeSYMGS.cpp", line 1462: Method of calculating sum or product is changed.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1466: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1466: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1467: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1472: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1477: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1477: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1478: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1478: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6004s-i  "../src/ComputeSYMGS.cpp", line 1485: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSYMGS.cpp", line 1485: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSYMGS.cpp", line 1485: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 192.
+  jwd8208o-i  "../src/ComputeSYMGS.cpp", line 1487: Method of calculating sum or product is changed.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1517: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1523: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1524: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1546: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 1546: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 1546: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1551: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1564: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 1564: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 1564: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1567: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1575: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 1575: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 1575: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1577: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1586: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1592: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1593: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1615: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6004s-i  "../src/ComputeSYMGS.cpp", line 1615: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSYMGS.cpp", line 1615: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSYMGS.cpp", line 1615: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 32.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1636: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6004s-i  "../src/ComputeSYMGS.cpp", line 1636: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSYMGS.cpp", line 1636: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSYMGS.cpp", line 1636: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 96.
+  jwd8208o-i  "../src/ComputeSYMGS.cpp", line 1637: Method of calculating sum or product is changed.
+  jwd8208o-i  "../src/ComputeSYMGS.cpp", line 1638: Method of calculating sum or product is changed.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 1649: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6004s-i  "../src/ComputeSYMGS.cpp", line 1649: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSYMGS.cpp", line 1649: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSYMGS.cpp", line 1649: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 192.
+  jwd8208o-i  "../src/ComputeSYMGS.cpp", line 1650: Method of calculating sum or product is changed.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2081: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2082: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2082: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2091: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2091: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2092: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2092: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2093: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2093: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2094: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2094: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2119: Inline expansion is applied to the user defined function '_ZNSt3__13maxIiEERKT_S3_S3_'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2120: Inline expansion is applied to the user defined function '_ZNSt3__13maxIiEERKT_S3_S3_'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2121: Inline expansion is applied to the user defined function '_ZNSt3__13maxIiEERKT_S3_S3_'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 2123: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 2123: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2187: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2187: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 2194: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 2194: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2214: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2219: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2220: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2220: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEE4sizeEv'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2232: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2232: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 2239: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 2239: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2260: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2260: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2261: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2261: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2262: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2262: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2263: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorINS0_IiNS_9allocatorIiEEEENS1_IS3_EEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2263: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIiNS_9allocatorIiEEEixEm'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2285: Inline expansion is applied to the user defined function '_ZNSt3__13maxIiEERKT_S3_S3_'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2286: Inline expansion is applied to the user defined function '_ZNSt3__13maxIiEERKT_S3_S3_'.
+  jwd8101o-i  "../src/ComputeSYMGS.cpp", line 2287: Inline expansion is applied to the user defined function '_ZNSt3__13maxIiEERKT_S3_S3_'.
+  jwd6142s-i  "../src/ComputeSYMGS.cpp", line 2289: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/ComputeSYMGS.cpp", line 2289: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2659: Inline expansion is applied to the user defined function '_ZNKSt3__16__lessIiiEclERKiS3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2667: Inline expansion is applied to the user defined function '_ZNSt3__13maxIiNS_6__lessIiiEEEERKT_S5_S5_T0_'.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_SCHEDULE_ON -I./src -I./src/OOKAMI_OMP_FJ -DLIKWID_PERFMON -DLIKWID_INSTRUMENTATION -Kfast -KSVE -Kopenmp -Koptmsg=2 -Nlst=t -Kocl -I../src -o src/ComputeSYMGS.o
+    Effective options    : -g0 -mt -Qy -std=gnu++14 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_3_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Knozfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

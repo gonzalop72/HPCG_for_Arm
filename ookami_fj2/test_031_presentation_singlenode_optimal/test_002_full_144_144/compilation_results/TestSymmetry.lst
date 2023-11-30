@@ -1,0 +1,289 @@
+Fujitsu C/C++ Version 4.7.0   Mon Jul 10 14:34:41 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/TestSymmetry.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file TestSymmetry.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             // The MPI include must be first for Windows platforms
+       22             #ifndef HPCG_NO_MPI
+       23             #include <mpi.h>
+       24             #endif
+       25             #include <fstream>
+       26             #include <iostream>
+       27             #include <cfloat>
+       28             using std::endl;
+       29             #include <vector>
+       30             #include <cmath>
+       31             
+       32             #include "hpcg.hpp"
+       33             
+       34             #include "ComputeSPMV.hpp"
+       35             #include "ComputeMG.hpp"
+       36             #include "ComputeDotProduct.hpp"
+       37             #include "ComputeResidual.hpp"
+       38             #include "Geometry.hpp"
+       39             #include "SparseMatrix.hpp"
+       40             #include "TestSymmetry.hpp"
+       41             
+       42             /*!
+       43               Tests symmetry-preserving properties of the sparse matrix vector multiply and multi-grid routines.
+       44             
+       45               @param[in]    geom   The description of the problem's geometry.
+       46               @param[in]    A      The known system matrix
+       47               @param[in]    b      The known right hand side vector
+       48               @param[in]    xexact The exact solution vector
+       49               @param[inout] testsymmetry_data The data structure with the results of the CG symmetry test including pass/fail information
+       50             
+       51               @return returns 0 upon success and non-zero otherwise
+       52             
+       53               @see ComputeDotProduct
+       54               @see ComputeDotProduct_ref
+       55               @see ComputeSPMV
+       56               @see ComputeSPMV_ref
+       57               @see ComputeMG
+       58               @see ComputeMG_ref
+       59             */
+       60             int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData & testsymmetry_data) {
+       61             
+       62              local_int_t nrow = A.localNumberOfRows;
+       63              local_int_t ncol = A.localNumberOfColumns;
+       64             
+       65              Vector x_ncol, y_ncol, z_ncol;
+       66    i         InitializeVector(x_ncol, ncol);
+       67    i         InitializeVector(y_ncol, ncol);
+       68    i         InitializeVector(z_ncol, ncol);
+       69             
+       70              double t4 = 0.0; // Needed for dot-product call, otherwise unused
+       71              testsymmetry_data.count_fail = 0;
+       72             
+       73              // Test symmetry of matrix
+       74             
+       75              // First load vectors with random values
+       76    i         FillRandomVector(x_ncol);
+       77    i         FillRandomVector(y_ncol);
+       78             
+       79              double xNorm2, yNorm2;
+       80              double ANorm = 2 * 26.0;
+       81             
+       82              TraceData tdDisabled;
+       83             
+       84              // Next, compute x'*A*y
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       85              ComputeDotProduct(nrow, y_ncol, y_ncol, yNorm2, t4, A.isDotProductOptimized);
+       86              int ierr = ComputeSPMV(A, y_ncol, z_ncol); // z_nrow = A*y_overlap
+       87    i         if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
+       88              double xtAy = 0.0;
+       89              ierr = ComputeDotProduct(nrow, x_ncol, z_ncol, xtAy, t4, A.isDotProductOptimized); // x'*A*y
+       90    i         if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
+       91             
+       92              // Next, compute y'*A*x
+       93              ComputeDotProduct(nrow, x_ncol, x_ncol, xNorm2, t4, A.isDotProductOptimized);
+       94              ierr = ComputeSPMV(A, x_ncol, z_ncol); // b_computed = A*x_overlap
+       95    i         if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
+       96              double ytAx = 0.0;
+       97              ierr = ComputeDotProduct(nrow, y_ncol, z_ncol, ytAx, t4, A.isDotProductOptimized); // y'*A*x
+       98    i         if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
+       99             
+      100    i         testsymmetry_data.depsym_spmv = std::fabs((long double) (xtAy - ytAx))/((xNorm2*ANorm*yNorm2 + yNorm2*ANorm*xNorm2) * (DBL_EPSILON));
+      101              if (testsymmetry_data.depsym_spmv > 1.0) {
+      102               ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
+      103    i          HPCG_fout << "Error in Symmetry :: (" << xtAy << "-" << ytAx << ")/(" << xNorm2*ANorm*yNorm2 << "+" << yNorm2*ANorm*xNorm2 << ") * " << DBL_EPSILON << "=" << testsymmetry_data.depsym_spmv <<"\n";
+      104              }
+      105    i         if (A.geom->rank==0) HPCG_fout << "Departure from symmetry (scaled) for SpMV abs(x'*A*y - y'*A*x) = " << testsymmetry_data.depsym_spmv << endl;
+      106             
+      107              // Test symmetry of multi-grid
+      108             
+      109              // Compute x'*Minv*y
+      110              ierr = ComputeMG(A, y_ncol, z_ncol, tdDisabled); // z_ncol = Minv*y_ncol
+      111    i         if (ierr) HPCG_fout << "Error in call to MG: " << ierr << ".\n" << endl;
+      112              double xtMinvy = 0.0;
+      113              ierr = ComputeDotProduct(nrow, x_ncol, z_ncol, xtMinvy, t4, A.isDotProductOptimized); // x'*Minv*y
+      114    i         if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
+      115             
+      116              // Next, compute z'*Minv*x
+      117              ierr = ComputeMG(A, x_ncol, z_ncol, tdDisabled); // z_ncol = Minv*x_ncol
+      118    i         if (ierr) HPCG_fout << "Error in call to MG: " << ierr << ".\n" << endl;
+      119              double ytMinvx = 0.0;
+      120              ierr = ComputeDotProduct(nrow, y_ncol, z_ncol, ytMinvx, t4, A.isDotProductOptimized); // y'*Minv*x
+      121    i         if (ierr) HPCG_fout << "Error in call to dot: " << ierr << ".\n" << endl;
+      122             
+      123    i         testsymmetry_data.depsym_mg = std::fabs((long double) (xtMinvy - ytMinvx))/((xNorm2*ANorm*yNorm2 + yNorm2*ANorm*xNorm2) * (DBL_EPSILON));
+      124              if (testsymmetry_data.depsym_mg > 1.0) {
+      125                ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
+      126    i          HPCG_fout << "Error in Symmetry(2) :: (" << xtMinvy << "-" << ytMinvx << ")/((" << xNorm2*ANorm*yNorm2 << "+" << yNorm2*ANorm*xNorm2 << ") * " << DBL_EPSILON << ") = " << testsymmetry_data.depsym_mg << "\n";
+      127              }
+      128    i         if (A.geom->rank==0) HPCG_fout << "Departure from symmetry (scaled) for MG abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data.depsym_mg << endl;
+      129             
+      130              CopyVector(xexact, x_ncol); // Copy exact answer into overlap vector
+      131             
+      132              int numberOfCalls = 2;
+      133              double residual = 0.0;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information  End >>>
+      134         f    for (int i=0; i< numberOfCalls; ++i) {
+      135         f      ierr = ComputeSPMV(A, x_ncol, z_ncol); // b_computed = A*x_overlap
+      136    i    f      if (ierr) HPCG_fout << "Error in call to SpMV: " << ierr << ".\n" << endl;
+      137         f      if ((ierr = ComputeResidual(A.localNumberOfRows, b, z_ncol, residual)))
+      138    i    f        HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
+      139    i    f      if (A.geom->rank==0) HPCG_fout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;
+      140         f    }
+      141    i         DeleteVector(x_ncol);
+      142    i         DeleteVector(y_ncol);
+      143    i         DeleteVector(z_ncol);
+      144             
+      145              return 0;
+      146             }
+      147             
+Total prefetch num: 0
+Optimization messages
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EEC1Ev'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1EOS5_'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEEC1EOS5_'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1Emc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 66: Inline expansion is applied to the user defined function '_Z16InitializeVectorR13Vector_STRUCTi'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 67: Inline expansion is applied to the user defined function '_Z16InitializeVectorR13Vector_STRUCTi'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 68: Inline expansion is applied to the user defined function '_Z16InitializeVectorR13Vector_STRUCTi'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 76: Inline expansion is applied to the user defined function '_Z16FillRandomVectorR13Vector_STRUCT'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 77: Inline expansion is applied to the user defined function '_Z16FillRandomVectorR13Vector_STRUCT'.
+  jwd8206o-i  "../src/Vector.hpp", line 85: Division is changed to multiplication by reciprocal.
+  jwd6122s-i  "../src/Vector.hpp", line 85: SIMD conversion is not applied to this loop because a function call that prevents SIMD conversion exists.
+  jwd8664o-i  "../src/Vector.hpp", line 85: This loop cannot be software pipelined because the loop contains an instruction, such as function call, which is not supported by software pipelining.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 87: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 87: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 90: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 90: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 95: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 95: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 98: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 98: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd6208s-i  "../src/Vector.hpp", line 99: SIMD conversion is not applied to this loop because the uncertain order of the definition and reference to variable 'wv' may cause different results from serial execution.
+  jwd8663o-i  "../src/Vector.hpp", line 99: This loop is not software pipelined because the software pipelining does not improve the performance.
+  jwd8202o-i  "../src/Vector.hpp", line 99: Loop unrolling expanding 4 times is applied to this loop.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 100: Inline expansion is applied to the user defined function '_ZNSt3__14fabsEe'.
+  jwd8209o-i  "../src/TestSymmetry.cpp", line 100: Evaluation order of polynomial expression is changed according to commutative law of addition and multiplication.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 103: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 105: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 105: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 111: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 111: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 114: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 114: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 118: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 118: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 121: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 121: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 123: Inline expansion is applied to the user defined function '_ZNSt3__14fabsEe'.
+  jwd8209o-i  "../src/TestSymmetry.cpp", line 123: Evaluation order of polynomial expression is changed according to commutative law of addition and multiplication.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 126: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 128: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8203o-i  "../src/TestSymmetry.cpp", line 134: Loop full unrolling is applied to this loop.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 136: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 138: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 139: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 141: Inline expansion is applied to the user defined function '_Z12DeleteVectorR13Vector_STRUCT'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 142: Inline expansion is applied to the user defined function '_Z12DeleteVectorR13Vector_STRUCT'.
+  jwd8101o-i  "../src/TestSymmetry.cpp", line 143: Inline expansion is applied to the user defined function '_Z12DeleteVectorR13Vector_STRUCT'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 589: Inline expansion is applied to the user defined function '_ZNSt3__18ios_base8setstateEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 696: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5rdbufEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 734: Inline expansion is applied to the user defined function '_ZNSt3__19use_facetINS_5ctypeIcEEEERKT_RKNS_6localeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 734: Inline expansion is applied to the user defined function '_ZNKSt3__15ctypeIcE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 742: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11eq_int_typeEii'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 743: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 752: Inline expansion is applied to the user defined function '_ZNKSt3__113basic_ostreamIcNS_11char_traitsIcEEE6sentrycvbEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNSt3__119ostreambuf_iteratorIcNS_11char_traitsIcEEEC1ERNS_13basic_ostreamIcS2_EE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5flagsEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE4fillEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__119ostreambuf_iteratorIcNS_11char_traitsIcEEE6failedEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 763: Inline expansion is applied to the user defined function '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEE8setstateEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 894: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE6lengthEPKc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/iterator", line 925: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5rdbufEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 932: Inline expansion is applied to the user defined function '_ZNSt3__19addressofIKcEEPT_RS2_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 1034: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1490: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5widthEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1498: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1506: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1Emc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1507: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE4dataEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1507: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1516: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1522: Inline expansion is applied to the user defined function '_ZNSt3__18ios_base5widthEl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1626: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE13__get_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1626: Inline expansion is applied to the user defined function '_ZNSt3__116__to_raw_pointerIKcEEPT_S3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1690: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1772: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1778: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1778: Inline expansion is applied to the user defined function '_ZNSt3__114pointer_traitsIPKcE10pointer_toERS1_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE9__is_longEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE18__get_long_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE19__get_short_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1789: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1789: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2106: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRNS_17__compressed_pairINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES6_EEEEONS_16remove_referenceIT_E4typeEOSC_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2106: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRNS_17__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES6_EEEEONS_16remove_referenceIT_E4typeEOSC_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2107: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE6__zeroEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2107: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__zeroEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2163: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_EC1Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2414: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EEC2Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2470: Inline expansion is applied to the user defined function '_ZNKSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EE5firstEv'.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/TestSymmetry.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

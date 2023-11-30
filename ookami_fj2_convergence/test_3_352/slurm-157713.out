@@ -1,0 +1,53 @@
+[fj025:3231241] MCW rank 2 bound to socket 2[core 24[hwt 0]], socket 2[core 25[hwt 0]], socket 2[core 26[hwt 0]], socket 2[core 27[hwt 0]], socket 2[core 28[hwt 0]], socket 2[core 29[hwt 0]], socket 2[core 30[hwt 0]], socket 2[core 31[hwt 0]], socket 2[core 32[hwt 0]], socket 2[core 33[hwt 0]], socket 2[core 34[hwt 0]]: [./././././././././././.][./././././././././././.][B/B/B/B/B/B/B/B/B/B/B/.][./././././././././././.]
+[fj025:3231241] MCW rank 3 bound to socket 3[core 36[hwt 0]], socket 3[core 37[hwt 0]], socket 3[core 38[hwt 0]], socket 3[core 39[hwt 0]], socket 3[core 40[hwt 0]], socket 3[core 41[hwt 0]], socket 3[core 42[hwt 0]], socket 3[core 43[hwt 0]], socket 3[core 44[hwt 0]], socket 3[core 45[hwt 0]], socket 3[core 46[hwt 0]]: [./././././././././././.][./././././././././././.][./././././././././././.][B/B/B/B/B/B/B/B/B/B/B/.]
+[fj025:3231241] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]]: [B/B/B/B/B/B/B/B/B/B/B/.][./././././././././././.][./././././././././././.][./././././././././././.]
+[fj025:3231241] MCW rank 1 bound to socket 1[core 12[hwt 0]], socket 1[core 13[hwt 0]], socket 1[core 14[hwt 0]], socket 1[core 15[hwt 0]], socket 1[core 16[hwt 0]], socket 1[core 17[hwt 0]], socket 1[core 18[hwt 0]], socket 1[core 19[hwt 0]], socket 1[core 20[hwt 0]], socket 1[core 21[hwt 0]], socket 1[core 22[hwt 0]]: [./././././././././././.][B/B/B/B/B/B/B/B/B/B/B/.][./././././././././././.][./././././././././././.]
+[fj026:3228021] MCW rank 5 bound to socket 1[core 12[hwt 0]], socket 1[core 13[hwt 0]], socket 1[core 14[hwt 0]], socket 1[core 15[hwt 0]], socket 1[core 16[hwt 0]], socket 1[core 17[hwt 0]], socket 1[core 18[hwt 0]], socket 1[core 19[hwt 0]], socket 1[core 20[hwt 0]], socket 1[core 21[hwt 0]], socket 1[core 22[hwt 0]]: [./././././././././././.][B/B/B/B/B/B/B/B/B/B/B/.][./././././././././././.][./././././././././././.]
+[fj026:3228021] MCW rank 6 bound to socket 2[core 24[hwt 0]], socket 2[core 25[hwt 0]], socket 2[core 26[hwt 0]], socket 2[core 27[hwt 0]], socket 2[core 28[hwt 0]], socket 2[core 29[hwt 0]], socket 2[core 30[hwt 0]], socket 2[core 31[hwt 0]], socket 2[core 32[hwt 0]], socket 2[core 33[hwt 0]], socket 2[core 34[hwt 0]]: [./././././././././././.][./././././././././././.][B/B/B/B/B/B/B/B/B/B/B/.][./././././././././././.]
+[fj026:3228021] MCW rank 7 bound to socket 3[core 36[hwt 0]], socket 3[core 37[hwt 0]], socket 3[core 38[hwt 0]], socket 3[core 39[hwt 0]], socket 3[core 40[hwt 0]], socket 3[core 41[hwt 0]], socket 3[core 42[hwt 0]], socket 3[core 43[hwt 0]], socket 3[core 44[hwt 0]], socket 3[core 45[hwt 0]], socket 3[core 46[hwt 0]]: [./././././././././././.][./././././././././././.][./././././././././././.][B/B/B/B/B/B/B/B/B/B/B/.]
+[fj026:3228021] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]]: [B/B/B/B/B/B/B/B/B/B/B/.][./././././././././././.][./././././././././././.][./././././././././././.]
+--------------------------------------------------------------------------
+[mpi::errmgr-base::normal-termination-but]
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+[fj025:3231253] *** Process received signal ***
+[fj025:3231253] Signal: Bus error (7)
+[fj025:3231253] Signal code: Non-existant physical address (2)
+[fj025:3231253] Failing at address: 0x40000b40ef64
+[fj025:3231253] [ 0] linux-vdso.so.1(__kernel_rt_sigreturn+0x0)[0x4000000707a0]
+[fj025:3231253] [ 1] /opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(+0x2f4bb0)[0x4000003d4bb0]
+[fj025:3231253] [ 2] /opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_progress+0x44)[0x400000473dec]
+[fj025:3231253] [ 3] /opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(+0x1e30a8)[0x4000002c30a8]
+[fj025:3231253] [ 4] /opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(mca_pml_ob1_send+0x2b4)[0x4000002c2b2c]
+[fj025:3231253] [ 5] /opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Send+0x34)[0x4000001edbac]
+[fj025:3231253] [ 6] xhpcg[0x414a08]
+[fj025:3231253] [ 7] xhpcg[0x42f7e8]
+[fj025:3231253] [ 8] xhpcg[0x4128ac]
+[fj025:3231253] [ 9] xhpcg[0x413e0c]
+[fj025:3231253] [10] xhpcg[0x40d2a4]
+[fj025:3231253] [11] /lib64/libc.so.6(__libc_start_main+0xdc)[0x400001424384]
+[fj025:3231253] [12] xhpcg[0x40c98c]
+[fj025:3231253] *** End of error message ***
+[fj025:3231255] *** Process received signal ***
+[fj025:3231255] Signal: Bus error (7)
+[fj025:3231255] Signal code: Non-existant physical address (2)
+[fj025:3231255] Failing at address: 0x40000c61faa4
+[fj025:3231255] [ 0] linux-vdso.so.1(__kernel_rt_sigreturn+0x0)[0x4000000707a0]
+[fj025:3231255] [ 1] /opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(+0x2f4bb0)[0x4000003d4bb0]
+[fj025:3231255] [ 2] /opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_progress+0x44)[0x400000473dec]
+[fj025:3231255] [ 3] /opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(+0x1e30a8)[0x4000002c30a8]
+[fj025:3231255] [ 4] /opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(mca_pml_ob1_send+0x2b4)[0x4000002c2b2c]
+[fj025:3231255] [ 5] /opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Send+0x34)[0x4000001edbac]
+[fj025:3231255] [ 6] xhpcg[0x414a08]
+[fj025:3231255] [ 7] xhpcg[0x42f7e8]
+[fj025:3231255] [ 8] xhpcg[0x4128ac]
+[fj025:3231255] [ 9] xhpcg[0x413e0c]
+[fj025:3231255] [10] xhpcg[0x40d2a4]
+[fj025:3231255] [11] /lib64/libc.so.6(__libc_start_main+0xdc)[0x400001424384]
+[fj025:3231255] [12] xhpcg[0x40c98c]
+[fj025:3231255] *** End of error message ***
+--------------------------------------------------------------------------
+[mpi::orterun::orterun:proc-aborted-strsignal]
+mpirun noticed that process rank 2 with PID 0 on node fj025 exited on signal 9 (Killed).
+--------------------------------------------------------------------------

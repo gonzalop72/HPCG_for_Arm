@@ -1,0 +1,361 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov 30 05:08:30 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2_instrumented
+  Source file       : ../src/ComputeMG.cpp
+(line-no.)(optimize)
+        1             /*
+        2              *
+        3              *  SPDX-License-Identifier: Apache-2.0
+        4              *
+        5              *  Copyright (C) 2019, Arm Limited and contributors
+        6              *
+        7              *  Licensed under the Apache License, Version 2.0 (the "License");
+        8              *  you may not use this file except in compliance with the License.
+        9              *  You may obtain a copy of the License at
+       10              *
+       11              *      http://www.apache.org/licenses/LICENSE-2.0
+       12              *
+       13              *  Unless required by applicable law or agreed to in writing, software
+       14              *  distributed under the License is distributed on an "AS IS" BASIS,
+       15              *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       16              *  See the License for the specific language governing permissions and
+       17              *  limitations under the License.
+       18              *
+       19              */
+       20             
+       21             //@HEADER
+       22             // ***************************************************
+       23             //
+       24             // HPCG: High Performance Conjugate Gradient Benchmark
+       25             //
+       26             // Contact:
+       27             // Michael A. Heroux ( maherou@sandia.gov)
+       28             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       29             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       30             //
+       31             // ***************************************************
+       32             //@HEADER
+       33             
+       34             /*!
+       35              @file ComputeMG.cpp
+       36             
+       37              HPCG routine
+       38              */
+       39             
+       40             #include "ComputeMG.hpp"
+       41             #include "ComputeMG_ref.hpp"
+       42             #include "ComputeSYMGS.hpp"
+       43             #include "ComputeSPMV.hpp"
+       44             #include "ComputeRestriction.hpp"
+       45             #include "ComputeProlongation.hpp"
+       46             #include "mytimer.hpp"
+       47             
+       48             #include "likwid_instrumentation.hpp"
+       49             
+       50             #ifdef ENABLE_MG_COUNTERS
+       51             MGTimers MGGlobalTimers[10];
+       52             
+       53             //t1 : symgs 
+       54             //T2:  spmv
+       55             //t3 : restriction
+       56             //t4 : prolongation
+       57             //t5 : symgs
+       58             
+       59             //#define TICK_MG()  t0 = mytimer() //!< record current time in 't0'
+       60             //#define TOCK_MG(t) t += mytimer() - t0 //!< store time difference in 't' using time in 't0'
+       61             #define TICK_MG(f)  if (f) t0 = mytimer()  //!< record current time in 't0'
+       62             #define TOCK_MG(f,t) if (f) t += mytimer() - t0 //!< store time difference in 't' using time in 't0'
+       63             #else
+       64             #define TICK_MG(f)	
+       65             #define TOCK_MG(f, t) 
+       66             #endif
+       67             
+       68             int ComputeMG_TDG(const SparseMatrix  & A, const Vector & r, Vector & x, TraceData& trace) {
+       69             	int ierr = 0;
+       70             
+       71             #ifdef ENABLE_MG_COUNTERS
+       72                 double t0=0,t1=0,t2=0,t3=0,t4=0,t5=0;
+       73             #endif
+       74             
+       75             	if ( A.mgData != 0 ) {
+       76             		int numberOfPresmootherSteps = A.mgData->numberOfPresmootherSteps;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SPILLS :
+                       <<<      GENERAL   : SPILL 4  FILL 4
+                       <<<      SIMD&FP   : SPILL 0  FILL 0
+                       <<<      SCALABLE  : SPILL 0  FILL 0
+                       <<<      PREDICATE : SPILL 0  FILL 0
+                       <<< Loop-information  End >>>
+       77         8   		for (int i = 0; i < numberOfPresmootherSteps-1; i++ ) {
+       78         8   			ierr += ComputeSYMGS(A, r, x, trace);
+       79         8   		}
+       80             #ifdef HPCG_USE_FUSED_SYMGS_SPMV
+       81             
+       82             		// Fuse the last SYMGS iteration with the following SPMV
+       83             		// HPCG rules forbid that, so the result will be invalid
+       84             		// and therefore not submiteable
+       85             
+       86             #ifdef HPCG_USE_SVE
+       87             		ierr += ComputeFusedSYMGS_SPMV_SVE(A, r, x, *A.mgData->Axf);
+       88             #elif defined HPCG_USE_NEON
+       89             		ierr += ComputeFusedSYMGS_SPMV_NEON(A, r, x, *A.mgData->Axf);
+       90             #else
+       91             		ierr += ComputeFusedSYMGS_SPMV(A, r, x, *A.mgData->Axf);
+       92             #endif
+       93             		if ( ierr != 0 ) return ierr;
+       94             
+       95             #else // if !HPCG_USE_FUSED_SYMGS_SPMV
+       96             
+       97             #if defined (ENABLE_MG_COUNTERS) || defined (LIKWID_INSTRUMENTATION)
+       98             	bool doTrace = trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level;
+       99             #endif
+      100             
+      101                 TICK_MG(trace.enabled);
+      102             	LIKWID_START(doTrace, "symgs_tdg1");
+      103             		ierr += ComputeSYMGS(A, r, x, trace);
+      104             		if ( ierr != 0 ) return ierr;
+      105             	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "symgs_tdg1");
+      106                 TOCK_MG(trace.enabled, t1);
+      107             
+      108                 TICK_MG(trace.enabled);
+      109             	LIKWID_START(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "spmv_tdg");
+      110             		ierr = ComputeSPMV(A, x, *A.mgData->Axf);
+      111             		if ( ierr != 0 ) return ierr;
+      112             	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "spmv_tdg");
+      113                 TOCK_MG(trace.enabled, t2);
+      114             
+      115             #endif // HPCG_USE_FUSED_SYMGS_SPMV
+      116             
+      117                 TICK_MG(trace.enabled);
+      118             	LIKWID_START(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "rest_tdg");
+      119             		ierr = ComputeRestriction(A, r);
+      120             		if ( ierr != 0 ) return ierr;
+      121             	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "rest_tdg");
+      122                 TOCK_MG(trace.enabled, t3);
+      123             
+      124             		ierr = ComputeMG(*A.Ac, *A.mgData->rc, *A.mgData->xc, trace);
+      125             		if ( ierr != 0 ) return ierr;
+      126             
+      127                 TICK_MG(trace.enabled);
+      128             	LIKWID_START(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "prol_tdg");
+      129             		ierr = ComputeProlongation(A, x);
+      130             		if ( ierr != 0 ) return ierr;
+      131             	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "prol_tdg");
+      132                 TOCK_MG(trace.enabled,t4);
+      133             
+      134                 TICK_MG(trace.enabled);
+      135             	LIKWID_START(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "symgs2_tdg");
+      136             		int numberOfPostsmootherSteps = A.mgData->numberOfPostsmootherSteps;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SPILLS :
+                       <<<      GENERAL   : SPILL 4  FILL 4
+                       <<<      SIMD&FP   : SPILL 0  FILL 0
+                       <<<      SCALABLE  : SPILL 0  FILL 0
+                       <<<      PREDICATE : SPILL 0  FILL 0
+                       <<< Loop-information  End >>>
+      137         8   		for ( int i = 0; i < numberOfPostsmootherSteps; i++ ) {
+      138         8   			ierr += ComputeSYMGS(A, r, x, trace);
+      139         8   		}
+      140             	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "symgs2_tdg");
+      141                 TOCK_MG(trace.enabled, t5);
+      142             
+      143             #ifdef ENABLE_MG_COUNTERS
+      144                 if (trace.enabled) {    
+      145             	int lvl = A.mgData->levelMG;
+      146                 MGGlobalTimers[lvl].t1 +=t1;
+      147                 MGGlobalTimers[lvl].t2 +=t2;
+      148                 MGGlobalTimers[lvl].t3 +=t3;
+      149                 MGGlobalTimers[lvl].t4 +=t4;
+      150                 MGGlobalTimers[lvl].t5 +=t5;
+      151                 }
+      152             #endif
+      153             
+      154             		if ( ierr != 0 ) return ierr;
+      155             
+      156             	} else {
+      157                 TICK_MG(trace.enabled);
+      158             	LIKWID_START(trace.enabled && trace.level==4, "symgs_tdg");
+      159             		ierr = ComputeSYMGS(A, r, x, trace);
+      160             		if ( ierr != 0 ) return ierr;
+      161             	LIKWID_STOP(trace.enabled && trace.level==4, "symgs_tdg");
+      162                 TOCK_MG(trace.enabled, t5);
+      163             
+      164             #ifdef ENABLE_MG_COUNTERS
+      165                 if (trace.enabled) {
+      166                 MGGlobalTimers[4].t5 +=t5;
+      167                 }
+      168             #endif
+      169             	}
+      170             	return 0;
+      171             }
+      172             
+      173             int ComputeMG_BLOCK(const SparseMatrix  & A, const Vector & r, Vector & x, TraceData& trace) {
+      174             	int ierr = 0;
+      175             
+      176             #ifdef ENABLE_MG_COUNTERS
+      177                 double t0=0,t1=0,t2=0,t3=0,t4=0,t5=0;
+      178             #endif
+      179             
+      180             	if ( A.mgData != 0 ) {
+      181             
+      182                 TICK_MG(trace.enabled);
+      183             	LIKWID_START(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "symgs_bl");
+      184             
+      185             		int numberOfPresmootherSteps = A.mgData->numberOfPresmootherSteps;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SPILLS :
+                       <<<      GENERAL   : SPILL 5  FILL 5
+                       <<<      SIMD&FP   : SPILL 0  FILL 0
+                       <<<      SCALABLE  : SPILL 0  FILL 0
+                       <<<      PREDICATE : SPILL 0  FILL 0
+                       <<< Loop-information  End >>>
+      186         8   		for (int i = 0; i < numberOfPresmootherSteps; i++ ) {
+      187         8   			ierr += ComputeSYMGS(A, r, x, trace);
+      188         8   		}
+      189             		if ( ierr != 0 ) return ierr;
+      190             	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "symgs_bl");
+      191                 TOCK_MG(trace.enabled,t1);
+      192             
+      193                 TICK_MG(trace.enabled);
+      194             	LIKWID_START(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "spmv_bl");
+      195             		ierr = ComputeSPMV(A, x, *A.mgData->Axf);
+      196             		if ( ierr != 0 ) return ierr;
+      197             	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "spmv_bl");
+      198                 TOCK_MG(trace.enabled,t2);
+      199             
+      200                 TICK_MG(trace.enabled);
+      201             	LIKWID_START(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "rest_bl");
+      202             		ierr = ComputeRestriction(A, r);
+      203             		if ( ierr != 0 ) return ierr;
+      204             	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "rest_bl");
+      205                 TOCK_MG(trace.enabled,t3);
+      206             		
+      207             		ierr = ComputeMG(*A.Ac, *A.mgData->rc, *A.mgData->xc, trace);
+      208             		if ( ierr != 0 ) return ierr;
+      209             
+      210                 TICK_MG(trace.enabled);
+      211             	LIKWID_START(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "prol_bl");
+      212             		ierr = ComputeProlongation(A, x);
+      213             		if ( ierr != 0 ) return ierr;
+      214             	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "prol_bl");
+      215                 TOCK_MG(trace.enabled, t4);
+      216             
+      217                 TICK_MG(trace.enabled);
+      218             	LIKWID_START(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "symgs2_bl");
+      219             		int numberOfPostsmootherSteps = A.mgData->numberOfPostsmootherSteps;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SPILLS :
+                       <<<      GENERAL   : SPILL 4  FILL 4
+                       <<<      SIMD&FP   : SPILL 0  FILL 0
+                       <<<      SCALABLE  : SPILL 0  FILL 0
+                       <<<      PREDICATE : SPILL 0  FILL 0
+                       <<< Loop-information  End >>>
+      220         8   		for ( int i = 0; i < numberOfPostsmootherSteps; i++ ) {
+      221         8   			ierr += ComputeSYMGS(A, r, x, trace);
+      222         8   		}
+      223             		if ( ierr != 0 ) return ierr;
+      224             	LIKWID_STOP(trace.enabled && A.mgData != 0 &&  A.mgData->levelMG == trace.level, "symgs2_bl");
+      225                 TOCK_MG(trace.enabled, t5);
+      226             
+      227             #ifdef ENABLE_MG_COUNTERS
+      228                 if (trace.enabled) {
+      229                 int lvl = A.mgData->levelMG;
+      230                 MGGlobalTimers[5+lvl].t1 +=t1;
+      231                 MGGlobalTimers[5+lvl].t2 +=t2;
+      232                 MGGlobalTimers[5+lvl].t3 +=t3;
+      233                 MGGlobalTimers[5+lvl].t4 +=t4;
+      234                 MGGlobalTimers[5+lvl].t5 +=t5;
+      235                 }
+      236             #endif
+      237             
+      238             	} else {
+      239                 TICK_MG(trace.enabled);
+      240             	LIKWID_START(trace.enabled && trace.level == 4, "symgs_bl");
+      241             		ierr = ComputeSYMGS(A, r, x, trace);
+      242             		if ( ierr != 0 ) return ierr;
+      243             	LIKWID_STOP(trace.enabled && trace.level == 4, "symgs_bl");
+      244                 TOCK_MG(trace.enabled, t5);
+      245             
+      246             #ifdef ENABLE_MG_COUNTERS
+      247                 if (trace.enabled) {
+      248                 MGGlobalTimers[5+4].t5 +=t5;
+      249                 }
+      250             #endif
+      251             	}
+      252             	return 0;
+      253             }
+      254             
+      255             
+      256             /*!
+      257               @param[in] A the known system matrix
+      258               @param[in] r the input vector
+      259               @param[inout] x On exit contains the result of the multigrid V-cycle with r as the RHS, x is the approximation to Ax = r.
+      260             
+      261               @return returns 0 upon success and non-zero otherwise
+      262             
+      263               @see ComputeMG_ref
+      264             */
+      265             int ComputeMG(const SparseMatrix  & A, const Vector & r, Vector & x, TraceData& trace) {
+      266             	assert(x.localLength == A.localNumberOfColumns);
+      267             
+      268    i        	ZeroVector(x);
+      269             
+      270             	if ( A.TDG ) {
+      271             		return ComputeMG_TDG(A, r, x, trace);
+      272             	}
+      273             	return ComputeMG_BLOCK(A, r, x, trace);
+      274             
+      275             }
+Total prefetch num: 0
+Optimization messages
+  jwd6001s-i  "../src/Vector.hpp", line 61: SIMD conversion is applied to this loop with the loop variable 'i'.
+  jwd8663o-i  "../src/Vector.hpp", line 61: This loop is not software pipelined because the software pipelining does not improve the performance.
+  jwd8664o-i  "../src/ComputeMG.cpp", line 77: This loop cannot be software pipelined because the loop contains an instruction, such as function call, which is not supported by software pipelining.
+  jwd8202o-i  "../src/ComputeMG.cpp", line 77: Loop unrolling expanding 8 times is applied to this loop.
+  jwd8664o-i  "../src/ComputeMG.cpp", line 137: This loop cannot be software pipelined because the loop contains an instruction, such as function call, which is not supported by software pipelining.
+  jwd8202o-i  "../src/ComputeMG.cpp", line 137: Loop unrolling expanding 8 times is applied to this loop.
+  jwd8664o-i  "../src/ComputeMG.cpp", line 186: This loop cannot be software pipelined because the loop contains an instruction, such as function call, which is not supported by software pipelining.
+  jwd8202o-i  "../src/ComputeMG.cpp", line 186: Loop unrolling expanding 8 times is applied to this loop.
+  jwd8664o-i  "../src/ComputeMG.cpp", line 220: This loop cannot be software pipelined because the loop contains an instruction, such as function call, which is not supported by software pipelining.
+  jwd8202o-i  "../src/ComputeMG.cpp", line 220: Loop unrolling expanding 8 times is applied to this loop.
+  jwd8101o-i  "../src/ComputeMG.cpp", line 268: Inline expansion is applied to the user defined function '_Z10ZeroVectorR13Vector_STRUCT'.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DHPCG_MAN_OPT_SCHEDULE_ON -I./src -I./src/OOKAMI_OMP_FJ -DLIKWID_PERFMON -DLIKWID_INSTRUMENTATION -Kfast -KSVE -Kopenmp -Koptmsg=2 -Nlst=t -Kocl -I../src -o src/ComputeMG.o
+    Effective options    : -g0 -mt -Qy -std=gnu++14 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_3_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Knozfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

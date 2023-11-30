@@ -1,0 +1,151 @@
+Fujitsu C/C++ Version 4.7.0   Fri Jul 21 03:50:43 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/CheckAspectRatio.cpp
+(line-no.)(optimize)
+        1             //@HEADER
+        2             // ***************************************************
+        3             //
+        4             // HPCG: High Performance Conjugate Gradient Benchmark
+        5             //
+        6             // Contact:
+        7             // Michael A. Heroux ( maherou@sandia.gov)
+        8             // Jack Dongarra     (dongarra@eecs.utk.edu)
+        9             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       10             //
+       11             // ***************************************************
+       12             //@HEADER
+       13             
+       14             /*!
+       15              @file CheckAspectRatio.cpp
+       16             
+       17              HPCG routine
+       18              */
+       19             
+       20             #include <algorithm>
+       21             
+       22             #ifndef HPCG_NO_MPI
+       23             #include <mpi.h>
+       24             #endif
+       25             
+       26             #include "hpcg.hpp"
+       27             
+       28             #include "CheckAspectRatio.hpp"
+       29             
+       30             int
+       31             CheckAspectRatio(double smallest_ratio, int x, int y, int z, const char *what, bool DoIo) {
+       32    i          double current_ratio = std::min(std::min(x, y), z) / double(std::max(std::max(x, y), z));
+       33             
+       34               if (current_ratio < smallest_ratio) { // ratio of the smallest to the largest
+       35                 if (DoIo) {
+       36    i              HPCG_fout << "The " << what << " sizes (" << x << "," << y << "," << z <<
+       37                     ") are invalid because the ratio min(x,y,z)/max(x,y,z)=" << current_ratio <<
+       38                     " is too small (at least " << smallest_ratio << " is required)." << std::endl;
+       39    i              HPCG_fout << "The shape should resemble a 3D cube. Please adjust and try again." << std::endl;
+       40                   HPCG_fout.flush();
+       41                 }
+       42             
+       43             #ifndef HPCG_NO_MPI
+       44                 MPI_Abort(MPI_COMM_WORLD, 127);
+       45             #endif
+       46             
+       47                 return 127;
+       48               }
+       49             
+       50               return 0;
+       51             }
+Total prefetch num: 0
+Optimization messages
+  jwd8101o-i  "../src/CheckAspectRatio.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EEC1Ev'.
+  jwd8101o-i  "../src/CheckAspectRatio.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1Emc'.
+  jwd8101o-i  "../src/CheckAspectRatio.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEEC1EOS5_'.
+  jwd8101o-i  "../src/CheckAspectRatio.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1EOS5_'.
+  jwd8101o-i  "../src/CheckAspectRatio.cpp", line 32: Inline expansion is applied to the user defined function '_ZNSt3__13minIiEERKT_S3_S3_'.
+  jwd8101o-i  "../src/CheckAspectRatio.cpp", line 32: Inline expansion is applied to the user defined function '_ZNSt3__13maxIiEERKT_S3_S3_'.
+  jwd8101o-i  "../src/CheckAspectRatio.cpp", line 36: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/CheckAspectRatio.cpp", line 36: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/CheckAspectRatio.cpp", line 39: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/CheckAspectRatio.cpp", line 39: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 589: Inline expansion is applied to the user defined function '_ZNSt3__18ios_base8setstateEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 696: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5rdbufEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 734: Inline expansion is applied to the user defined function '_ZNSt3__19use_facetINS_5ctypeIcEEEERKT_RKNS_6localeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 734: Inline expansion is applied to the user defined function '_ZNKSt3__15ctypeIcE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 742: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11eq_int_typeEii'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 743: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 752: Inline expansion is applied to the user defined function '_ZNKSt3__113basic_ostreamIcNS_11char_traitsIcEEE6sentrycvbEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNSt3__119ostreambuf_iteratorIcNS_11char_traitsIcEEEC1ERNS_13basic_ostreamIcS2_EE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5flagsEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE4fillEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__119ostreambuf_iteratorIcNS_11char_traitsIcEEE6failedEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 763: Inline expansion is applied to the user defined function '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEE8setstateEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 894: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE6lengthEPKc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/iterator", line 925: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5rdbufEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 932: Inline expansion is applied to the user defined function '_ZNSt3__19addressofIKcEEPT_RS2_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 1034: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1490: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5widthEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1498: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1506: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1Emc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1507: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE4dataEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1507: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1516: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1522: Inline expansion is applied to the user defined function '_ZNSt3__18ios_base5widthEl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1626: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE13__get_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1626: Inline expansion is applied to the user defined function '_ZNSt3__116__to_raw_pointerIKcEEPT_S3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1690: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1772: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1778: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1778: Inline expansion is applied to the user defined function '_ZNSt3__114pointer_traitsIPKcE10pointer_toERS1_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE9__is_longEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE18__get_long_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE19__get_short_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1789: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1789: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2106: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRNS_17__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES6_EEEEONS_16remove_referenceIT_E4typeEOSC_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2106: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRNS_17__compressed_pairINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES6_EEEEONS_16remove_referenceIT_E4typeEOSC_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2107: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__zeroEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2107: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE6__zeroEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2163: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_EC1Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2414: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EEC2Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2470: Inline expansion is applied to the user defined function '_ZNKSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2594: Inline expansion is applied to the user defined function '_ZNKSt3__16__lessIiiEclERKiS3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2602: Inline expansion is applied to the user defined function '_ZNSt3__13minIiNS_6__lessIiiEEEERKT_S5_S5_T0_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2659: Inline expansion is applied to the user defined function '_ZNKSt3__16__lessIiiEclERKiS3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2667: Inline expansion is applied to the user defined function '_ZNSt3__13maxIiNS_6__lessIiiEEEERKT_S5_S5_T0_'.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_4_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DUNROLLING_4_B -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/CheckAspectRatio.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta
