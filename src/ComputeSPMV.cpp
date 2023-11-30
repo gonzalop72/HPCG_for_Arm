@@ -71,8 +71,17 @@ the target system.
 @see ComputeSPMV_ref
 */
 
-#ifdef HPCG_MAN_OPT_SCHEDULE_ON
-	#define SCHEDULE(T)	schedule(T)
+/*#ifdef HPCG_MAN_OPT_SCHEDULE_ON*/
+	//#define SCHEDULE(T)	schedule(T)
+/*#elif defined(HPCG_MAN_SPVM_SCHEDULE)
+	#define SCHEDULE(T) schedule(static,720)
+/*#else
+	#define SCHEDULE(T)
+#endif*/
+#ifdef HPCG_MAN_SPVM_SCHEDULE_720
+	#define SCHEDULE(T) schedule(static,720)
+#elif defined(HPCG_MAN_SPVM_SCHEDULE_528)
+	#define SCHEDULE(T) schedule(static,720)
 #else
 	#define SCHEDULE(T)
 #endif
@@ -106,7 +115,10 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 	double * const yv = y.values;
 	const local_int_t nrow = A.localNumberOfRows;
 
-#if defined(HPCG_USE_NEON) && !defined(HPCG_USE_ARMPL_SPMV)
+#if defined(HPCG_MAN_OPT_SPMV_UNROLL)
+	ComputeSPMV_manual(A, xv, yv, nrow);
+
+#elif defined(HPCG_USE_NEON) && !defined(HPCG_USE_ARMPL_SPMV)
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel for SCHEDULE(runtime)
 #endif
@@ -289,64 +301,26 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 
 	armpl_spmv_exec_d(ARMPL_SPARSE_OPERATION_NOTRANS, alpha, A.armpl_mat, xv, beta, yv);
 
-#elif defined(HPCG_MAN_OPT_SPMV_UNROLL)
-	ComputeSPMV_manual(A, xv, yv, nrow);
-/*#ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
-#endif
-	for ( local_int_t i = 0; i < nrow-1; ++i ) {
-		double sum0 = 0.0;
-		double sum1 = 0.0;
-		if (A.nonzerosInRow[i] == A.nonzerosInRow[i+1]) {
-			for ( local_int_t j = 0; j < A.nonzerosInRow[i]; ++j ) {
-				local_int_t curCol0 = A.mtxIndL[i][j];
-				local_int_t curCol1 = A.mtxIndL[i+1][j];
-
-				sum0 += A.matrixValues[i][j] * xv[curCol0];
-				sum1 += A.matrixValues[i+1][j] * xv[curCol1];
-			}
-			yv[i] = sum0;
-			yv[i+1] = sum1;
-			++i;
-		}
-		else {
-			double sum = 0.0;
-			for ( local_int_t j = 0; j < A.nonzerosInRow[i]; ++j ) {
-				local_int_t curCol = A.mtxIndL[i][j];
-				sum += A.matrixValues[i][j] * xv[curCol];
-			}
-			yv[i] = sum;
-			++i;
-			//if (i < nrow) {
-				sum = 0.0;
-				for ( local_int_t j = 0; j < A.nonzerosInRow[i]; ++j ) {
-					local_int_t curCol = A.mtxIndL[i][j];
-					sum += A.matrixValues[i][j] * xv[curCol];
-				}
-				yv[i] = sum;
-			//}
-		}
-	}*/
 #else
-#pragma statement scache_isolate_way L2=10
-#pragma statement scache_isolate_assign xv
+//#pragma statement scache_isolate_way L2=10
+//#pragma statement scache_isolate_assign xv
 
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel for SCHEDULE(runtime)
 #endif
-#pragma loop nounroll
+//#pragma loop nounroll
 	for ( local_int_t i = 0; i < nrow; i++ ) {
 		double sum = 0.0;
-		#pragma fj loop zfill
-	#pragma loop nounroll
+		//#pragma fj loop zfill
+	//#pragma loop nounroll
 		for ( local_int_t j = 0; j < A.nonzerosInRow[i]; j++ ) {
 			local_int_t curCol = A.mtxIndL[i][j];
 			sum += A.matrixValues[i][j] * xv[curCol];
 		}
 		yv[i] = sum;
 	}
-	#pragma statement end_scache_isolate_assign
-	#pragma statement end_scache_isolate_way
+	//#pragma statement end_scache_isolate_assign
+	//#pragma statement end_scache_isolate_way
 #endif
 
 	return 0;
@@ -354,14 +328,14 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 
 #ifdef HPCG_MAN_OPT_SPMV_UNROLL
 inline void ComputeSPMV_unroll2(const SparseMatrix & A, const double * const xv, double * const yv,	const local_int_t nrow) {
-#pragma fj loop zfill
-#pragma statement scache_isolate_way L2=10
-#pragma statement scache_isolate_assign xv
+//#pragma fj loop zfill
+//#pragma statement scache_isolate_way L2=10
+//#pragma statement scache_isolate_assign xv
 
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel for SCHEDULE(runtime)
 #endif
-#pragma loop nounroll_and_jam
+//#pragma loop nounroll_and_jam
 	for ( local_int_t i = 0; i < nrow-1; i+=2 ) {
 		double sum0 = 0.0;
 		double sum1 = 0.0;
@@ -396,8 +370,8 @@ inline void ComputeSPMV_unroll2(const SparseMatrix & A, const double * const xv,
 		yv[i] = sum0;
 		yv[i+1] = sum1;
 	}
-	#pragma statement end_scache_isolate_assign
-	#pragma statement end_scache_isolate_way
+	//#pragma statement end_scache_isolate_assign
+	//#pragma statement end_scache_isolate_way
 }
 
 inline void ComputeSPMV_unroll4(const SparseMatrix & A, const double * const xv, double * const yv,	const local_int_t nrow) {
@@ -405,16 +379,15 @@ inline void ComputeSPMV_unroll4(const SparseMatrix & A, const double * const xv,
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel for SCHEDULE(runtime)
 #endif
-	#pragma statement scache_isolate_way L2=10
-	#pragma statement scache_isolate_assign xv
-#pragma loop nounroll_and_jam
+	//#pragma statement scache_isolate_way L2=10
+	//#pragma statement scache_isolate_assign xv
+	#pragma loop nounroll_and_jam
 	for ( local_int_t i = 0; i < nrow-3; i+=4) {
 		double sum0 = 0.0, sum1 = 0.0, sum2 = 0.0, sum3 = 0.0;
 
-	double x=0;
 		if ((A.nonzerosInRow[i] == A.nonzerosInRow[i+1]) && (A.nonzerosInRow[i] == A.nonzerosInRow[i+2]) && (A.nonzerosInRow[i] == A.nonzerosInRow[i+3]) ){
-				#pragma fj loop zfill
-				#pragma loop nounroll
+			#pragma fj loop zfill
+			#pragma loop nounroll
 			for ( local_int_t j = 0; j < A.nonzerosInRow[i]; ++j ) {
 				local_int_t curCol0 = A.mtxIndL[i][j];
 				local_int_t curCol1 = A.mtxIndL[i+1][j];
@@ -443,50 +416,9 @@ inline void ComputeSPMV_unroll4(const SparseMatrix & A, const double * const xv,
 				yv[i+ix] = sum;
 			}
 		}
-/*
-		local_int_t max1 = A.nonzerosInRow[i  ];
-		local_int_t min1 = A.nonzerosInRow[i+1];
-		local_int_t tmp = max1;
-		if (max1 < min1) { max1 = min1; min1 = tmp; } 
-
-		local_int_t max2 = A.nonzerosInRow[i+2];
-		local_int_t min2 = A.nonzerosInRow[i+3];
-		tmp = max2;
-		if (max2 < min2) { max2 = min2; min2 = tmp; }
-
-		local_int_t max = max2 > max1 ? max2 : max1;
-		local_int_t min = min1 < min2 ? min1 : min2;
-
-		for ( local_int_t j = 0; j < min; ++j ) {
-			local_int_t curCol0 = A.mtxIndL[i][j];
-			local_int_t curCol1 = A.mtxIndL[i+1][j];
-			local_int_t curCol2 = A.mtxIndL[i+2][j];
-			local_int_t curCol3 = A.mtxIndL[i+3][j];
-
-			sum0 += A.matrixValues[i][j] * xv[curCol0];
-			sum1 += A.matrixValues[i+1][j] * xv[curCol1];
-			sum2 += A.matrixValues[i+2][j] * xv[curCol2];
-			sum3 += A.matrixValues[i+3][j] * xv[curCol3];
-		}
-		for ( local_int_t j=min; j < max; ++j ) {
-			local_int_t curCol0 = (j<A.nonzerosInRow[i  ]) ? A.mtxIndL[i][j] : 0;
-			local_int_t curCol1 = (j<A.nonzerosInRow[i+1]) ? A.mtxIndL[i+1][j] : 0;
-			local_int_t curCol2 = (j<A.nonzerosInRow[i+2]) ? A.mtxIndL[i+2][j] : 0;
-			local_int_t curCol3 = (j<A.nonzerosInRow[i+3]) ? A.mtxIndL[i+3][j] : 0;
-
-			sum0 += A.matrixValues[i][j] * xv[curCol0];
-			sum1 += A.matrixValues[i+1][j] * xv[curCol1];
-			sum2 += A.matrixValues[i+2][j] * xv[curCol2];
-			sum3 += A.matrixValues[i+3][j] * xv[curCol3];
-		}
-
-		yv[i] = sum0;
-		yv[i+1] = sum1;
-		yv[i+2] = sum2;
-		yv[i+3] = sum3;*/
 	}
-	#pragma statement end_scache_isolate_assign
-    #pragma statement end_scache_isolate_way	
+	//#pragma statement end_scache_isolate_assign
+    //#pragma statement end_scache_isolate_way	
 }
 #endif //HPCG_MAN_OPT_SPMV_UNROLL
 

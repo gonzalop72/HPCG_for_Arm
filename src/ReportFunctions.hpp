@@ -6,15 +6,19 @@
 #include <sstream>
 #include <string>
 #include "omp.h"
+#include <cstdlib>
 
 std::ostream& operator<<(std::ostream& o, omp_sched_t c) {
-#ifdef __FCC_version__
-  switch (c) {
-#else
-  if (c & omp_sched_t::omp_sched_monotonic)
-    o << "(monotonic)";
-  switch (c & ~omp_sched_t::omp_sched_monotonic) {
+
+    omp_sched_t filter = (omp_sched_t)0;
+#ifndef __FCC_version__
+    filter = omp_sched_t::omp_sched_monotonic;
 #endif
+
+  if (c & filter)
+    o << "(monotonic)";
+  c = (omp_sched_t)(c & ~filter);
+  switch (c) {
 	  case omp_sched_t::omp_sched_static:
       o << "static";
       break;
@@ -99,7 +103,7 @@ void ReportEnvironment(const SparseMatrix& A, OutputFile& doc) {
     omp_sched_t schedule; int chunkSize;
     omp_get_schedule(&schedule, &chunkSize);
     std::stringstream schedule_info("");
-    schedule_info << "(" << schedule << "," << chunkSize << ")";
+    schedule_info << "(" << schedule << ":" << chunkSize << ")";
     doc.get("ARM Configuration")->add("Schedule", schedule_info.str());
 
     std::string optimizations;
@@ -130,6 +134,7 @@ void ReportEnvironment(const SparseMatrix& A, OutputFile& doc) {
     doc.get(ArmGroup)->add("DDOT Unrolling", DdotSVEManualOptimizations(unrolling));
     doc.get(ArmGroup)->add("DDOT Unroll-level", unrolling);
 #endif
+
 #ifdef HPCG_MAN_OPT_SPMV_UNROLL    //2-WAY UNROLLING ON SPMV
     int unrolling = 0;
 
