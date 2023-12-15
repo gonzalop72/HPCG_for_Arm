@@ -328,25 +328,17 @@ int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 		}
 	}*/
 #else
-#pragma statement scache_isolate_way L2=10
-#pragma statement scache_isolate_assign xv
-
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel for SCHEDULE(runtime)
 #endif
-#pragma loop nounroll
 	for ( local_int_t i = 0; i < nrow; i++ ) {
 		double sum = 0.0;
-		#pragma fj loop zfill
-	#pragma loop nounroll
 		for ( local_int_t j = 0; j < A.nonzerosInRow[i]; j++ ) {
 			local_int_t curCol = A.mtxIndL[i][j];
 			sum += A.matrixValues[i][j] * xv[curCol];
 		}
 		yv[i] = sum;
 	}
-	#pragma statement end_scache_isolate_assign
-	#pragma statement end_scache_isolate_way
 #endif
 
 	return 0;

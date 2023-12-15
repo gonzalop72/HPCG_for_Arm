@@ -102,6 +102,11 @@ HPCG_LIBS     =
 # -DHPCG_NO_MPI	        Define to disable MPI
 # -DHPCG_NO_OPENMP	Define to disable OPENMP
 # -DHPCG_CONTIGUOUS_ARRAYS Define to have sparse matrix arrays long and contiguous
+# -DHPCG_USE_DDOT_ARMPL Define to use Arm Performance Libraries calls in the ComputeDotProduct
+# -DHPCG_USE_WAXPBY_ARMPL Define to use Arm Performance Libraries calls in the ComputeWAXPBY
+# -DHPCG_USE_ARMPL_SPMV Define to use Arm Performance Libraries calls in the ComputeSPMV kernel. Requires ArmPL >= 19.0
+# -DHPCG_USE_NEON Define to use NEON intrinsics in the main kernels
+# -DHPCG_USE_SVE Define to use SVE intrinsics in the main kernels
 # -DHPCG_DEBUG       	Define to enable debugging output
 # -DHPCG_DETAILED_DEBUG Define to enable very detailed debugging output
 #

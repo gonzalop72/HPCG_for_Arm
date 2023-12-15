@@ -59,7 +59,6 @@
 /**************************************************************************************************/
 /**************************************************************************************************/
 
-#include "arm_sve.h"
 #ifdef HPCG_USE_SVE
 #include "arm_sve.h"
 
@@ -1435,14 +1434,6 @@ int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, Tra
 	double * const xv = x.values;
 	double **matrixDiagonal = A.matrixDiagonal;
 
-/*#ifndef HPCG_NO_OPENMP
-#pragma omp parallel SCHEDULE(runtime)
-{
-#endif
-*/
-#pragma statement scache_isolate_way L2=10
-#pragma statement scache_isolate_assign xv
-
 	/*
 	 * FORWARD
 	 */
@@ -1450,7 +1441,6 @@ int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, Tra
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel for SCHEDULE(runtime)
 #endif
-		#pragma loop unroll_and_jam(4)
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
 			const double * const currentValues = A.matrixValues[row];
@@ -1475,7 +1465,6 @@ int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, Tra
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel for SCHEDULE(runtime)
 #endif
-		#pragma loop unroll_and_jam(4)
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
 			const double * const currentValues = A.matrixValues[row];
@@ -1492,12 +1481,6 @@ int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, Tra
 			xv[row] = sum / currentDiagonal;
 		}
 	}
-
-	#pragma statement end_scache_isolate_assign
-	#pragma statement end_scache_isolate_way
-/*#ifndef HPCG_NO_OPENMP
-}
-#endif*/
 
 	return 0;
 }
@@ -1711,6 +1694,8 @@ int ComputeSYMGS( const SparseMatrix & A, const Vector & r, Vector & x, TraceDat
 	return ComputeSYMGS_BLOCK(A, r, x, trace);
 #endif
 }
+
+#ifdef HPCG_USE_SVE
 
 inline void SYMGS_VERSION_1(const SparseMatrix& A, double * const& xv, const double * const& rv) {
 	
@@ -2771,3 +2756,4 @@ inline void SYMGS_VERSION_4(const SparseMatrix& A, double * const& xv, const dou
 #endif
 	}
 }
+#endif //HPCG_USE_SVE
