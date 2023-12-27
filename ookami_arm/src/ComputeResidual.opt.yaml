@@ -1,0 +1,756 @@
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_barrier
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_critical
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 67, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_end_critical
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_barrier
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_critical
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 67, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_end_critical
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 61, Column: 31 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 61, Column: 31 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 61, Column: 40 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 61, Column: 40 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Passed
+Pass:            gvn
+Name:            LoadPRE
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - String:          load eliminated by PRE
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 66, Column: 32 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 64, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 66, Column: 32 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 64, Column: 5 }
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 3 }
+Function:        _Z15ComputeResidualiRK13Vector_STRUCTS1_Rd
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeResidualiRK13Vector_STRUCTS1_Rd
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 49, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 3 }
+Function:        _Z15ComputeResidualiRK13Vector_STRUCTS1_Rd
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeResidualiRK13Vector_STRUCTS1_Rd
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 49, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 85, Column: 14 }
+Function:        _Z15ComputeResidualiRK13Vector_STRUCTS1_Rd
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 53, Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 85, Column: 14 }
+Function:        _Z15ComputeResidualiRK13Vector_STRUCTS1_Rd
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 53, Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 3 }
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            InterleavingNotBeneficial
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          the cost-model indicates that interleaving is not beneficial
+...
+--- !Passed
+Pass:            sve-loop-vectorize
+Name:            Vectorized
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'vectorized loop (vectorization width: '
+  - VectorizationFactor: vscale x 2
+  - String:          ', interleaved count: '
+  - InterleaveCount: '1'
+  - String:          ')'
+  - String:          '(runtime checks: '
+  - RTNeeded:        no
+  - String:          ')'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 66, Column: 32 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 64, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 60, Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 66, Column: 32 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 64, Column: 5 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 49, Column: 0 }
+Function:        _Z15ComputeResidualiRK13Vector_STRUCTS1_Rd
+Args:
+  - NumStackBytes:   '64'
+  - String:          ' stack bytes in function'
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - NumSpills:       '2'
+  - String:          ' spills '
+  - TotalSpillsCost: '9.599999e-01'
+  - String:          ' total spills cost '
+  - NumReloads:      '1'
+  - String:          ' reloads '
+  - TotalReloadsCost: '1.000000e+00'
+  - String:          ' total reloads cost '
+  - NumVRCopies:     '1'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '1.000000e+00'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+Function:        .omp_outlined.
+Args:
+  - NumStackBytes:   '96'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z15ComputeResidualiRK13Vector_STRUCTS1_Rd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '27'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 49, Column: 0 }
+Function:        _Z15ComputeResidualiRK13Vector_STRUCTS1_Rd
+Args:
+  - NumInstructions: '27'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '12'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '28'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '12'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 61, Column: 31 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 59, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '14'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 67, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '13'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeResidual.cpp', Line: 56, Column: 0 }
+Function:        .omp_outlined.
+Args:
+  - NumInstructions: '100'
+  - String:          ' instructions in function'
+...

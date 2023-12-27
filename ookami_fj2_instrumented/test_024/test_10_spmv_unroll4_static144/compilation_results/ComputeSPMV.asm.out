@@ -1,0 +1,1697 @@
+..text.b:
+	.ident	"$Options: Fujitsu C/C++ Compiler 4.7.0 (Nov 10 2021 09:37:15) --preinclude /opt/FJSVstclanga/cp-1.0.21.01/bin/../lib/FCC.pre --g++ -Dunix -Dlinux -D__FUJITSU -D__FCC_major__=4 -D__FCC_minor__=7 -D__FCC_patchlevel__=0 -D__FCC_version__=\"4.7.0\" -D__aarch64__ -D__unix -D_OPENMP=201107 -D__PRAGMA_REDEFINE_EXTNAME -D__FCC_VERSION=800 -D__USER_LABEL_PREFIX__= -D__OPTIMIZE__ -D__ARM_ARCH=8 -D__ARM_FEATURE_SVE -D__FP_FAST_FMA -D__ELF__ -D__linux -Asystem(unix) -D__LIBC_6B -D_LP64 -D__LP64__ -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DHPCG_MAN_OPT_SCHEDULE_ON -I./src -I./src/OOKAMI_OMP_FJ -DLIKWID_PERFMON -DLIKWID_INSTRUMENTATION --K=omp -I../src -DSPMV_4_UNROLL -DHPCG_MAN_OPT_SPMV_UNROLL --K=ocl -D_REENTRANT -D__MT__ --zmode=64 -I/lustre/software/arm/22.1/arm-linux-compiler-22.1_Generic-AArch64_RHEL-8_aarch64-linux/include -I/lustre/software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/include -I/lustre/software/likwid/5.2.2//include -I/cm/shared/apps/slurm/current/include -I/lustre/software/likwid/5.2.2//include --sys_include=/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371 --sys_include=/opt/FJSVstclanga/cp-1.0.21.01/bin/../include --K=opt --exceptions ../../../../src/ComputeSPMV.cpp -- -ncmdname=FCC -nspopt=\"-c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DHPCG_MAN_OPT_SCHEDULE_ON -I./src -I./src/OOKAMI_OMP_FJ -DLIKWID_PERFMON -DLIKWID_INSTRUMENTATION -Kfast -KSVE -Kopenmp -Koptmsg=2 -S -Nlst=t -Kocl -I../src -DSPMV_4_UNROLL -DHPCG_MAN_OPT_SPMV_UNROLL -o ComputeSPMV.asm.out\" -zobe=cplus -zcfc=target_sve -O3 -x- -Komitfp,mfunc,eval,fp_relaxed,fz,fast_matmul,fp_contract,ilfunc,simd_packed_promotion -KSVE -Kopenmp,threadsafe -Koptmsg=2 -Nlst=t -Kocl -zsta=am -Klargepage -zsrc=../../../../src/ComputeSPMV.cpp ComputeSPMV.asm.out $"
+	.file	"ComputeSPMV.cpp"
+	.ident	"$Compiler: Fujitsu C/C++ Compiler 4.7.0 (Nov 10 2021 09:37:15) ../../../../src/ComputeSPMV.cpp _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_ $"
+	.text
+	.align	2
+	.global	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+	.type	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_, %function
+_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_:
+	.file 1 "/usr/include/bits/byteswap.h"
+	.file 2 "/usr/include/bits/types.h"
+	.file 3 "/usr/include/bits/uintn-identity.h"
+	.file 4 "/usr/include/stdlib.h"
+	.file 5 "/usr/include/bits/stdlib-bsearch.h"
+	.file 6 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/stddef.h"
+	.file 7 "/usr/include/bits/stdlib-float.h"
+	.file 8 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/__config_fujitsu"
+	.file 9 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/cstdlib"
+	.file 10 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/type_traits"
+	.file 11 "/usr/include/string.h"
+	.file 12 "/usr/include/strings.h"
+	.file 13 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/exception"
+	.file 14 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/cstddef"
+	.file 15 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/typeinfo"
+	.file 16 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/new"
+	.file 17 "/usr/include/wchar.h"
+	.file 18 "/usr/include/bits/types/mbstate_t.h"
+	.file 19 "/usr/include/bits/types/__mbstate_t.h"
+	.file 20 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/iterator"
+	.file 21 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/tuple"
+	.file 22 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/atomic"
+	.file 23 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory"
+	.file 24 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm"
+	.file 25 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/__bit_reference"
+	.file 26 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/stdexcept"
+	.file 27 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/iosfwd"
+	.file 28 "../../../../src/Geometry.hpp"
+	.file 29 "../../../../src/Vector.hpp"
+	.file 30 "../../../../src/MGData.hpp"
+	.file 31 "/usr/include/math.h"
+	.file 32 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/cmath"
+	.file 33 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/__hash_table"
+	.file 34 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/functional"
+	.file 35 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/unordered_map"
+	.file 36 "../../../../src/SparseMatrix.hpp"
+	.file 37 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector"
+	.file 38 "../../../../src/ComputeSPMV.cpp"
+	.loc 38 87 0
+..LDL1:
+.LFB0:
+	.cfi_startproc
+/*     87 */	sub	sp, sp, 64
+	.cfi_def_cfa_offset 64
+/*    ??? */	str	x30, [sp, 48]	//  (*)
+	.cfi_offset 30, -16
+	.loc 38 89 0
+..LDL2:
+/*     89 */	ldr	w3, [x1]	//  (*)
+/*     89 */	ldr	w4, [x0, 36]	//  (*)
+/*     89 */	cmp	w3, w4
+/*     89 */	bge	.L342
+/*     89 */	adrp	x0, .LR.3
+/*     89 */	adrp	x1, .LR.2
+/*     89 */	mov	w2, 89
+/*     89 */	add	x0, x0, :lo12:.LR.3
+/*     89 */	add	x1, x1, :lo12:.LR.2
+/*     89 */	adrp	x3, .LR.4
+/*     89 */	add	x3, x3, :lo12:.LR.4
+/*     89 */	bl	__assert_fail
+.L342:
+	.loc 38 90 0
+..LDL3:
+/*     90 */	ldr	w4, [x2]	//  (*)
+/*     90 */	ldr	w3, [x0, 32]	//  (*)
+/*     90 */	cmp	w4, w3
+/*     90 */	bge	.L345
+/*     90 */	adrp	x0, .LR.1
+/*     90 */	adrp	x1, .LR.2
+/*     90 */	mov	w2, 90
+/*     90 */	add	x0, x0, :lo12:.LR.1
+/*     90 */	add	x1, x1, :lo12:.LR.2
+/*     90 */	adrp	x3, .LR.4
+/*     90 */	add	x3, x3, :lo12:.LR.4
+/*     90 */	bl	__assert_fail
+.L345:
+	.loc 38 283 0
+..LDL4:
+	.loc 38 95 0 is_stmt 0
+..LDL5:
+/*     95 */	ldr	x1, [x1, 8]	//  (*)
+	.loc 38 96 0
+..LDL6:
+/*     96 */	ldr	x2, [x2, 8]	//  (*)
+	.loc 38 283 0
+..LDL7:
+/*    283 */	bl	_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi
+	.loc 38 342 0 is_stmt 1
+..LDL8:
+/*    342 */	mov	w0, 0
+	.loc 38 343 0
+..LDL9:
+/*    ??? */	ldr	x30, [sp, 48]	//  (*)
+	.cfi_restore 30
+/*    343 */	add	sp, sp, 64
+	.cfi_def_cfa_offset 0
+/*    343 */	ret	
+..D1.pchi:
+	.cfi_endproc
+.LFE0:
+	.size	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_, .-_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+	.ident	"$Compiler: Fujitsu C/C++ Compiler 4.7.0 (Nov 10 2021 09:37:15) ../../../../src/ComputeSPMV.cpp _Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi $"
+	.section	.text._Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi,"axG",%progbits,_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi,comdat
+
+	.weak	_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi
+	.align	2
+	.type	_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi, %function
+_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi:
+	.loc 38 392 0
+..LDL10:
+.LFB1:
+	.cfi_startproc
+/*    ??? */	str	x30, [sp, -16]!	//  (*)
+	.cfi_def_cfa_offset 16
+	.cfi_offset 30, -16
+/*    477 */	mov	x4, x1
+/*    ??? */	sub	sp, sp, 112
+	.cfi_def_cfa_offset 128
+/*    392 */	add	x1, sp, 32
+/*    392 */	str	w3, [x1]
+/*    392 */	stp	x2, x4, [x1, 8]
+/*    392 */	str	x0, [x1, 24]
+	.loc 38 397 0 is_stmt 0
+..LDL11:
+/*    397 */	mov	x2, 0
+/*    397 */	adrp	x0, _Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1
+/*    397 */	add	x0, x0, :lo12:_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1
+/*    397 */	bl	__mpc_opar
+	.loc 38 480 0 is_stmt 1
+..LDL12:
+/*    ??? */	add	sp, sp, 112
+	.cfi_def_cfa_offset 16
+/*    ??? */	ldr	x30, [sp], 16	//  (*)
+	.cfi_restore 30
+	.cfi_def_cfa_offset 0
+/*    480 */	ret	
+..D2.pchi:
+	.cfi_endproc
+.LFE1:
+	.size	_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi, .-_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi
+	.ident	"$Compiler: Fujitsu C/C++ Compiler 4.7.0 (Nov 10 2021 09:37:15) ../../../../src/ComputeSPMV.cpp _Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1 $"
+	.text
+	.align	2
+	.type	_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1, %function
+_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1:
+	.loc 38 397 0
+..LDL13:
+.LFB2:
+	.cfi_startproc
+/*    ??? */	stp	x29, x30, [sp, -16]!	//  (*)
+/*    343 */	add	x29, sp, 0
+	.cfi_def_cfa 29, 16
+	.cfi_offset 29, -16
+	.cfi_offset 30, -8
+/*    343 */	sub	sp, sp, 192
+/*    ??? */	stp	x23, x24, [x29, -48]	//  (*)
+	.cfi_offset 23, -64
+	.cfi_offset 24, -56
+/*    ??? */	stp	d8, d9, [x29, -72]	//  (*)
+	.cfi_offset 72, -88
+	.cfi_offset 73, -80
+/*    ??? */	stp	x19, x20, [x29, -16]	//  (*)
+	.cfi_offset 19, -32
+	.cfi_offset 20, -24
+/*    ??? */	stp	d10, d11, [x29, -88]	//  (*)
+	.cfi_offset 74, -104
+	.cfi_offset 75, -96
+/*    343 */	add	x19, sp, 0
+/*    343 */	mov	x20, x0
+/*    ??? */	stp	x21, x22, [x29, -32]	//  (*)
+	.cfi_offset 21, -48
+	.cfi_offset 22, -40
+/*    ??? */	str	x25, [x29, -56]	//  (*)
+	.cfi_offset 25, -72
+/*    ??? */	sub	sp, sp, 32
+/*    343 */	mov	x5, sp
+/*    343 */	and	sp, x5, -64
+/*    343 */	str	x1, [x19, 80]
+/*    343 */	str	x2, [x19, 72]
+/*    343 */	str	x3, [x19, 64]
+/*    343 */	str	x4, [x19, 56]
+	.loc 38 397 0 is_stmt 0
+..LDL14:
+	.loc 38 397 0 is_stmt 0
+..LDL15:
+	.loc 38 402 0 is_stmt 1
+..LDL16:
+/*    402 */	add	x21, x19, 0
+/*    402 */	mov	w0, 655360
+/*    402 */	mov	w1, 256
+/*    402 */	movk	w0, 6, lsl #0
+/*    402 */	str	w0, [x21, 8]
+/*    402 */	mov	x0, x21
+/*    402 */	str	w1, [x21]
+/*    402 */	str	wzr, [x21, 4]
+/*    402 */	bl	__jwe_xset_sccr
+/*    402 */	mov	w1, 0
+/*    402 */	ldr	w0, [x20]	//  "nrow"
+/*    402 */	sub	w0, w0, 3
+/*    402 */	cmp	w0, 0
+/*    402 */	ble	.L576
+/*    402 */	mov	x2, 1
+/*    402 */	add	x24, x19, 32
+/*    402 */	str	x2, [x21, 40]
+/*    402 */	sxtw	x22, w0
+/*    402 */	add	x23, x24, 16
+.L547:
+/*    402 */	sxtw	x0, w1
+/*    402 */	add	x1, x24, 8
+/*    402 */	ldr	x2, [x24, 32]
+/*    402 */	mov	x7, 0
+/*    402 */	mov	x4, x24
+/*    402 */	mov	x3, x7
+/*    402 */	mov	x5, x23
+/*    402 */	mov	x6, x7
+/*    402 */	str	x2, [sp, 8]	//  (*)
+/*    402 */	mov	x2, 4
+/*    402 */	str	x1, [sp]	//  (*)
+/*    402 */	mov	x1, x22
+/*    402 */	bl	__mpc_ortd_th
+/*    402 */	ldr	x0, [x24, 8]
+/*    402 */	cmp	x0, 0
+/*    402 */	ble	.L576
+/*    402 */	ldr	x1, [x24]
+/*    402 */	ldr	x0, [x24, 16]
+	.loc 38 430 0 is_stmt 0
+..LDL17:
+/*    430 */	ptrue	p0.d, ALL
+	.loc 38 402 0
+..LDL18:
+/*    402 */	sub	w2, w0, w1
+/*    402 */	cmp	w1, w0
+/*    402 */	asr	w0, w2, 1
+/*    402 */	add	w0, w2, w0, lsr #30
+/*    402 */	asr	w0, w0, 2
+/*    402 */	add	w0, w0, 1
+/*    402 */	csinc	w5, w0, wzr, le
+.L549:					// :entr
+	.loc 38 403 0 is_stmt 1
+..LDL19:
+/*    403 */	eor	v28.8b, v28.8b, v28.8b
+	.loc 38 406 0
+..LDL20:
+/*    406 */	sxtw	x6, w1
+/*    406 */	ldr	x0, [x20, 24]	//  "A"
+/*    406 */	add	x7, x6, 1
+/*    406 */	ldr	x2, [x0, 48]	//  (*)
+/*    406 */	ldrb	w4, [x2, x6]	//  (*)
+/*    406 */	ldrb	w3, [x2, x7]	//  (*)
+/*    406 */	cmp	w4, w3
+/*    406 */	bne	.L562
+/*    406 */	add	x12, x6, 2
+/*    406 */	ldrb	w3, [x2, x12]	//  (*)
+/*    406 */	cmp	w4, w3
+/*    406 */	bne	.L562
+/*    406 */	add	x16, x6, 3
+/*    406 */	ldrb	w2, [x2, x16]	//  (*)
+/*    406 */	cmp	w4, w2
+/*    406 */	bne	.L562
+	.loc 38 409 0
+..LDL21:
+/*    409 */	cmp	w4, 0
+	.loc 38 406 0 is_stmt 0
+..LDL22:
+/*    406 */	fmov	d0, d28
+	.loc 38 409 0
+..LDL23:
+/*    409 */	csel	w3, w4, wzr, ge
+/*    409 */	cmp	w4, 0
+	.loc 38 406 0
+..LDL24:
+/*    406 */	fmov	d1, d0
+/*    406 */	fmov	d2, d1
+	.loc 38 409 0
+..LDL25:
+/*    409 */	ble	.L560
+	.loc 38 410 0
+..LDL26:
+/*    410 */	ldr	x2, [x0, 64]	//  (*)
+	.loc 38 409 0
+..LDL27:
+/*    409 */	asr	w4, w3, 2
+	.loc 38 418 0
+..LDL28:
+/*    418 */	fmov	z1.d, 0.000000e+00
+	.loc 38 415 0
+..LDL29:
+/*    415 */	ldr	x0, [x0, 72]	//  (*)
+	.loc 38 409 0
+..LDL30:
+/*    409 */	add	w4, w3, w4, lsr #29
+/*    409 */	mov	x25, 0
+/*    409 */	asr	w18, w4, 3
+/*    409 */	sub	w14, w3, w18, lsl #3
+/*    409 */	mov	z2.d, z1.d
+/*    409 */	mov	z4.d, z1.d
+	.loc 38 410 0
+..LDL31:
+/*    410 */	ldr	x11, [x2, x6, lsl #3]	//  (*)
+	.loc 38 411 0
+..LDL32:
+/*    411 */	ldr	x15, [x2, x7, lsl #3]	//  (*)
+	.loc 38 409 0
+..LDL33:
+/*    409 */	mov	z6.d, z1.d
+	.loc 38 412 0
+..LDL34:
+/*    412 */	ldr	x8, [x2, x12, lsl #3]	//  (*)
+	.loc 38 413 0
+..LDL35:
+/*    413 */	ldr	x3, [x2, x16, lsl #3]	//  (*)
+	.loc 38 415 0
+..LDL36:
+/*    415 */	ldr	x13, [x0, x6, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL37:
+/*    416 */	ldr	x9, [x0, x7, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL38:
+/*    417 */	ldr	x2, [x0, x12, lsl #3]	//  (*)
+	.loc 38 418 0
+..LDL39:
+/*    418 */	ldr	x30, [x0, x16, lsl #3]	//  (*)
+	.loc 38 409 0
+..LDL40:
+/*    409 */	cbz	w18, .L557
+	.loc 38 415 0
+..LDL41:
+/*    415 */	ldr	x0, [x20, 16]	//  "xv"
+/*    415 */	mov	w17, w18
+/*    415 */	mov	z2.d, z1.d
+/*    415 */	mov	z4.d, z1.d
+/*    415 */	mov	z6.d, z1.d
+	.loc 38 409 0
+..LDL42:
+/*    409 */	cmp	w17, 6
+	.loc 38 415 0
+..LDL43:
+/*    415 */	orr	x10, x0, 72057594037927936
+	.loc 38 409 0
+..LDL44:
+/*    409 */	blt	.L636
+	.loc 38 410 0
+..LDL45:
+/*    410 */	ld1sw	{z27.d}, p0/z, [x11, x25, lsl #2]	//  (*)
+/*    410 */	add	x0, x25, 8
+/*    410 */	add	x4, x25, 16
+	.loc 38 412 0
+..LDL46:
+/*    412 */	ld1sw	{z26.d}, p0/z, [x8, x25, lsl #2]	//  (*)
+	.loc 38 413 0
+..LDL47:
+/*    413 */	ld1sw	{z25.d}, p0/z, [x3, x25, lsl #2]	//  (*)
+	.loc 38 411 0
+..LDL48:
+/*    411 */	ld1sw	{z24.d}, p0/z, [x15, x0, lsl #2]	//  (*)
+/*    411 */	ld1sw	{z23.d}, p0/z, [x15, x25, lsl #2]	//  (*)
+	.loc 38 410 0
+..LDL49:
+/*    410 */	ld1sw	{z21.d}, p0/z, [x11, x0, lsl #2]	//  (*)
+	.loc 38 412 0
+..LDL50:
+/*    412 */	ld1sw	{z3.d}, p0/z, [x8, x0, lsl #2]	//  (*)
+	.loc 38 413 0
+..LDL51:
+/*    413 */	ld1sw	{z22.d}, p0/z, [x3, x0, lsl #2]	//  (*)
+	.loc 38 415 0
+..LDL52:
+/*    415 */	ld1d	{z18.d}, p0/z, [x13, x25, lsl #3]	//  (*)
+	.loc 38 410 0
+..LDL53:
+/*    410 */	ld1sw	{z20.d}, p0/z, [x11, x4, lsl #2]	//  (*)
+	.loc 38 411 0
+..LDL54:
+/*    411 */	ld1sw	{z19.d}, p0/z, [x15, x4, lsl #2]	//  (*)
+	.loc 38 416 0
+..LDL55:
+/*    416 */	ld1d	{z17.d}, p0/z, [x9, x25, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL56:
+/*    417 */	ld1d	{z16.d}, p0/z, [x2, x25, lsl #3]	//  (*)
+	.loc 38 412 0
+..LDL57:
+/*    412 */	ld1sw	{z7.d}, p0/z, [x8, x4, lsl #2]	//  (*)
+	.loc 38 418 0
+..LDL58:
+/*    418 */	ld1d	{z5.d}, p0/z, [x30, x25, lsl #3]	//  (*)
+	.loc 38 413 0
+..LDL59:
+/*    413 */	ld1sw	{z0.d}, p0/z, [x3, x4, lsl #2]	//  (*)
+	.loc 38 415 0
+..LDL60:
+/*    415 */	ld1d	{z29.d}, p0/z, [x10, z27.d, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL61:
+/*    417 */	ld1d	{z27.d}, p0/z, [x10, z26.d, lsl #3]	//  (*)
+	.loc 38 418 0
+..LDL62:
+/*    418 */	ld1d	{z28.d}, p0/z, [x10, z25.d, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL63:
+/*    416 */	ld1d	{z26.d}, p0/z, [x10, z24.d, lsl #3]	//  (*)
+/*    416 */	ld1d	{z23.d}, p0/z, [x10, z23.d, lsl #3]	//  (*)
+	.loc 38 415 0
+..LDL64:
+/*    415 */	ld1d	{z25.d}, p0/z, [x10, z21.d, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL65:
+/*    417 */	ld1d	{z24.d}, p0/z, [x10, z3.d, lsl #3]	//  (*)
+	.p2align 5
+.L555:					// :entr:term:swpl
+	.loc 38 418 0
+..LDL66:
+/*    418 */	ld1d	{z22.d}, p0/z, [x10, z22.d, lsl #3]	//  (*)
+	.loc 38 410 0
+..LDL67:
+/*    410 */	add	x25, x4, 8
+	.loc 38 415 0
+..LDL68:
+/*    415 */	ld1d	{z21.d}, p0/z, [x13, x0, lsl #3]	//  (*)
+	.loc 38 410 0
+..LDL69:
+/*    410 */	ld1sw	{z31.d}, p0/z, [x11, x25, lsl #2]	//  (*)
+	.loc 38 415 0
+..LDL70:
+/*    415 */	ld1d	{z11.d}, p0/z, [x10, z20.d, lsl #3]	//  (*)
+	.loc 38 411 0
+..LDL71:
+/*    411 */	ld1sw	{z3.d}, p0/z, [x15, x25, lsl #2]	//  (*)
+	.loc 38 416 0
+..LDL72:
+/*    416 */	ld1d	{z20.d}, p0/z, [x9, x0, lsl #3]	//  (*)
+/*    416 */	ld1d	{z10.d}, p0/z, [x10, z19.d, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL73:
+/*    417 */	ld1d	{z19.d}, p0/z, [x2, x0, lsl #3]	//  (*)
+	.loc 38 415 0
+..LDL74:
+/*    415 */	fmla	z6.d, p0/m, z18.d, z29.d
+	.loc 38 412 0
+..LDL75:
+/*    412 */	ld1sw	{z18.d}, p0/z, [x8, x25, lsl #2]	//  (*)
+	.loc 38 417 0
+..LDL76:
+/*    417 */	ld1d	{z30.d}, p0/z, [x10, z7.d, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL77:
+/*    416 */	fmla	z4.d, p0/m, z17.d, z23.d
+	.loc 38 418 0
+..LDL78:
+/*    418 */	ld1d	{z17.d}, p0/z, [x30, x0, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL79:
+/*    417 */	fmla	z2.d, p0/m, z16.d, z27.d
+	.loc 38 418 0
+..LDL80:
+/*    418 */	movprfx	z9.d, p0/z, z1.d
+/*    418 */	fmla	z9.d, p0/m, z5.d, z28.d
+	.loc 38 413 0
+..LDL81:
+/*    413 */	ld1sw	{z28.d}, p0/z, [x3, x25, lsl #2]	//  (*)
+	.loc 38 418 0
+..LDL82:
+/*    418 */	ld1d	{z0.d}, p0/z, [x10, z0.d, lsl #3]	//  (*)
+	.loc 38 410 0
+..LDL83:
+/*    410 */	add	x0, x4, 16
+	.loc 38 415 0
+..LDL84:
+/*    415 */	ld1d	{z7.d}, p0/z, [x13, x4, lsl #3]	//  (*)
+	.loc 38 410 0
+..LDL85:
+/*    410 */	ld1sw	{z8.d}, p0/z, [x11, x0, lsl #2]	//  (*)
+	.loc 38 415 0
+..LDL86:
+/*    415 */	ld1d	{z29.d}, p0/z, [x10, z31.d, lsl #3]	//  (*)
+	.loc 38 411 0
+..LDL87:
+/*    411 */	ld1sw	{z16.d}, p0/z, [x15, x0, lsl #2]	//  (*)
+	.loc 38 416 0
+..LDL88:
+/*    416 */	ld1d	{z5.d}, p0/z, [x9, x4, lsl #3]	//  (*)
+/*    416 */	ld1d	{z23.d}, p0/z, [x10, z3.d, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL89:
+/*    417 */	ld1d	{z3.d}, p0/z, [x2, x4, lsl #3]	//  (*)
+	.loc 38 415 0
+..LDL90:
+/*    415 */	fmla	z6.d, p0/m, z21.d, z25.d
+	.loc 38 412 0
+..LDL91:
+/*    412 */	ld1sw	{z21.d}, p0/z, [x8, x0, lsl #2]	//  (*)
+	.loc 38 417 0
+..LDL92:
+/*    417 */	ld1d	{z27.d}, p0/z, [x10, z18.d, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL93:
+/*    416 */	fmla	z4.d, p0/m, z20.d, z26.d
+	.loc 38 418 0
+..LDL94:
+/*    418 */	ld1d	{z1.d}, p0/z, [x30, x4, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL95:
+/*    417 */	fmla	z2.d, p0/m, z19.d, z24.d
+	.loc 38 418 0
+..LDL96:
+/*    418 */	fmla	z9.d, p0/m, z17.d, z22.d
+	.loc 38 413 0
+..LDL97:
+/*    413 */	ld1sw	{z22.d}, p0/z, [x3, x0, lsl #2]	//  (*)
+	.loc 38 418 0
+..LDL98:
+/*    418 */	ld1d	{z28.d}, p0/z, [x10, z28.d, lsl #3]	//  (*)
+	.loc 38 410 0
+..LDL99:
+/*    410 */	add	x4, x4, 24
+	.loc 38 415 0
+..LDL100:
+/*    415 */	ld1d	{z18.d}, p0/z, [x13, x25, lsl #3]	//  (*)
+	.loc 38 410 0
+..LDL101:
+/*    410 */	ld1sw	{z20.d}, p0/z, [x11, x4, lsl #2]	//  (*)
+	.loc 38 415 0
+..LDL102:
+/*    415 */	ld1d	{z25.d}, p0/z, [x10, z8.d, lsl #3]	//  (*)
+	.loc 38 411 0
+..LDL103:
+/*    411 */	ld1sw	{z19.d}, p0/z, [x15, x4, lsl #2]	//  (*)
+	.loc 38 416 0
+..LDL104:
+/*    416 */	ld1d	{z17.d}, p0/z, [x9, x25, lsl #3]	//  (*)
+/*    416 */	ld1d	{z26.d}, p0/z, [x10, z16.d, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL105:
+/*    417 */	ld1d	{z16.d}, p0/z, [x2, x25, lsl #3]	//  (*)
+	.loc 38 415 0
+..LDL106:
+/*    415 */	fmla	z6.d, p0/m, z7.d, z11.d
+	.loc 38 412 0
+..LDL107:
+/*    412 */	ld1sw	{z7.d}, p0/z, [x8, x4, lsl #2]	//  (*)
+	.loc 38 417 0
+..LDL108:
+/*    417 */	ld1d	{z24.d}, p0/z, [x10, z21.d, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL109:
+/*    416 */	fmla	z4.d, p0/m, z5.d, z10.d
+	.loc 38 418 0
+..LDL110:
+/*    418 */	ld1d	{z5.d}, p0/z, [x30, x25, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL111:
+/*    417 */	fmla	z2.d, p0/m, z3.d, z30.d
+	.loc 38 418 0
+..LDL112:
+/*    418 */	fmad	z1.d, p0/m, z0.d, z9.d
+	.loc 38 413 0
+..LDL113:
+/*    413 */	ld1sw	{z0.d}, p0/z, [x3, x4, lsl #2]	//  (*)
+	.loc 38 410 0
+..LDL114:
+/*    410 */	sub	w17, w17, 3
+/*    410 */	cmp	w17, 6
+/*    410 */	bge	.L555
+	.loc 38 418 0
+..LDL115:
+/*    418 */	ld1d	{z21.d}, p0/z, [x10, z22.d, lsl #3]	//  (*)
+	.loc 38 410 0
+..LDL116:
+/*    410 */	add	x25, x4, 8
+	.loc 38 415 0
+..LDL117:
+/*    415 */	ld1d	{z22.d}, p0/z, [x13, x0, lsl #3]	//  (*)
+/*    415 */	fmla	z6.d, p0/m, z18.d, z29.d
+	.loc 38 416 0
+..LDL118:
+/*    416 */	ld1d	{z30.d}, p0/z, [x9, x0, lsl #3]	//  (*)
+/*    416 */	ld1d	{z31.d}, p0/z, [x10, z19.d, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL119:
+/*    417 */	fmla	z2.d, p0/m, z16.d, z27.d
+	.loc 38 410 0
+..LDL120:
+/*    410 */	sub	w17, w17, 3
+	.loc 38 417 0
+..LDL121:
+/*    417 */	ld1d	{z19.d}, p0/z, [x2, x0, lsl #3]	//  (*)
+/*    417 */	ld1d	{z18.d}, p0/z, [x10, z7.d, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL122:
+/*    416 */	fmla	z4.d, p0/m, z17.d, z23.d
+	.loc 38 418 0
+..LDL123:
+/*    418 */	ld1d	{z17.d}, p0/z, [x30, x0, lsl #3]	//  (*)
+/*    418 */	fmla	z1.d, p0/m, z5.d, z28.d
+/*    418 */	ld1d	{z16.d}, p0/z, [x10, z0.d, lsl #3]	//  (*)
+	.loc 38 415 0
+..LDL124:
+/*    415 */	ld1d	{z20.d}, p0/z, [x10, z20.d, lsl #3]	//  (*)
+/*    415 */	ld1d	{z7.d}, p0/z, [x13, x4, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL125:
+/*    416 */	ld1d	{z5.d}, p0/z, [x9, x4, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL126:
+/*    417 */	ld1d	{z3.d}, p0/z, [x2, x4, lsl #3]	//  (*)
+	.loc 38 418 0
+..LDL127:
+/*    418 */	ld1d	{z0.d}, p0/z, [x30, x4, lsl #3]	//  (*)
+	.loc 38 415 0
+..LDL128:
+/*    415 */	fmla	z6.d, p0/m, z22.d, z25.d
+	.loc 38 416 0
+..LDL129:
+/*    416 */	fmla	z4.d, p0/m, z30.d, z26.d
+	.loc 38 417 0
+..LDL130:
+/*    417 */	fmla	z2.d, p0/m, z19.d, z24.d
+	.loc 38 418 0
+..LDL131:
+/*    418 */	fmla	z1.d, p0/m, z17.d, z21.d
+	.loc 38 416 0
+..LDL132:
+/*    416 */	fmla	z4.d, p0/m, z5.d, z31.d
+	.loc 38 417 0
+..LDL133:
+/*    417 */	fmla	z2.d, p0/m, z3.d, z18.d
+	.loc 38 415 0
+..LDL134:
+/*    415 */	fmla	z6.d, p0/m, z7.d, z20.d
+	.loc 38 418 0
+..LDL135:
+/*    418 */	fmla	z1.d, p0/m, z0.d, z16.d
+	.loc 38 410 0
+..LDL136:
+/*    410 */	cbz	w17, .L633
+.L636:
+	.p2align 5
+.L639:					// :entr:term:mod:swpl
+	.loc 38 410 0 is_stmt 1
+..LDL137:
+/*    410 */	ld1sw	{z0.d}, p0/z, [x11, x25, lsl #2]	//  (*)
+	.loc 38 411 0
+..LDL138:
+/*    411 */	ld1sw	{z3.d}, p0/z, [x15, x25, lsl #2]	//  (*)
+	.loc 38 410 0 is_stmt 0
+..LDL139:
+/*    410 */	subs	w17, w17, 1
+	.loc 38 412 0 is_stmt 1
+..LDL140:
+/*    412 */	ld1sw	{z5.d}, p0/z, [x8, x25, lsl #2]	//  (*)
+	.loc 38 413 0
+..LDL141:
+/*    413 */	ld1sw	{z19.d}, p0/z, [x3, x25, lsl #2]	//  (*)
+	.loc 38 409 0
+..LDL142:
+	.loc 38 415 0 is_stmt 0
+..LDL143:
+/*    415 */	ld1d	{z18.d}, p0/z, [x13, x25, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL144:
+/*    416 */	ld1d	{z17.d}, p0/z, [x9, x25, lsl #3]	//  (*)
+	.loc 38 416 0 is_stmt 1
+..LDL145:
+	.loc 38 417 0 is_stmt 0
+..LDL146:
+/*    417 */	ld1d	{z16.d}, p0/z, [x2, x25, lsl #3]	//  (*)
+	.loc 38 418 0 is_stmt 1
+..LDL147:
+/*    418 */	ld1d	{z7.d}, p0/z, [x30, x25, lsl #3]	//  (*)
+	.loc 38 410 0 is_stmt 0
+..LDL148:
+/*    410 */	add	x25, x25, 8
+	.loc 38 415 0 is_stmt 1
+..LDL149:
+/*    415 */	ld1d	{z0.d}, p0/z, [x10, z0.d, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL150:
+/*    416 */	ld1d	{z3.d}, p0/z, [x10, z3.d, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL151:
+/*    417 */	ld1d	{z5.d}, p0/z, [x10, z5.d, lsl #3]	//  (*)
+	.loc 38 418 0
+..LDL152:
+/*    418 */	ld1d	{z19.d}, p0/z, [x10, z19.d, lsl #3]	//  (*)
+	.loc 38 415 0
+..LDL153:
+/*    415 */	fmla	z6.d, p0/m, z18.d, z0.d
+	.loc 38 416 0
+..LDL154:
+/*    416 */	fmla	z4.d, p0/m, z17.d, z3.d
+	.loc 38 417 0
+..LDL155:
+/*    417 */	fmla	z2.d, p0/m, z16.d, z5.d
+	.loc 38 418 0
+..LDL156:
+/*    418 */	fmla	z1.d, p0/m, z7.d, z19.d
+	.loc 38 410 0 is_stmt 0
+..LDL157:
+/*    410 */	bne	.L639
+.L633:
+.L557:
+	.loc 38 409 0 is_stmt 1
+..LDL158:
+/*    409 */	sbfiz	x0, x18, 3, 32
+/*    409 */	cbz	w14, .L559
+	.loc 38 410 0 is_stmt 0
+..LDL159:
+/*    410 */	whilelt	p1.d, wzr, w14
+	.loc 38 415 0 is_stmt 1
+..LDL160:
+/*    415 */	ldr	x4, [x20, 16]	//  "xv"
+	.loc 38 410 0
+..LDL161:
+/*    410 */	ld1sw	{z3.d}, p1/z, [x11, x0, lsl #2]	//  (*)
+	.loc 38 413 0
+..LDL162:
+/*    413 */	ld1sw	{z5.d}, p1/z, [x3, x0, lsl #2]	//  (*)
+	.loc 38 411 0
+..LDL163:
+/*    411 */	ld1sw	{z18.d}, p1/z, [x15, x0, lsl #2]	//  (*)
+	.loc 38 415 0
+..LDL164:
+/*    415 */	orr	x4, x4, 72057594037927936
+	.loc 38 412 0
+..LDL165:
+/*    412 */	ld1sw	{z19.d}, p1/z, [x8, x0, lsl #2]	//  (*)
+	.loc 38 409 0
+..LDL166:
+	.loc 38 415 0 is_stmt 0
+..LDL167:
+/*    415 */	ld1d	{z0.d}, p1/z, [x13, x0, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL168:
+/*    416 */	ld1d	{z16.d}, p1/z, [x9, x0, lsl #3]	//  (*)
+	.loc 38 416 0 is_stmt 1
+..LDL169:
+	.loc 38 417 0 is_stmt 0
+..LDL170:
+/*    417 */	ld1d	{z7.d}, p1/z, [x2, x0, lsl #3]	//  (*)
+	.loc 38 418 0 is_stmt 1
+..LDL171:
+/*    418 */	ld1d	{z17.d}, p1/z, [x30, x0, lsl #3]	//  (*)
+/*    418 */	ld1d	{z20.d}, p1/z, [x4, z5.d, lsl #3]	//  (*)
+	.loc 38 415 0
+..LDL172:
+/*    415 */	mov	z5.d, z6.d
+/*    415 */	ld1d	{z3.d}, p1/z, [x4, z3.d, lsl #3]	//  (*)
+	.loc 38 416 0
+..LDL173:
+/*    416 */	ld1d	{z18.d}, p1/z, [x4, z18.d, lsl #3]	//  (*)
+	.loc 38 417 0
+..LDL174:
+/*    417 */	ld1d	{z19.d}, p1/z, [x4, z19.d, lsl #3]	//  (*)
+	.loc 38 418 0
+..LDL175:
+/*    418 */	fmla	z1.d, p1/m, z20.d, z17.d
+	.loc 38 415 0
+..LDL176:
+/*    415 */	movprfx	z5.d, p1/m, z0.d
+/*    415 */	fmad	z5.d, p1/m, z3.d, z6.d
+	.loc 38 416 0
+..LDL177:
+/*    416 */	mov	z3.d, z4.d
+	.loc 38 417 0
+..LDL178:
+/*    417 */	mov	z0.d, z2.d
+	.loc 38 416 0
+..LDL179:
+/*    416 */	movprfx	z3.d, p1/m, z16.d
+/*    416 */	fmad	z3.d, p1/m, z18.d, z4.d
+	.loc 38 417 0
+..LDL180:
+/*    417 */	movprfx	z0.d, p1/m, z7.d
+/*    417 */	fmad	z0.d, p1/m, z19.d, z2.d
+	.loc 38 415 0 is_stmt 0
+..LDL181:
+/*    415 */	mov	z6.d, z5.d
+	.loc 38 416 0
+..LDL182:
+/*    416 */	mov	z4.d, z3.d
+	.loc 38 417 0
+..LDL183:
+/*    417 */	mov	z2.d, z0.d
+.L559:
+	.loc 38 418 0
+..LDL184:
+/*    418 */	movprfx	z0, z1
+/*    418 */	ext	z0.b, z0.b, z1.b, 32
+	.loc 38 417 0
+..LDL185:
+/*    417 */	movprfx	z7, z2
+/*    417 */	ext	z7.b, z7.b, z2.b, 32
+	.loc 38 416 0
+..LDL186:
+/*    416 */	movprfx	z5, z4
+/*    416 */	ext	z5.b, z5.b, z4.b, 32
+	.loc 38 415 0
+..LDL187:
+/*    415 */	movprfx	z3, z6
+/*    415 */	ext	z3.b, z3.b, z6.b, 32
+	.loc 38 418 0
+..LDL188:
+/*    418 */	fadd	z0.d, z0.d, z1.d
+	.loc 38 417 0
+..LDL189:
+/*    417 */	fadd	z1.d, z7.d, z2.d
+	.loc 38 416 0
+..LDL190:
+/*    416 */	fadd	z4.d, z5.d, z4.d
+	.loc 38 415 0
+..LDL191:
+/*    415 */	fadd	z3.d, z3.d, z6.d
+	.loc 38 418 0
+..LDL192:
+/*    418 */	movprfx	z2, z0
+/*    418 */	ext	z2.b, z2.b, z0.b, 16
+	.loc 38 417 0
+..LDL193:
+/*    417 */	movprfx	z7, z1
+/*    417 */	ext	z7.b, z7.b, z1.b, 16
+	.loc 38 416 0
+..LDL194:
+/*    416 */	movprfx	z6, z4
+/*    416 */	ext	z6.b, z6.b, z4.b, 16
+	.loc 38 415 0
+..LDL195:
+/*    415 */	movprfx	z5, z3
+/*    415 */	ext	z5.b, z5.b, z3.b, 16
+	.loc 38 418 0
+..LDL196:
+/*    418 */	fadd	z2.d, z0.d, z2.d
+	.loc 38 417 0
+..LDL197:
+/*    417 */	fadd	z1.d, z1.d, z7.d
+	.loc 38 416 0
+..LDL198:
+/*    416 */	fadd	z0.d, z4.d, z6.d
+	.loc 38 415 0
+..LDL199:
+/*    415 */	fadd	z6.d, z3.d, z5.d
+	.loc 38 418 0
+..LDL200:
+/*    418 */	movprfx	z7, z2
+/*    418 */	ext	z7.b, z7.b, z2.b, 8
+	.loc 38 417 0
+..LDL201:
+/*    417 */	movprfx	z5, z1
+/*    417 */	ext	z5.b, z5.b, z1.b, 8
+	.loc 38 416 0
+..LDL202:
+/*    416 */	movprfx	z4, z0
+/*    416 */	ext	z4.b, z4.b, z0.b, 8
+	.loc 38 415 0
+..LDL203:
+/*    415 */	movprfx	z3, z6
+/*    415 */	ext	z3.b, z3.b, z6.b, 8
+	.loc 38 418 0
+..LDL204:
+/*    418 */	fadd	z2.d, z2.d, z7.d
+	.loc 38 417 0
+..LDL205:
+/*    417 */	fadd	z1.d, z1.d, z5.d
+	.loc 38 416 0
+..LDL206:
+/*    416 */	fadd	z0.d, z0.d, z4.d
+	.loc 38 415 0
+..LDL207:
+/*    415 */	fadd	z28.d, z6.d, z3.d
+.L560:
+	.loc 38 421 0 is_stmt 1
+..LDL208:
+/*    421 */	ldr	x0, [x20, 8]	//  "yv"
+/*    421 */	str	d28, [x0, x6, lsl #3]	//  (*)
+	.loc 38 422 0
+..LDL209:
+/*    422 */	str	d0, [x0, x7, lsl #3]	//  (*)
+	.loc 38 423 0
+..LDL210:
+/*    423 */	str	d1, [x0, x12, lsl #3]	//  (*)
+	.loc 38 424 0
+..LDL211:
+/*    424 */	str	d2, [x0, x16, lsl #3]	//  (*)
+	.loc 38 425 0 is_stmt 0
+..LDL212:
+/*    425 */	b	.L573
+.L562:					// :init:bt
+	.loc 38 427 0 is_stmt 1
+..LDL213:
+/*    427 */	mov	w10, 4
+	.loc 38 433 0 is_stmt 0
+..LDL214:
+/*    433 */	ldr	x11, [x20, 8]	//  "yv"
+.L563:					// :entr
+	.loc 38 429 0 is_stmt 1
+..LDL215:
+/*    429 */	ldr	x0, [x20, 24]	//  "A"
+	.loc 38 427 0 is_stmt 0
+..LDL216:
+/*    427 */	fmov	d0, d28
+	.loc 38 429 0
+..LDL217:
+/*    429 */	ldr	x2, [x0, 48]	//  (*)
+/*    429 */	ldrb	w2, [x2, x6]	//  (*)
+/*    429 */	uxtb	w3, w2
+/*    429 */	uxtb	w2, w2
+/*    429 */	cmp	w3, 0
+/*    429 */	csel	w3, w3, wzr, ge
+/*    429 */	cbz	w2, .L571
+/*    430 */	ldp	x2, x0, [x0, 64]	//  (*)
+/*    429 */	asr	w4, w3, 2
+	.loc 38 431 0
+..LDL218:
+/*    431 */	fmov	z19.d, 0.000000e+00
+	.loc 38 429 0
+..LDL219:
+/*    429 */	add	w7, w3, w4, lsr #29
+/*    429 */	mov	x4, 0
+/*    429 */	asr	w8, w7, 3
+/*    429 */	sub	w12, w3, w8, lsl #3
+	.loc 38 430 0
+..LDL220:
+/*    430 */	ldr	x13, [x2, x6, lsl #3]	//  (*)
+	.loc 38 431 0
+..LDL221:
+/*    431 */	ldr	x7, [x0, x6, lsl #3]	//  (*)
+	.loc 38 429 0
+..LDL222:
+/*    429 */	cbz	w8, .L568
+/*    429 */	subs	w2, w8, 8
+/*    429 */	bmi	.L579
+	.loc 38 431 0
+..LDL223:
+/*    431 */	ldr	x9, [x20, 16]	//  "xv"
+	.loc 38 430 0
+..LDL224:
+/*    430 */	add	x3, x13, 224
+	.loc 38 431 0
+..LDL225:
+/*    431 */	mov	z17.d, z19.d
+/*    431 */	mov	z16.d, z19.d
+/*    431 */	add	x0, x7, 448
+/*    431 */	mov	z6.d, z19.d
+/*    431 */	mov	z5.d, z19.d
+	.loc 38 429 0
+..LDL226:
+/*    429 */	cmp	w2, 16
+	.loc 38 431 0
+..LDL227:
+/*    431 */	mov	z3.d, z19.d
+/*    431 */	mov	z2.d, z19.d
+/*    431 */	mov	z0.d, z19.d
+/*    431 */	orr	x9, x9, 72057594037927936
+	.loc 38 429 0
+..LDL228:
+/*    429 */	blt	.L625
+	.loc 38 432 0
+..LDL229:
+/*    432 */	mov	z27.d, z19.d
+	.loc 38 430 0
+..LDL230:
+/*    430 */	ld1sw	{z31.d}, p0/z, [x3, -7, mul vl]	//  (*)
+	.loc 38 432 0
+..LDL231:
+/*    432 */	mov	z24.d, z16.d
+/*    432 */	mov	z1.d, z0.d
+/*    432 */	mov	z4.d, z2.d
+	.loc 38 430 0
+..LDL232:
+/*    430 */	ld1sw	{z30.d}, p0/z, [x3, -6, mul vl]	//  (*)
+/*    430 */	ld1sw	{z29.d}, p0/z, [x3, -5, mul vl]	//  (*)
+	.loc 38 432 0
+..LDL233:
+/*    432 */	mov	z7.d, z3.d
+/*    432 */	mov	z18.d, z5.d
+	.loc 38 430 0
+..LDL234:
+/*    430 */	ld1sw	{z8.d}, p0/z, [x3, -4, mul vl]	//  (*)
+/*    430 */	ld1sw	{z9.d}, p0/z, [x3, -3, mul vl]	//  (*)
+	.loc 38 432 0
+..LDL235:
+/*    432 */	mov	z21.d, z6.d
+/*    432 */	mov	z26.d, z17.d
+	.loc 38 430 0
+..LDL236:
+/*    430 */	ld1sw	{z22.d}, p0/z, [x3, -2, mul vl]	//  (*)
+/*    430 */	ld1sw	{z16.d}, p0/z, [x3, -1, mul vl]	//  (*)
+	.p2align 5
+.L566:					// :entr:term:body:swpl
+/*    430 */	ld1sw	{z0.d}, p0/z, [x3, 0, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL237:
+/*    431 */	ld1d	{z31.d}, p0/z, [x9, z31.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z25.d}, p0/z, [x9, z30.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z23.d}, p0/z, [x9, z29.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z20.d}, p0/z, [x9, z8.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z17.d}, p0/z, [x9, z9.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z6.d}, p0/z, [x9, z22.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z3.d}, p0/z, [x9, z16.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z0.d}, p0/z, [x9, z0.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z11.d}, p0/z, [x0, -7, mul vl]	//  (*)
+/*    431 */	ld1d	{z10.d}, p0/z, [x0, -6, mul vl]	//  (*)
+/*    431 */	ld1d	{z9.d}, p0/z, [x0, -5, mul vl]	//  (*)
+/*    431 */	ld1d	{z22.d}, p0/z, [x0, -4, mul vl]	//  (*)
+/*    431 */	ld1d	{z19.d}, p0/z, [x0, -3, mul vl]	//  (*)
+/*    431 */	ld1d	{z16.d}, p0/z, [x0, -2, mul vl]	//  (*)
+/*    431 */	ld1d	{z5.d}, p0/z, [x0, -1, mul vl]	//  (*)
+/*    431 */	ld1d	{z2.d}, p0/z, [x0, 0, mul vl]	//  (*)
+	.loc 38 432 0
+..LDL238:
+/*    432 */	add	x14, x3, 256
+	.loc 38 430 0
+..LDL239:
+/*    430 */	ld1sw	{z30.d}, p0/z, [x3, 1, mul vl]	//  (*)
+/*    430 */	ld1sw	{z8.d}, p0/z, [x3, 2, mul vl]	//  (*)
+/*    430 */	ld1sw	{z29.d}, p0/z, [x3, 3, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL240:
+/*    431 */	fmla	z27.d, p0/m, z11.d, z31.d
+/*    431 */	fmla	z26.d, p0/m, z10.d, z25.d
+	.loc 38 430 0
+..LDL241:
+/*    430 */	ld1sw	{z31.d}, p0/z, [x3, 4, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL242:
+/*    431 */	fmla	z24.d, p0/m, z9.d, z23.d
+	.loc 38 430 0
+..LDL243:
+/*    430 */	ld1sw	{z9.d}, p0/z, [x3, 5, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL244:
+/*    431 */	fmla	z21.d, p0/m, z22.d, z20.d
+	.loc 38 430 0
+..LDL245:
+/*    430 */	ld1sw	{z22.d}, p0/z, [x3, 6, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL246:
+/*    431 */	fmla	z18.d, p0/m, z19.d, z17.d
+/*    431 */	fmla	z7.d, p0/m, z16.d, z6.d
+	.loc 38 430 0
+..LDL247:
+/*    430 */	ld1sw	{z16.d}, p0/z, [x3, 7, mul vl]	//  (*)
+	.loc 38 432 0
+..LDL248:
+/*    432 */	add	x15, x0, 512
+	.loc 38 431 0
+..LDL249:
+/*    431 */	fmla	z4.d, p0/m, z5.d, z3.d
+/*    431 */	fmla	z1.d, p0/m, z2.d, z0.d
+	.loc 38 430 0
+..LDL250:
+/*    430 */	ld1sw	{z0.d}, p0/z, [x14, 0, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL251:
+/*    431 */	ld1d	{z10.d}, p0/z, [x9, z30.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z25.d}, p0/z, [x9, z8.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z23.d}, p0/z, [x9, z29.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z20.d}, p0/z, [x9, z31.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z17.d}, p0/z, [x9, z9.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z6.d}, p0/z, [x9, z22.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z3.d}, p0/z, [x9, z16.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z0.d}, p0/z, [x9, z0.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z11.d}, p0/z, [x0, 1, mul vl]	//  (*)
+/*    431 */	ld1d	{z8.d}, p0/z, [x0, 2, mul vl]	//  (*)
+/*    431 */	ld1d	{z9.d}, p0/z, [x0, 3, mul vl]	//  (*)
+/*    431 */	ld1d	{z22.d}, p0/z, [x0, 4, mul vl]	//  (*)
+/*    431 */	ld1d	{z19.d}, p0/z, [x0, 5, mul vl]	//  (*)
+/*    431 */	ld1d	{z16.d}, p0/z, [x0, 6, mul vl]	//  (*)
+/*    431 */	ld1d	{z5.d}, p0/z, [x0, 7, mul vl]	//  (*)
+/*    431 */	ld1d	{z2.d}, p0/z, [x15, 0, mul vl]	//  (*)
+	.loc 38 432 0
+..LDL252:
+/*    432 */	add	x3, x14, 256
+	.loc 38 430 0
+..LDL253:
+/*    430 */	ld1sw	{z31.d}, p0/z, [x14, 1, mul vl]	//  (*)
+/*    430 */	ld1sw	{z30.d}, p0/z, [x14, 2, mul vl]	//  (*)
+/*    430 */	ld1sw	{z29.d}, p0/z, [x14, 3, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL254:
+/*    431 */	fmla	z27.d, p0/m, z11.d, z10.d
+/*    431 */	fmla	z26.d, p0/m, z8.d, z25.d
+	.loc 38 430 0
+..LDL255:
+/*    430 */	ld1sw	{z8.d}, p0/z, [x14, 4, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL256:
+/*    431 */	fmla	z24.d, p0/m, z9.d, z23.d
+	.loc 38 430 0
+..LDL257:
+/*    430 */	ld1sw	{z9.d}, p0/z, [x14, 5, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL258:
+/*    431 */	fmla	z21.d, p0/m, z22.d, z20.d
+	.loc 38 430 0
+..LDL259:
+/*    430 */	ld1sw	{z22.d}, p0/z, [x14, 6, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL260:
+/*    431 */	fmla	z18.d, p0/m, z19.d, z17.d
+/*    431 */	fmla	z7.d, p0/m, z16.d, z6.d
+	.loc 38 430 0
+..LDL261:
+/*    430 */	ld1sw	{z16.d}, p0/z, [x14, 7, mul vl]	//  (*)
+/*    430 */	add	x4, x4, 128
+	.loc 38 432 0
+..LDL262:
+/*    432 */	add	x0, x15, 512
+	.loc 38 431 0
+..LDL263:
+/*    431 */	fmla	z4.d, p0/m, z5.d, z3.d
+/*    431 */	fmla	z1.d, p0/m, z2.d, z0.d
+	.loc 38 432 0
+..LDL264:
+/*    432 */	sub	w2, w2, 16
+	.loc 38 430 0
+..LDL265:
+/*    430 */	cmp	w2, 16
+/*    430 */	bge	.L566
+/*    430 */	ld1sw	{z0.d}, p0/z, [x3, 0, mul vl]	//  (*)
+	.loc 38 431 0
+..LDL266:
+/*    431 */	ld1d	{z10.d}, p0/z, [x9, z31.d, lsl #3]	//  (*)
+	.loc 38 432 0
+..LDL267:
+/*    432 */	add	x3, x3, 256
+/*    432 */	sub	w2, w2, 8
+	.loc 38 431 0
+..LDL268:
+/*    431 */	ld1d	{z31.d}, p0/z, [x9, z30.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z19.d}, p0/z, [x0, -7, mul vl]	//  (*)
+	.loc 38 430 0
+..LDL269:
+/*    430 */	add	x4, x4, 64
+	.loc 38 432 0
+..LDL270:
+/*    432 */	cmp	w2, 0
+	.loc 38 431 0
+..LDL271:
+/*    431 */	ld1d	{z23.d}, p0/z, [x9, z22.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z17.d}, p0/z, [x0, -6, mul vl]	//  (*)
+/*    431 */	ld1d	{z30.d}, p0/z, [x9, z29.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z6.d}, p0/z, [x0, -4, mul vl]	//  (*)
+/*    431 */	ld1d	{z22.d}, p0/z, [x9, z16.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z16.d}, p0/z, [x0, -5, mul vl]	//  (*)
+/*    431 */	ld1d	{z29.d}, p0/z, [x9, z8.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z5.d}, p0/z, [x0, -3, mul vl]	//  (*)
+/*    431 */	ld1d	{z25.d}, p0/z, [x9, z9.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z3.d}, p0/z, [x0, -2, mul vl]	//  (*)
+/*    431 */	ld1d	{z2.d}, p0/z, [x0, -1, mul vl]	//  (*)
+/*    431 */	ld1d	{z20.d}, p0/z, [x9, z0.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z0.d}, p0/z, [x0, 0, mul vl]	//  (*)
+	.loc 38 432 0
+..LDL272:
+/*    432 */	add	x0, x0, 512
+	.loc 38 431 0
+..LDL273:
+/*    431 */	fmad	z19.d, p0/m, z10.d, z27.d
+/*    431 */	fmad	z17.d, p0/m, z31.d, z26.d
+/*    431 */	fmad	z3.d, p0/m, z23.d, z7.d
+/*    431 */	fmad	z16.d, p0/m, z30.d, z24.d
+/*    431 */	fmad	z2.d, p0/m, z22.d, z4.d
+/*    431 */	fmad	z6.d, p0/m, z29.d, z21.d
+/*    431 */	fmad	z5.d, p0/m, z25.d, z18.d
+/*    431 */	fmad	z0.d, p0/m, z20.d, z1.d
+	.loc 38 432 0
+..LDL274:
+/*    432 */	blt	.L622
+.L625:
+	.p2align 5
+.L628:					// :entr:term:mod:swpl
+	.loc 38 430 0 is_stmt 1
+..LDL275:
+/*    430 */	ld1sw	{z24.d}, p0/z, [x3, -7, mul vl]	//  (*)
+/*    430 */	ld1sw	{z4.d}, p0/z, [x3, -6, mul vl]	//  (*)
+/*    430 */	add	x4, x4, 64
+	.loc 38 432 0 is_stmt 0
+..LDL276:
+/*    432 */	subs	w2, w2, 8
+	.loc 38 430 0
+..LDL277:
+/*    430 */	ld1sw	{z8.d}, p0/z, [x3, -5, mul vl]	//  (*)
+/*    430 */	ld1sw	{z9.d}, p0/z, [x3, -4, mul vl]	//  (*)
+/*    430 */	ld1sw	{z20.d}, p0/z, [x3, -3, mul vl]	//  (*)
+/*    430 */	ld1sw	{z21.d}, p0/z, [x3, -2, mul vl]	//  (*)
+/*    430 */	ld1sw	{z22.d}, p0/z, [x3, -1, mul vl]	//  (*)
+/*    430 */	ld1sw	{z23.d}, p0/z, [x3, 0, mul vl]	//  (*)
+	.loc 38 432 0
+..LDL278:
+/*    432 */	add	x3, x3, 256
+	.loc 38 431 0 is_stmt 1
+..LDL279:
+/*    431 */	ld1d	{z7.d}, p0/z, [x0, -7, mul vl]	//  (*)
+/*    431 */	ld1d	{z18.d}, p0/z, [x0, -6, mul vl]	//  (*)
+/*    431 */	ld1d	{z25.d}, p0/z, [x0, -5, mul vl]	//  (*)
+/*    431 */	ld1d	{z30.d}, p0/z, [x0, -4, mul vl]	//  (*)
+/*    431 */	ld1d	{z1.d}, p0/z, [x0, -3, mul vl]	//  (*)
+/*    431 */	ld1d	{z29.d}, p0/z, [x0, -2, mul vl]	//  (*)
+/*    431 */	ld1d	{z27.d}, p0/z, [x0, -1, mul vl]	//  (*)
+/*    431 */	ld1d	{z26.d}, p0/z, [x0, 0, mul vl]	//  (*)
+	.loc 38 432 0 is_stmt 0
+..LDL280:
+/*    432 */	add	x0, x0, 512
+	.loc 38 431 0
+..LDL281:
+/*    431 */	ld1d	{z31.d}, p0/z, [x9, z4.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z24.d}, p0/z, [x9, z24.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z8.d}, p0/z, [x9, z8.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z4.d}, p0/z, [x9, z9.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z20.d}, p0/z, [x9, z20.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z21.d}, p0/z, [x9, z21.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z22.d}, p0/z, [x9, z22.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z23.d}, p0/z, [x9, z23.d, lsl #3]	//  (*)
+/*    431 */	fmla	z17.d, p0/m, z18.d, z31.d
+/*    431 */	fmla	z19.d, p0/m, z7.d, z24.d
+/*    431 */	fmla	z16.d, p0/m, z25.d, z8.d
+/*    431 */	fmla	z6.d, p0/m, z30.d, z4.d
+/*    431 */	fmla	z5.d, p0/m, z1.d, z20.d
+/*    431 */	fmla	z3.d, p0/m, z29.d, z21.d
+/*    431 */	fmla	z2.d, p0/m, z27.d, z22.d
+/*    431 */	fmla	z0.d, p0/m, z26.d, z23.d
+	.loc 38 432 0
+..LDL282:
+/*    432 */	bpl	.L628
+.L622:
+	.loc 38 431 0
+..LDL283:
+/*    431 */	fadd	z0.d, z0.d, z2.d
+/*    431 */	fadd	z1.d, z3.d, z5.d
+/*    431 */	fadd	z2.d, z6.d, z16.d
+/*    431 */	fadd	z3.d, z19.d, z17.d
+/*    431 */	fadd	z0.d, z1.d, z0.d
+/*    431 */	fadd	z1.d, z3.d, z2.d
+/*    431 */	fadd	z19.d, z1.d, z0.d
+.L579:
+	.loc 38 429 0 is_stmt 1
+..LDL284:
+/*    429 */	adds	w0, w2, 7
+/*    429 */	bmi	.L568
+	.loc 38 431 0 is_stmt 0
+..LDL285:
+/*    431 */	ldr	x2, [x20, 16]	//  "xv"
+/*    431 */	orr	x2, x2, 72057594037927936
+	.p2align 5
+.L591:					// :entr:term:mod
+	.loc 38 430 0 is_stmt 1
+..LDL286:
+/*    430 */	ld1sw	{z0.d}, p0/z, [x13, x4, lsl #2]	//  (*)
+	.loc 38 432 0 is_stmt 0
+..LDL287:
+/*    432 */	subs	w0, w0, 1
+	.loc 38 431 0 is_stmt 1
+..LDL288:
+/*    431 */	ld1d	{z1.d}, p0/z, [x2, z0.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z0.d}, p0/z, [x7, x4, lsl #3]	//  (*)
+	.loc 38 430 0 is_stmt 0
+..LDL289:
+/*    430 */	add	x4, x4, 8
+	.loc 38 431 0
+..LDL290:
+/*    431 */	fmla	z19.d, p0/m, z0.d, z1.d
+	.loc 38 430 0
+..LDL291:
+/*    430 */	bpl	.L591
+.L568:
+	.loc 38 429 0 is_stmt 1
+..LDL292:
+/*    429 */	sbfiz	x0, x8, 3, 32
+/*    429 */	cbz	w12, .L570
+	.loc 38 430 0 is_stmt 0
+..LDL293:
+/*    430 */	whilelt	p1.d, wzr, w12
+	.loc 38 431 0 is_stmt 1
+..LDL294:
+/*    431 */	ldr	x2, [x20, 16]	//  "xv"
+	.loc 38 430 0
+..LDL295:
+/*    430 */	ld1sw	{z0.d}, p1/z, [x13, x0, lsl #2]	//  (*)
+	.loc 38 431 0
+..LDL296:
+/*    431 */	orr	x2, x2, 72057594037927936
+/*    431 */	ld1d	{z1.d}, p1/z, [x2, z0.d, lsl #3]	//  (*)
+/*    431 */	ld1d	{z0.d}, p1/z, [x7, x0, lsl #3]	//  (*)
+/*    431 */	fmla	z19.d, p1/m, z1.d, z0.d
+.L570:
+/*    431 */	movprfx	z0, z19
+/*    431 */	ext	z0.b, z0.b, z19.b, 32
+/*    431 */	fadd	z1.d, z0.d, z19.d
+/*    431 */	movprfx	z0, z1
+/*    431 */	ext	z0.b, z0.b, z1.b, 16
+/*    431 */	fadd	z1.d, z1.d, z0.d
+/*    431 */	movprfx	z0, z1
+/*    431 */	ext	z0.b, z0.b, z1.b, 8
+/*    431 */	fadd	z0.d, z1.d, z0.d
+.L571:					// :term
+	.loc 38 433 0
+..LDL297:
+/*    433 */	str	d0, [x11, x6, lsl #3]	//  (*)
+	.loc 38 434 0
+..LDL298:
+/*    434 */	add	x6, x6, 1
+/*    434 */	subs	w10, w10, 1
+/*    434 */	bne	.L563
+.L573:					// :term
+	.loc 38 477 0
+..LDL299:
+/*    477 */	add	w1, w1, 4
+/*    477 */	subs	w5, w5, 1
+/*    477 */	bne	.L549
+/*    477 */	b	.L547
+.L576:
+/*    477 */	ldr	x0, [x21, 64]
+/*    477 */	bl	__mpc_obar
+/*    477 */	ldr	x0, [x21, 64]
+/*    477 */	bl	__mpc_obar
+/*    ??? */	ldp	x19, x20, [x29, -16]	//  (*)
+	.cfi_restore 19
+	.cfi_restore 20
+/*    ??? */	ldp	x21, x22, [x29, -32]	//  (*)
+	.cfi_restore 21
+	.cfi_restore 22
+/*    ??? */	ldp	x23, x24, [x29, -48]	//  (*)
+	.cfi_restore 23
+	.cfi_restore 24
+/*    ??? */	ldr	x25, [x29, -56]	//  (*)
+	.cfi_restore 25
+/*    ??? */	ldp	d8, d9, [x29, -72]	//  (*)
+	.cfi_restore 72
+	.cfi_restore 73
+/*    ??? */	ldp	d10, d11, [x29, -88]	//  (*)
+	.cfi_restore 74
+	.cfi_restore 75
+/*    ??? */	add	sp, x29, 0
+/*    ??? */	ldp	x29, x30, [sp], 16	//  (*)
+	.cfi_restore 29
+	.cfi_restore 30
+	.cfi_def_cfa_offset 0
+/*    477 */	ret	
+..D3.pchi:
+	.cfi_endproc
+.LFE2:
+	.size	_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1, .-_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1
+	.ident	"$Compiler: Fujitsu C/C++ Compiler 4.7.0 (Nov 10 2021 09:37:15) ../../../../src/ComputeSPMV.cpp __sti___15_ComputeSPMV_cpp_0abfbdd1 $"
+	.text
+	.align	2
+	.type	__sti___15_ComputeSPMV_cpp_0abfbdd1, %function
+__sti___15_ComputeSPMV_cpp_0abfbdd1:
+	.loc 38 482 0
+..LDL300:
+.LFB3:
+	.cfi_startproc
+/*    482 */	ret	
+..D4.pchi:
+	.cfi_endproc
+.LFE3:
+	.size	__sti___15_ComputeSPMV_cpp_0abfbdd1, .-__sti___15_ComputeSPMV_cpp_0abfbdd1
+	.section	.init_array,"aw"
+	.align	3
+	.xword		__sti___15_ComputeSPMV_cpp_0abfbdd1
+	.ident	"$Compiler: Fujitsu C/C++ Compiler 4.7.0 (Nov 10 2021 09:37:15) ../../../../src/ComputeSPMV.cpp __fjc_check_hpctag $"
+	.text
+	.align	2
+	.type	__fjc_check_hpctag, %function
+__fjc_check_hpctag:
+.LFB4:
+	.cfi_startproc
+/*        */	mov	x0, 0
+/*        */	b	__jwe_check_hpctag
+..D5.pchi:
+	.cfi_endproc
+.LFE4:
+	.size	__fjc_check_hpctag, .-__fjc_check_hpctag
+	.section	.init_array,"aw"
+	.align	3
+	.xword		__fjc_check_hpctag
+	.file 39 "/usr/include/bits/stdint-uintn.h"
+	.file 40 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/utility"
+	.file 41 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/limits"
+	.file 42 "/usr/include/stdint.h"
+	.file 43 "/usr/include/alloca.h"
+	.file 44 "/usr/include/assert.h"
+	.file 45 "/usr/include/bits/floatn-common.h"
+	.file 46 "/usr/include/bits/floatn.h"
+	.file 47 "/usr/include/bits/types/locale_t.h"
+	.file 48 "/usr/include/bits/types/__locale_t.h"
+	.file 49 "/usr/include/sys/select.h"
+	.file 50 "/usr/include/bits/types/struct_timeval.h"
+	.file 51 "/usr/include/bits/types/struct_timespec.h"
+	.file 52 "/usr/include/bits/types/__sigset_t.h"
+	.file 53 "/usr/include/bits/stdint-intn.h"
+	.file 54 "/usr/include/bits/types/__FILE.h"
+	.file 55 "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/stdarg.h"
+	.file 56 "/usr/include/bits/mathcalls-helper-functions.h"
+	.file 57 "/usr/include/bits/mathcalls.h"
+	.file 58 "/usr/include/bits/mathcalls-narrow.h"
+	.file 59 "../../../../src/ComputeSPMV_ref.hpp"
+	.file 60 "/usr/include/sys/types.h"
+	.file 61 "/usr/include/bits/types/clock_t.h"
+	.file 62 "/usr/include/bits/types/clockid_t.h"
+	.file 63 "/usr/include/bits/types/time_t.h"
+	.file 64 "/usr/include/bits/types/timer_t.h"
+	.file 65 "/usr/include/bits/types/sigset_t.h"
+	.file 66 "/usr/include/bits/pthreadtypes-arch.h"
+	.file 67 "/usr/include/bits/thread-shared-types.h"
+	.file 68 "/usr/include/bits/pthreadtypes.h"
+	.file 69 "/usr/include/bits/types/FILE.h"
+	.pushsection	.text
+..text.e:
+	.popsection
+	.section	.debug_info
+	.4byte	.LSEdebug_info-.LSBdebug_info	// Length of .debug_info section
+.LSBdebug_info:
+	.2byte	0x4	// Version of DWARF information
+	.4byte	.Ldebug_abbrev	// Offset into .debug_abbrev section
+	.byte	0x8	// Address size
+	.uleb128	0x1	// DW_TAG_compile_unit (0xb)
+	.ascii	"../../../../src/ComputeSPMV.cpp\0"	// DW_AT_name
+	.4byte	.Ldebug_line	// DW_AT_stmt_list
+	.byte	0x4	// DW_AT_language
+	.ascii	"/lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2_instrumented/test_024/test_10_spmv_unroll4_static144/compilation_results\0"	// DW_AT_comp_dir
+	.ascii	"ccpcom: Fujitsu C/C++ Compiler 4.7.0 (Nov 10 2021 09:37:15)\0"	// DW_AT_producer
+	.4byte	.Ldebug_ranges1	// DW_AT_ranges
+	.uleb128	0x2	// DW_TAG_subprogram (0xf1)
+	.ascii	"ComputeSPMV\0"	// DW_AT_name
+	.8byte	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_	// DW_AT_low_pc
+	.8byte	..D1.pchi-_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_	// DW_AT_high_pc
+	.byte	0x26	// DW_AT_decl_file
+	.byte	0x57	// DW_AT_decl_line
+			// DW_AT_external
+	.uleb128	0x1	// DW_AT_frame_base
+	.byte	0x9c	// DW_OP_call_frame_cfa
+	.ascii	"_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_\0"	// DW_AT_linkage_name
+	.uleb128	0x3	// DW_TAG_subprogram (0x14c)
+	.ascii	"ComputeSPMV_manual\0"	// DW_AT_name
+	.8byte	_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi	// DW_AT_low_pc
+	.8byte	..D2.pchi-_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi	// DW_AT_high_pc
+	.byte	0x26	// DW_AT_decl_file
+	.2byte	0x188	// DW_AT_decl_line
+			// DW_AT_external
+	.uleb128	0x1	// DW_AT_frame_base
+	.byte	0x9c	// DW_OP_call_frame_cfa
+	.ascii	"_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi\0"	// DW_AT_linkage_name
+	.uleb128	0x4	// DW_TAG_subprogram (0x1a9)
+	.ascii	"_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1\0"	// DW_AT_name
+	.8byte	_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1	// DW_AT_low_pc
+	.8byte	..D3.pchi-_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1	// DW_AT_high_pc
+			// DW_AT_artificial
+	.uleb128	0x1	// DW_AT_frame_base
+	.byte	0x9c	// DW_OP_call_frame_cfa
+	.uleb128	0x5	// DW_TAG_FJ_loop (0x1f7)
+	.byte	0x26	// DW_AT_decl_file
+	.2byte	0x1ad	// DW_AT_FJ_loop_start_line
+	.2byte	0x1b0	// DW_AT_FJ_loop_end_line
+	.byte	0x3	// DW_AT_FJ_loop_nest_level
+	.byte	0x5	// DW_AT_FJ_loop_type
+	.uleb128	0x5	// DW_TAG_FJ_loop (0x1ff)
+	.byte	0x26	// DW_AT_decl_file
+	.2byte	0x1ab	// DW_AT_FJ_loop_start_line
+	.2byte	0x1b2	// DW_AT_FJ_loop_end_line
+	.byte	0x2	// DW_AT_FJ_loop_nest_level
+	.byte	0x5	// DW_AT_FJ_loop_type
+	.uleb128	0x5	// DW_TAG_FJ_loop (0x207)
+	.byte	0x26	// DW_AT_decl_file
+	.2byte	0x199	// DW_AT_FJ_loop_start_line
+	.2byte	0x1a3	// DW_AT_FJ_loop_end_line
+	.byte	0x2	// DW_AT_FJ_loop_nest_level
+	.byte	0x5	// DW_AT_FJ_loop_type
+	.uleb128	0x5	// DW_TAG_FJ_loop (0x20f)
+	.byte	0x26	// DW_AT_decl_file
+	.2byte	0x192	// DW_AT_FJ_loop_start_line
+	.2byte	0x1dd	// DW_AT_FJ_loop_end_line
+	.byte	0x1	// DW_AT_FJ_loop_nest_level
+	.byte	0x5	// DW_AT_FJ_loop_type
+	.byte	0x0	// End of children (0x1a9)
+	.byte	0x0	// End of children (0x14c)
+	.byte	0x0	// End of children (0xb)
+.LSEdebug_info:
+	.section	.debug_abbrev
+.Ldebug_abbrev:
+	.uleb128	0x1	// Abbreviation code
+	.uleb128	0x11	// DW_TAG_compile_unit
+	.byte	0x1	// DW_CHILDREN_yes
+	.uleb128	0x3	// DW_AT_name
+	.uleb128	0x8	// DW_FORM_string
+	.uleb128	0x10	// DW_AT_stmt_list
+	.uleb128	0x17	// DW_FORM_sec_offset
+	.uleb128	0x13	// DW_AT_language
+	.uleb128	0xb	// DW_FORM_data1
+	.uleb128	0x1b	// DW_AT_comp_dir
+	.uleb128	0x8	// DW_FORM_string
+	.uleb128	0x25	// DW_AT_producer
+	.uleb128	0x8	// DW_FORM_string
+	.uleb128	0x55	// DW_AT_ranges
+	.uleb128	0x17	// DW_FORM_sec_offset
+	.byte	0x0
+	.byte	0x0
+	.uleb128	0x2	// Abbreviation code
+	.uleb128	0x2e	// DW_TAG_subprogram
+	.byte	0x0	// DW_CHILDREN_no
+	.uleb128	0x3	// DW_AT_name
+	.uleb128	0x8	// DW_FORM_string
+	.uleb128	0x11	// DW_AT_low_pc
+	.uleb128	0x1	// DW_FORM_addr
+	.uleb128	0x12	// DW_AT_high_pc
+	.uleb128	0x7	// DW_FORM_data8
+	.uleb128	0x3a	// DW_AT_decl_file
+	.uleb128	0xb	// DW_FORM_data1
+	.uleb128	0x3b	// DW_AT_decl_line
+	.uleb128	0xb	// DW_FORM_data1
+	.uleb128	0x3f	// DW_AT_external
+	.uleb128	0x19	// DW_FORM_flag_present
+	.uleb128	0x40	// DW_AT_frame_base
+	.uleb128	0x18	// DW_FORM_exprloc
+	.uleb128	0x6e	// DW_AT_linkage_name
+	.uleb128	0x8	// DW_FORM_string
+	.byte	0x0
+	.byte	0x0
+	.uleb128	0x3	// Abbreviation code
+	.uleb128	0x2e	// DW_TAG_subprogram
+	.byte	0x1	// DW_CHILDREN_yes
+	.uleb128	0x3	// DW_AT_name
+	.uleb128	0x8	// DW_FORM_string
+	.uleb128	0x11	// DW_AT_low_pc
+	.uleb128	0x1	// DW_FORM_addr
+	.uleb128	0x12	// DW_AT_high_pc
+	.uleb128	0x7	// DW_FORM_data8
+	.uleb128	0x3a	// DW_AT_decl_file
+	.uleb128	0xb	// DW_FORM_data1
+	.uleb128	0x3b	// DW_AT_decl_line
+	.uleb128	0x5	// DW_FORM_data2
+	.uleb128	0x3f	// DW_AT_external
+	.uleb128	0x19	// DW_FORM_flag_present
+	.uleb128	0x40	// DW_AT_frame_base
+	.uleb128	0x18	// DW_FORM_exprloc
+	.uleb128	0x6e	// DW_AT_linkage_name
+	.uleb128	0x8	// DW_FORM_string
+	.byte	0x0
+	.byte	0x0
+	.uleb128	0x4	// Abbreviation code
+	.uleb128	0x2e	// DW_TAG_subprogram
+	.byte	0x1	// DW_CHILDREN_yes
+	.uleb128	0x3	// DW_AT_name
+	.uleb128	0x8	// DW_FORM_string
+	.uleb128	0x11	// DW_AT_low_pc
+	.uleb128	0x1	// DW_FORM_addr
+	.uleb128	0x12	// DW_AT_high_pc
+	.uleb128	0x7	// DW_FORM_data8
+	.uleb128	0x34	// DW_AT_artificial
+	.uleb128	0x19	// DW_FORM_flag_present
+	.uleb128	0x40	// DW_AT_frame_base
+	.uleb128	0x18	// DW_FORM_exprloc
+	.byte	0x0
+	.byte	0x0
+	.uleb128	0x5	// Abbreviation code
+	.uleb128	0xf000	// DW_TAG_FJ_loop
+	.byte	0x0	// DW_CHILDREN_no
+	.uleb128	0x3a	// DW_AT_decl_file
+	.uleb128	0xb	// DW_FORM_data1
+	.uleb128	0x3300	// DW_AT_FJ_loop_start_line
+	.uleb128	0x5	// DW_FORM_data2
+	.uleb128	0x3301	// DW_AT_FJ_loop_end_line
+	.uleb128	0x5	// DW_FORM_data2
+	.uleb128	0x3302	// DW_AT_FJ_loop_nest_level
+	.uleb128	0xb	// DW_FORM_data1
+	.uleb128	0x3303	// DW_AT_FJ_loop_type
+	.uleb128	0xb	// DW_FORM_data1
+	.byte	0x0
+	.byte	0x0
+	.byte	0x0
+	.section	.debug_line
+.Ldebug_line:
+	.section	.debug_ranges
+.Ldebug_ranges1:
+	.8byte	0xffffffffffffffff	// Base addr selection entry ID
+	.8byte	0x0
+	.8byte	_Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+	.8byte	..D1.pchi
+	.8byte	_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi._OMP_1
+	.8byte	..D3.pchi
+	.8byte	_Z18ComputeSPMV_manualRK19SparseMatrix_STRUCTPKdPdi
+	.8byte	..D2.pchi
+	.8byte	0x0
+	.8byte	0x0
+	.section	.rodata
+	.align	3
+.LR.1:
+	.ascii "y.localLength\040>=\040A.localNumberOfRows\000"
+	.type	.LR.1, %object
+	.size	.LR.1,.-.LR.1
+	.section	.rodata
+	.align	3
+.LR.2:
+	.ascii "../../../../src/ComputeSPMV.cpp\000"
+	.type	.LR.2, %object
+	.size	.LR.2,.-.LR.2
+	.section	.rodata
+	.align	3
+.LR.3:
+	.ascii "x.localLength\040>=\040A.localNumberOfColumns\000"
+	.type	.LR.3, %object
+	.size	.LR.3,.-.LR.3
+	.section	.rodata
+	.align	3
+.LR.4:
+	.byte	105
+	.byte	110
+	.byte	116
+	.byte	32
+	.byte	67
+	.byte	111
+	.byte	109
+	.byte	112
+	.byte	117
+	.byte	116
+	.byte	101
+	.byte	83
+	.byte	80
+	.byte	77
+	.byte	86
+	.byte	40
+	.byte	99
+	.byte	111
+	.byte	110
+	.byte	115
+	.byte	116
+	.byte	32
+	.byte	83
+	.byte	112
+	.byte	97
+	.byte	114
+	.byte	115
+	.byte	101
+	.byte	77
+	.byte	97
+	.byte	116
+	.byte	114
+	.byte	105
+	.byte	120
+	.byte	95
+	.byte	83
+	.byte	84
+	.byte	82
+	.byte	85
+	.byte	67
+	.byte	84
+	.byte	32
+	.byte	38
+	.byte	44
+	.byte	32
+	.byte	86
+	.byte	101
+	.byte	99
+	.byte	116
+	.byte	111
+	.byte	114
+	.byte	95
+	.byte	83
+	.byte	84
+	.byte	82
+	.byte	85
+	.byte	67
+	.byte	84
+	.byte	32
+	.byte	38
+	.byte	44
+	.byte	32
+	.byte	86
+	.byte	101
+	.byte	99
+	.byte	116
+	.byte	111
+	.byte	114
+	.byte	95
+	.byte	83
+	.byte	84
+	.byte	82
+	.byte	85
+	.byte	67
+	.byte	84
+	.byte	32
+	.byte	38
+	.byte	41
+	.zero	1
+	.type	.LR.4, %object
+	.size	.LR.4,.-.LR.4
+	.section	.note.GNU-stack,"",%progbits
+	.section	.fj.compile_info, "e"
+	.ascii	"C++::trad-libc++"

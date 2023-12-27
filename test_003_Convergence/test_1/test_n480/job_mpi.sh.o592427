@@ -1,0 +1,45 @@
+### Starting TaskPrologue of job 592427 on f0347 at Wed May 17 12:26:50 CEST 2023
+#   SLURM_JOB_NODELIST=f0347
+#   SLURM_JOB_NUM_NODES=1
+#   SLURM_NTASKS=10
+#   SLURM_NPROCS=10
+#   SLURM_TASKS_PER_NODE=10
+#   SLURM_JOB_CPUS_PER_NODE=72
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=480 --ny=96 --nz=240 --npx=1 --npy=5 --npz=2
+(f0347:0,1,2,3,4,5,6,7,8,9)
+
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 12:31:49 CEST 2023
+= Job-ID             : 592427 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : singlenode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=72,node=1,billing=72 for 00:30:00
+= Elapsed runtime    : 00:04:59
+= Total RAM usage    : 131.4 GiB 
+= Node list          : f0347
+= Subm/Elig/Start/End: 2023-05-17T11:08:31 / 2023-05-17T11:08:31 / 2023-05-17T12:26:49 / 2023-05-17T12:31:48
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/woody          4.0K   500.0G   750.0G        N/A       1                           N/A    
+    /home/hpc           23.1G    52.4G   104.9G        N/A  39,206      500K   1,000K        N/A    
+    /home/vault          0.0K   524.3G  1048.6G        N/A       1      200K     400K        N/A    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================

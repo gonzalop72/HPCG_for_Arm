@@ -1,0 +1,3156 @@
+--- !Passed
+Pass:            loop-idiom
+Name:            ProcessLoopStridedStore
+DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+Function:        _Z10ZeroVectorR13Vector_STRUCT
+Args:
+  - String:          'Transformed loop-strided store in '
+  - Function:        _Z10ZeroVectorR13Vector_STRUCT
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 58, Column: 0 }
+  - String:          ' function into a call to '
+  - NewFunction:     llvm.memset.p0i8.i64
+  - String:          '() intrinsic'
+...
+--- !Passed
+Pass:            loop-delete
+Name:            Invariant
+DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 3 }
+Function:        _Z10ZeroVectorR13Vector_STRUCT
+Args:
+  - String:          Loop deleted because it is invariant
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 103, Column: 11 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 78, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z18ComputeRestrictionRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 129, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z19ComputeProlongationRK19SparseMatrix_STRUCTR13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 138, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 159, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z18ComputeRestrictionRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 212, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z19ComputeProlongationRK19SparseMatrix_STRUCTR13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 221, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 241, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 103, Column: 11 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 78, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z18ComputeRestrictionRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 129, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z19ComputeProlongationRK19SparseMatrix_STRUCTR13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 138, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 159, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z18ComputeRestrictionRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 212, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z19ComputeProlongationRK19SparseMatrix_STRUCTR13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 221, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 241, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '170'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          ComputeMG_TDG
+  - String:          ':'
+  - Line:            '56'
+  - String:          ':'
+  - Column:          '10'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 268, Column: 2 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z10ZeroVectorR13Vector_STRUCT
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 58, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-5'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          ComputeMG
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '2'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 271, Column: 10 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          recursive
+...
+--- !Missed
+Pass:            inline
+Name:            TooCostly
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 273, Column: 9 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' because too costly to inline '
+  - String:          '(cost='
+  - Cost:            '455'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '165'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          ComputeMG_BLOCK
+  - String:          ':'
+  - Line:            '34'
+  - String:          ':'
+  - Column:          '10'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            TooCostly
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 273, Column: 9 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because too costly to inline '
+  - String:          '(cost='
+  - Cost:            '90'
+  - String:          ', threshold='
+  - Threshold:       '45'
+  - String:          ')'
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 271, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          recursive
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 268, Column: 2 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z10ZeroVectorR13Vector_STRUCT
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 58, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-5'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          ComputeMG
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '2'
+  - String:          ' @ '
+  - String:          ComputeMG_TDG
+  - String:          ':'
+  - Line:            '56'
+  - String:          ':'
+  - Column:          '10'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            TooCostly
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 273, Column: 9 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because too costly to inline '
+  - String:          '(cost='
+  - Cost:            '90'
+  - String:          ', threshold='
+  - Threshold:       '45'
+  - String:          ')'
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 271, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          recursive
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 77, Column: 47 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'hoisting '
+  - Inst:            add
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 77, Column: 47 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 77, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 137, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 75, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 103, Column: 11 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 23 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.SparseMatrix_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 136, Column: 37 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 129, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 75, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 103, Column: 11 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 23 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.SparseMatrix_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 136, Column: 37 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 129, Column: 10 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 186, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 220, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 31 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 180, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 23 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.SparseMatrix_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 31 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 219, Column: 37 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 212, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 31 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 180, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 23 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.SparseMatrix_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 31 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 219, Column: 37 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 212, Column: 10 }
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 103, Column: 11 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 78, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z18ComputeRestrictionRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 129, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z19ComputeProlongationRK19SparseMatrix_STRUCTR13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 138, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 159, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z18ComputeRestrictionRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 212, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z19ComputeProlongationRK19SparseMatrix_STRUCTR13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 221, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 241, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 103, Column: 11 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 78, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z18ComputeRestrictionRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 129, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z19ComputeProlongationRK19SparseMatrix_STRUCTR13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 138, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 159, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z11ComputeSPMVRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z18ComputeRestrictionRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 212, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z19ComputeProlongationRK19SparseMatrix_STRUCTR13Vector_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 221, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 241, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 271, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          recursive
+...
+--- !Missed
+Pass:            inline
+Name:            TooCostly
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 273, Column: 9 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' because too costly to inline '
+  - String:          '(cost='
+  - Cost:            '90'
+  - String:          ', threshold='
+  - Threshold:       '45'
+  - String:          ')'
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 271, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          recursive
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 273, Column: 9 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          recursive
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 77, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 137, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 75, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 103, Column: 11 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 23 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.SparseMatrix_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 136, Column: 37 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 129, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 75, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 103, Column: 11 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 23 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.SparseMatrix_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 136, Column: 37 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 129, Column: 10 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 186, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 220, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 31 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 180, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+...
+--- !Passed
+Pass:            gvn
+Name:            LoadPRE
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 31 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          load eliminated by PRE
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 23 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.SparseMatrix_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 180, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 219, Column: 37 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 212, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 31 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 180, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 23 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.SparseMatrix_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 180, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 219, Column: 37 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 212, Column: 10 }
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 271, Column: 10 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          recursive
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 273, Column: 9 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - Callee:          _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+  - String:          ' not inlined into '
+  - Caller:          _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+  - String:          ' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          recursive
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 78, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - String:          ' (Callee = '
+  - String:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ', Location = '
+  - Location:        call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 78, Column: 12 }
+  - String:          ')'
+  - OptReportRemark: Call instruction to external function _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData cannot be vectorized.
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 77, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 138, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - String:          ' (Callee = '
+  - String:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ', Location = '
+  - Location:        call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 138, Column: 12 }
+  - String:          ')'
+  - OptReportRemark: Call instruction to external function _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData cannot be vectorized.
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 137, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 78, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - OptReportRemark: Call instruction to external function _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData cannot be vectorized.
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeInstruction
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 77, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          instruction cannot be vectorized
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 77, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 138, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - OptReportRemark: Call instruction to external function _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData cannot be vectorized.
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeInstruction
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 137, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          instruction cannot be vectorized
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 137, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 75, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 103, Column: 11 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 23 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.SparseMatrix_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 136, Column: 37 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 129, Column: 10 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '5'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '5'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '5'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '5'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 77, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 137, Column: 3 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - String:          ' (Callee = '
+  - String:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ', Location = '
+  - Location:        call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+  - String:          ')'
+  - OptReportRemark: Call instruction to external function _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData cannot be vectorized.
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 186, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 221, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - String:          ' (Callee = '
+  - String:          _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+  - String:          ', Location = '
+  - Location:        call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 221, Column: 12 }
+  - String:          ')'
+  - OptReportRemark: Call instruction to external function _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData cannot be vectorized.
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 220, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - OptReportRemark: Call instruction to external function _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData cannot be vectorized.
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeInstruction
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 186, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          instruction cannot be vectorized
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 186, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 221, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - OptReportRemark: Call instruction to external function _Z12ComputeSYMGSRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData cannot be vectorized.
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeInstruction
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 220, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'loop not vectorized: '
+  - String:          instruction cannot be vectorized
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 220, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 31 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 180, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 23 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.SparseMatrix_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 180, Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 219, Column: 37 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'load of type '
+  - Type:            '%struct.MGData_STRUCT*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 212, Column: 10 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '5'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '5'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '5'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '5'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 186, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 220, Column: 3 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          loop not unrolled
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - NumStackBytes:   '80'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - NumStackBytes:   '48'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - NumStackBytes:   '80'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '12'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 76, Column: 44 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 78, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 159, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 103, Column: 11 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 110, Column: 31 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 119, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 124, Column: 30 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/Vector.hpp', Line: 60, Column: 19 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 271, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 273, Column: 9 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 0, Column: 0 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 129, Column: 10 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 171, Column: 1 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 136, Column: 37 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 138, Column: 12 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 68, Column: 0 }
+Function:        _Z13ComputeMG_TDGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - NumInstructions: '129'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/Vector.hpp', Line: 60, Column: 19 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 271, Column: 10 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 273, Column: 9 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 265, Column: 0 }
+Function:        _Z9ComputeMGRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - NumInstructions: '55'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '12'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 185, Column: 44 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 187, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 189, Column: 8 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 31 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 195, Column: 39 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 202, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 207, Column: 30 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/Vector.hpp', Line: 60, Column: 19 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 241, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 253, Column: 1 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/Vector.hpp', Line: 61, Column: 43 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 270, Column: 9 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 271, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 273, Column: 9 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 212, Column: 10 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 219, Column: 37 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 221, Column: 12 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 266, Column: 2 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeMG.cpp', Line: 173, Column: 0 }
+Function:        _Z15ComputeMG_BLOCKRK19SparseMatrix_STRUCTRK13Vector_STRUCTRS2_R9TraceData
+Args:
+  - NumInstructions: '121'
+  - String:          ' instructions in function'
+...

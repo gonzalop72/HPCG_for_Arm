@@ -1,0 +1,1026 @@
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 27 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 27 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 68, Column: 26 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 68, Column: 26 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 63, Column: 39 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 63, Column: 39 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 63, Column: 39 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 63, Column: 39 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 64, Column: 44 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 64, Column: 44 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 64, Column: 44 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 64, Column: 44 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 65, Column: 27 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 65, Column: 27 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 65, Column: 27 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 65, Column: 27 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 69, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 69, Column: 5 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 67, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'i32**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 69, Column: 11 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'i32**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 69, Column: 11 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 49, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 47, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 50, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 47, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 47, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 49, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 47, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 50, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 47, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 47, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 50, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 49, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            InterleavingNotBeneficial
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 67, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          the cost-model indicates that interleaving is not beneficial
+...
+--- !Passed
+Pass:            sve-loop-vectorize
+Name:            Vectorized
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 67, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'vectorized loop (vectorization width: '
+  - VectorizationFactor: vscale x 2
+  - String:          ', interleaved count: '
+  - InterleaveCount: '1'
+  - String:          ')'
+  - String:          '(runtime checks: '
+  - RTNeeded:        no
+  - String:          ')'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 67, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 67, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'i32**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 69, Column: 11 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 61, Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'i32**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 69, Column: 11 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 67, Column: 32 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '11'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 67, Column: 32 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '11'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 67, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 47, Column: 0 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - NumStackBytes:   '48'
+  - String:          ' stack bytes in function'
+...
+--- !Missed
+Pass:            regalloc
+Name:            LoopSpillReloadCopies
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+Function:        .omp_outlined.
+Args:
+  - NumVRCopies:     '1'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '6.360000e+00'
+  - String:          ' total copies cost '
+  - String:          generated in loop
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - NumVRCopies:     '1'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '6.360000e+00'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 0 }
+Function:        .omp_outlined.
+Args:
+  - NumStackBytes:   '96'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 50, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 55, Column: 31 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '18'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 49, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 50, Column: 3 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 47, Column: 0 }
+Function:        _Z15ComputeSPMV_refRK19SparseMatrix_STRUCTR13Vector_STRUCTS3_
+Args:
+  - NumInstructions: '46'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 3 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '25'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 65, Column: 25 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 68, Column: 29 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 27 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 70, Column: 3 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeSPMV_ref.cpp', Line: 59, Column: 0 }
+Function:        .omp_outlined.
+Args:
+  - NumInstructions: '78'
+  - String:          ' instructions in function'
+...

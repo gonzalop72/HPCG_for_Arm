@@ -1,0 +1,425 @@
+Fujitsu C/C++ Version 4.7.0   Fri Jul 21 04:39:23 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/init.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             #ifndef HPCG_NO_MPI
+       16             #include <mpi.h>
+       17             #endif
+       18             
+       19             #ifndef HPCG_NO_OPENMP
+       20             #include <omp.h>
+       21             #endif
+       22             
+       23             #ifdef _WIN32
+       24             const char* NULLDEVICE="nul";
+       25             #else
+       26             const char* NULLDEVICE="/dev/null";
+       27             #endif
+       28             
+       29             #include <ctime>
+       30             #include <cstdio>
+       31             #include <cstdlib>
+       32             #include <cstring>
+       33             
+       34             #include <fstream>
+       35             #include <iostream>
+       36             
+       37             #include "hpcg.hpp"
+       38             
+       39             #include "ReadHpcgDat.hpp"
+       40             
+       41    i        std::ofstream HPCG_fout; //!< output file stream for logging activities during HPCG run
+       42             
+       43             static int
+       44             startswith(const char * s, const char * prefix) {
+       45               size_t n = strlen( prefix );
+       46               if (strncmp( s, prefix, n ))
+       47                 return 0;
+       48               return 1;
+       49             }
+       50             
+       51             /*!
+       52               Initializes an HPCG run by obtaining problem parameters (from a file or
+       53               command line) and then broadcasts them to all nodes. It also initializes
+       54               login I/O streams that are used throughout the HPCG run. Only MPI rank 0
+       55               performs I/O operations.
+       56             
+       57               The function assumes that MPI has already been initialized for MPI runs.
+       58             
+       59               @param[in] argc_p the pointer to the "argc" parameter passed to the main() function
+       60               @param[in] argv_p the pointer to the "argv" parameter passed to the main() function
+       61               @param[out] params the reference to the data structures that is filled the basic parameters of the run
+       62             
+       63               @return returns 0 upon success and non-zero otherwise
+       64             
+       65               @see HPCG_Finalize
+       66             */
+       67             int
+       68             HPCG_Init(int * argc_p, char ** *argv_p, HPCG_Params & params) {
+       69               int argc = *argc_p;
+       70               char ** argv = *argv_p;
+       71               char fname[80];
+       72               int i, j, *iparams;
+       73               char cparams[][7] = {"--nx=", "--ny=", "--nz=", "--rt=", "--pz=", "--zl=", "--zu=", "--npx=", "--npy=", "--npz=", "--lvt="};
+       74               time_t rawtime;
+       75               tm * ptm;
+       76               const int nparams = (sizeof cparams) / (sizeof cparams[0]);
+       77               bool broadcastParams = false; // Make true if parameters read from file.
+       78             
+       79               iparams = (int *)malloc(sizeof(int) * nparams);
+       80             
+       81               // Initialize iparams
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 16)
+                       <<< Loop-information  End >>>
+       82          v    for (i = 0; i < nparams; ++i) iparams[i] = 0;
+       83             
+       84               /* for sequential and some MPI implementations it's OK to read first three args */
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information  End >>>
+       85         f     for (i = 0; i < nparams; ++i)
+       86         f       if (argc <= i+1 || sscanf(argv[i+1], "%d", iparams+i) != 1 || iparams[i] < 10) iparams[i] = 0;
+       87             
+       88               /* for some MPI environments, command line arguments may get complicated so we need a prefix */
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       89               for (i = 1; i <= argc && argv[i]; ++i)
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information  End >>>
+       90         f       for (j = 0; j < nparams; ++j)
+       91    i    f         if (startswith(argv[i], cparams[j]))
+       92         f           if (sscanf(argv[i]+strlen(cparams[j]), "%d", iparams+j) != 1)
+       93         f             iparams[j] = 0;
+       94             
+       95               // Check if --rt was specified on the command line
+       96               int * rt  = iparams+3;  // Assume runtime was not specified and will be read from the hpcg.dat file
+       97               if (! iparams[3]) rt = 0; // If --rt was specified, we already have the runtime, so don't read it from file
+       98               if (! iparams[0] && ! iparams[1] && ! iparams[2]) { /* no geometry arguments on the command line */
+       99                 ReadHpcgDat(iparams, rt, iparams+7);
+      100                 broadcastParams = true;
+      101               }
+      102             
+      103               // Check for small or unspecified nx, ny, nz values
+      104               // If any dimension is less than 16, make it the max over the other two dimensions, or 16, whichever is largest
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information  End >>>
+      105         f     for (i = 0; i < 3; ++i) {
+      106         f       if (iparams[i] < 16)
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information  End >>>
+      107         fs        for (j = 1; j <= 2; ++j)
+      108         fm          if (iparams[(i+j)%3] > iparams[i])
+      109         fm            iparams[i] = iparams[(i+j)%3];
+      110         f       if (iparams[i] < 16)
+      111         f         iparams[i] = 16;
+      112         f     }
+      113             
+      114             // Broadcast values of iparams to all MPI processes
+      115             #ifndef HPCG_NO_MPI
+      116               if (broadcastParams) {
+      117                 MPI_Bcast( iparams, nparams, MPI_INT, 0, MPI_COMM_WORLD );
+      118               }
+      119             #endif
+      120             
+      121               params.nx = iparams[0];
+      122               params.ny = iparams[1];
+      123               params.nz = iparams[2];
+      124             
+      125               params.runningTime = iparams[3];
+      126               params.pz = iparams[4];
+      127               params.zl = iparams[5];
+      128               params.zu = iparams[6];
+      129             
+      130               params.npx = iparams[7];
+      131               params.npy = iparams[8];
+      132               params.npz = iparams[9];
+      133             
+      134             #ifndef HPCG_NO_MPI
+      135               MPI_Comm_rank( MPI_COMM_WORLD, &params.comm_rank );
+      136               MPI_Comm_size( MPI_COMM_WORLD, &params.comm_size );
+      137             #else
+      138               params.comm_rank = 0;
+      139               params.comm_size = 1;
+      140             #endif
+      141             
+      142             #ifdef HPCG_NO_OPENMP
+      143               params.numThreads = 1;
+      144             #else
+      145               #pragma omp parallel
+      146               params.numThreads = omp_get_num_threads();
+      147             #endif
+      148             //  for (i = 0; i < nparams; ++i) std::cout << "rank = "<< params.comm_rank << " iparam["<<i<<"] = " << iparams[i] << "\n";
+      149             
+      150               time ( &rawtime );
+      151               ptm = localtime(&rawtime);
+      152               sprintf( fname, "hpcg%04d%02d%02dT%02d%02d%02d.txt",
+      153                   1900 + ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec );
+      154             
+      155               if (0 == params.comm_rank) {
+      156    i            HPCG_fout.open(fname);
+      157               } else {
+      158             #if defined(HPCG_DEBUG) || defined(HPCG_DETAILED_DEBUG)
+      159                 sprintf( fname, "hpcg%04d%02d%02dT%02d%02d%02d_%d.txt",
+      160                     1900 + ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, params.comm_rank );
+      161                 HPCG_fout.open(fname);
+      162             #else
+      163    i            HPCG_fout.open(NULLDEVICE);
+      164             #endif
+      165               }
+      166               
+      167             #if defined(LIKWID_INSTRUMENTATION) || defined(ENABLE_MG_COUNTERS)
+      168               if (iparams[10] > 0)
+      169               params.lvl_Trace = iparams[10];
+      170             #endif
+      171             
+      172               free( iparams );
+      173             
+      174               return 0;
+      175             }
+Total prefetch num: 0
+Optimization messages
+  jwd8101o-i  "../src/init.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__18ios_baseC1Ev'.
+  jwd8101o-i  "../src/init.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impIP8_IO_FILEPFiS2_ELj0EEC1ES2_S4_'.
+  jwd8101o-i  "../src/init.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEEC1Ev'.
+  jwd8101o-i  "../src/init.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEEC1EOS5_'.
+  jwd8101o-i  "../src/init.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1EOS5_'.
+  jwd8101o-i  "../src/init.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEEC2EPNS_15basic_streambufIcS2_EE'.
+  jwd8101o-i  "../src/init.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__113basic_filebufIcNS_11char_traitsIcEEED1Ev'.
+  jwd8101o-i  "../src/init.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEEED2Ev'.
+  jwd8101o-i  "../src/init.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEC2Ev'.
+  jwd8101o-i  "../src/init.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEEED1Ev'.
+  jwd8101o-i  "../src/init.cpp", line 41: Inline expansion is applied to the user defined function '_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEEEC1Ev'.
+  jwd6122s-i  "../src/init.cpp", line 45: SIMD conversion is not applied to this loop because a function call that prevents SIMD conversion exists.
+  jwd6122s-i  "../src/init.cpp", line 46: SIMD conversion is not applied to this loop because a function call that prevents SIMD conversion exists.
+  jwd6001s-i  "../src/init.cpp", line 82: SIMD conversion is applied to this loop with the loop variable 'i'.
+  jwd8203o-i  "../src/init.cpp", line 85: Loop full unrolling is applied to this loop.
+  jwd6122s-i  "../src/init.cpp", line 86: SIMD conversion is not applied to this loop because a function call that prevents SIMD conversion exists.
+  jwd8664o-i  "../src/init.cpp", line 89: This loop cannot be software pipelined because the loop contains an instruction, such as function call, which is not supported by software pipelining.
+  jwd6101s-i  "../src/init.cpp", line 90: SIMD conversion is not applied because a statement that prevents SIMD conversion exists.
+  jwd8203o-i  "../src/init.cpp", line 90: Loop full unrolling is applied to this loop.
+  jwd8101o-i  "../src/init.cpp", line 91: Inline expansion is applied to the user defined function '_ZN29_INTERNAL_8_init_cpp_eeb0435810startswithEPKcS1_'.
+  jwd6122s-i  "../src/init.cpp", line 92: SIMD conversion is not applied to this loop because a function call that prevents SIMD conversion exists.
+  jwd8203o-i  "../src/init.cpp", line 105: Loop full unrolling is applied to this loop.
+  jwd6229s-i  "../src/init.cpp", line 107: SIMD conversion is not applied to this loop because "if" statements exist in the loop.
+  jwd8203o-i  "../src/init.cpp", line 107: Loop full unrolling is applied to this loop.
+  jwd6208s-i  "../src/init.cpp", line 108: SIMD conversion is not applied to this loop because the uncertain order of the definition and reference to variable 'iparams' may cause different results from serial execution.
+  jwd8101o-i  "../src/init.cpp", line 156: Inline expansion is applied to the user defined function '_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEEE4openEPKcj'.
+  jwd8101o-i  "../src/init.cpp", line 163: Inline expansion is applied to the user defined function '_ZNSt3__114basic_ofstreamIcNS_11char_traitsIcEEE4openEPKcj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 268: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE6getlocEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 268: Inline expansion is applied to the user defined function '_ZNSt3__19has_facetINS_7codecvtIcc11__mbstate_tEEEEbRKNS_6localeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 270: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE6getlocEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 270: Inline expansion is applied to the user defined function '_ZNSt3__19use_facetINS_7codecvtIcc11__mbstate_tEEEERKT_RKNS_6localeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 271: Inline expansion is applied to the user defined function '_ZNKSt3__17codecvtIcc11__mbstate_tE13always_noconvEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 280: Inline expansion is applied to the user defined function '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEEC2Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 281: Inline expansion is applied to the user defined function '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEE4initEPNS_15basic_streambufIcS2_EE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 566: Inline expansion is applied to the user defined function '_ZNSt3__110unique_ptrI8_IO_FILEPFiPS1_EEC1ES2_OS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 569: Inline expansion is applied to the user defined function '_ZNSt3__110unique_ptrI8_IO_FILEPFiPS1_EE7releaseEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 585: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 586: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 587: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5egptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 587: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 587: Inline expansion is applied to the user defined function '_ZNSt3__13minImEERKT_S3_S3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 589: Inline expansion is applied to the user defined function '_ZNSt3__18ios_base8setstateEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 589: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 589: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5egptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 591: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 591: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5egptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 594: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5egptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 594: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 595: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 598: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 598: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 601: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 601: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11to_int_typeEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 609: Inline expansion is applied to the user defined function '_ZNSt3__13minImEERKT_S3_S3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 622: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 622: Inline expansion is applied to the user defined function '_ZNKSt3__17codecvtIcc11__mbstate_tE2inERS1_PKcS5_RS5_PcS7_RS7_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 627: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 628: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 628: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11to_int_typeEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 630: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 631: Inline expansion is applied to the user defined function '_ZNSt3__18ios_baseC2Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 632: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 632: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 633: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 633: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11to_int_typeEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 639: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 639: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11to_int_typeEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 640: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 641: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 649: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 649: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 651: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11eq_int_typeEii'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 653: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5gbumpEi'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 654: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE3eofEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 654: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11eq_int_typeEii'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 654: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE7not_eofEi'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 656: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE12to_char_typeEi'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 656: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 656: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE2eqEcc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 659: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5gbumpEi'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 660: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 660: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE12to_char_typeEi'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 675: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 676: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5epptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 677: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11eq_int_typeEii'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 679: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4pptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 680: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpEPcS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 681: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4pptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 681: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE12to_char_typeEi'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 682: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbumpEi'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 684: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4pptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 684: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 688: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4pptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 688: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 689: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseEv'.
+  jwd6142s-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 696: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8664o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 696: This loop cannot be software pipelined because the loop contains an instruction, such as function call, which is not supported by software pipelining.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 703: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 703: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4pptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 703: Inline expansion is applied to the user defined function '_ZNKSt3__17codecvtIcc11__mbstate_tE3outERS1_PKcS5_RS5_PcS7_RS7_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 705: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 709: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4pptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 709: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 710: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 720: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4pptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 720: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpEPcS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 721: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5epptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 721: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 721: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbumpEi'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 728: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpEPcS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 730: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE7not_eofEi'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 737: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 738: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpEPcS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 765: Inline expansion is applied to the user defined function '_ZNSt3__13maxIlEERKT_S3_S3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 795: Inline expansion is applied to the user defined function '_ZNKSt3__17codecvtIcc11__mbstate_tE8encodingEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 797: Inline expansion is applied to the user defined function '_ZNSt3__14fposI11__mbstate_tEC1Ex'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 812: Inline expansion is applied to the user defined function '_ZNSt3__14fposI11__mbstate_tEC1Ex'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 820: Inline expansion is applied to the user defined function '_ZNSt3__14fposI11__mbstate_tEC1Ex'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 821: Inline expansion is applied to the user defined function '_ZNSt3__14fposI11__mbstate_tEC1Ex'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 823: Inline expansion is applied to the user defined function '_ZNSt3__14fposI11__mbstate_tE5stateES1_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 832: Inline expansion is applied to the user defined function '_ZNSt3__14fposI11__mbstate_tEC1Ex'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 837: Inline expansion is applied to the user defined function '_ZNKSt3__14fposI11__mbstate_tEcvxEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 838: Inline expansion is applied to the user defined function '_ZNSt3__14fposI11__mbstate_tEC1Ex'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 840: Inline expansion is applied to the user defined function '_ZNKSt3__14fposI11__mbstate_tE5stateEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 856: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4pptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 856: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5pbaseEv'.
+  jwd6142s-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 860: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8664o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 860: This loop cannot be software pipelined because the loop contains an instruction, such as function call, which is not supported by software pipelining.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 863: Inline expansion is applied to the user defined function '_ZNKSt3__17codecvtIcc11__mbstate_tE7unshiftERS1_PcS4_RS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 879: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5egptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 879: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 882: Inline expansion is applied to the user defined function '_ZNKSt3__17codecvtIcc11__mbstate_tE8encodingEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 885: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5egptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 885: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 888: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 888: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5egptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 890: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE4gptrEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 890: Inline expansion is applied to the user defined function '_ZNKSt3__115basic_streambufIcNS_11char_traitsIcEEE5ebackEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 890: Inline expansion is applied to the user defined function '_ZNKSt3__17codecvtIcc11__mbstate_tE6lengthERS1_PKcS5_m'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 908: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 919: Inline expansion is applied to the user defined function '_ZNSt3__19use_facetINS_7codecvtIcc11__mbstate_tEEEERKT_RKNS_6localeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 921: Inline expansion is applied to the user defined function '_ZNKSt3__17codecvtIcc11__mbstate_tE13always_noconvEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 924: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 925: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpEPcS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 964: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpEPcS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 966: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 970: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 983: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setgEPcS4_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 987: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpEPcS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 990: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpEPcS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 993: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE4setpEPcS4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 1192: Inline expansion is applied to the user defined function '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEEC2Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 1192: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEEC2EPNS_15basic_streambufIcS2_EE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 1277: Inline expansion is applied to the user defined function '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEE5clearEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/fstream", line 1279: Inline expansion is applied to the user defined function '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEE8setstateEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1789: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1789: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2058: Inline expansion is applied to the user defined function '_ZNSt3__17forwardIP8_IO_FILEEEOT_RNS_16remove_referenceIS3_E4typeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2058: Inline expansion is applied to the user defined function '_ZNSt3__17forwardIPFiP8_IO_FILEEEEOT_RNS_16remove_referenceIS5_E4typeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2106: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRNS_17__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES6_EEEEONS_16remove_referenceIT_E4typeEOSC_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2106: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRNS_17__compressed_pairINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES6_EEEEONS_16remove_referenceIT_E4typeEOSC_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2107: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__zeroEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2107: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE6__zeroEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2420: Inline expansion is applied to the user defined function '_ZNSt3__17forwardIP8_IO_FILEEEOT_RNS_16remove_referenceIS3_E4typeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2420: Inline expansion is applied to the user defined function '_ZNSt3__17forwardIPFiP8_IO_FILEEEEOT_RNS_16remove_referenceIS5_E4typeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2420: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impIP8_IO_FILEPFiS2_ELj0EEC2ES2_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impIP8_IO_FILEPFiS2_ELj0EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2472: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impIP8_IO_FILEPFiS2_ELj0EE6secondEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2594: Inline expansion is applied to the user defined function '_ZNKSt3__16__lessImmEclERKmS3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2602: Inline expansion is applied to the user defined function '_ZNSt3__13minImNS_6__lessImmEEEERKT_S5_S5_T0_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2611: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRPFiP8_IO_FILEEEEONS_16remove_referenceIT_E4typeEOS7_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2611: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EEC1ES2_S4_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2659: Inline expansion is applied to the user defined function '_ZNKSt3__16__lessIllEclERKlS3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2667: Inline expansion is applied to the user defined function '_ZNSt3__13maxIlNS_6__lessIllEEEERKT_S5_S5_T0_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2714: Inline expansion is applied to the user defined function '_ZNSt3__110unique_ptrI8_IO_FILEPFiPS1_EE5resetES2_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2736: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2737: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2743: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2744: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2746: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairIP8_IO_FILEPFiS2_EE6secondEv'.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DUNROLLING_4_B -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/init.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

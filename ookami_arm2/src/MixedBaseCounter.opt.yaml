@@ -1,0 +1,1996 @@
+--- !Missed
+Pass:            loop-idiom
+Name:            LoopMayAccessLoad
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - Inst:            load and store
+  - String:          ' in '
+  - Function:        _ZN16MixedBaseCounterC2EPii
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 6, Column: 0 }
+  - String:          ' function will not be hoisted: '
+  - Reason:          The loop may access load location
+...
+--- !Passed
+Pass:            loop-unroll
+Name:            FullyUnrolled
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 11, Column: 3 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'completely unrolled loop with '
+  - UnrollCount:     '32'
+  - String:          ' iterations'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 7, Column: 16 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 3 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 21, Column: 23 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 21, Column: 16 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 24, Column: 25 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 29 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 29 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 29 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 29 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 3 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          loop not unrolled
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 29 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 29 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 29 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 29 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 3 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          loop not unrolled
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 25 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'hoisting '
+  - Inst:            zext
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 25 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 25 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 25 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 25 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 25 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 55, Column: 12 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 55, Column: 12 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressCondExecuted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 55, Column: 12 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          failed to hoist load with loop-invariant address because load is conditionally executed
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 55, Column: 12 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 55, Column: 12 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 52, Column: 29 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'hoisting '
+  - Inst:            getelementptr
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 52, Column: 29 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 52, Column: 29 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 52, Column: 29 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 5 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 52, Column: 3 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 7, Column: 16 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 12, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+...
+--- !Passed
+Pass:            slp-vectorizer
+Name:            StoresVectorized
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 13, Column: 25 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'Stores SLP vectorized with cost '
+  - Cost:            '-1'
+  - String:          ' and with tree size '
+  - TreeSize:        '2'
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 3 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 3 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 3 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 3 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 21, Column: 23 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 21, Column: 16 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 24, Column: 25 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 3 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 22, Column: 28 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CFGNotUnderstood
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 3 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          'loop not vectorized: '
+  - String:          loop control flow is not understood by vectorizer
+  - String:          ' (Reason = early exits)'
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 3 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 3 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 3 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 31, Column: 24 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 3 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          loop not unrolled
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CFGNotUnderstood
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 3 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'loop not vectorized: '
+  - String:          loop control flow is not understood by vectorizer
+  - String:          ' (Reason = early exits)'
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 3 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 3 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 3 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 3 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          loop not unrolled
+...
+--- !Passed
+Pass:            licm
+Name:            InstSunk
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 21 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'sinking '
+  - Inst:            icmp
+    DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 21 }
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            InterleavingNotBeneficial
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 5 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          the cost-model indicates that interleaving is not beneficial
+...
+--- !Passed
+Pass:            sve-loop-vectorize
+Name:            Vectorized
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 5 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'vectorized loop (vectorization width: '
+  - VectorizationFactor: vscale x 4
+  - String:          ', interleaved count: '
+  - InterleaveCount: '1'
+  - String:          ')'
+  - String:          '(runtime checks: '
+  - RTNeeded:        no
+  - String:          ')'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 5 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 5 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 50, Column: 7 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '12'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 50, Column: 12 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '9'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 0, Column: 0 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '12'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '10'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '12'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 5 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 5 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 52, Column: 3 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 6, Column: 1 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - NumVRCopies:     '1'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '1.000000e+00'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 6, Column: 0 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - NumStackBytes:   '0'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 20, Column: 0 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - NumStackBytes:   '0'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 29, Column: 0 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - NumStackBytes:   '0'
+  - String:          ' stack bytes in function'
+...
+--- !Missed
+Pass:            regalloc
+Name:            LoopSpillReloadCopies
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 3 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - NumVRCopies:     '1'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '3.823529e+00'
+  - String:          ' total copies cost '
+  - String:          generated in loop
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 41, Column: 1 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - NumVRCopies:     '1'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '3.823529e+00'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 41, Column: 0 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - NumStackBytes:   '0'
+  - String:          ' stack bytes in function'
+...
+--- !Missed
+Pass:            regalloc
+Name:            LoopSpillReloadCopies
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 52, Column: 3 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - NumVRCopies:     '5'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '2.209524e+01'
+  - String:          ' total copies cost '
+  - String:          generated in loop
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 49, Column: 1 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - NumVRCopies:     '5'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '2.209524e+01'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 49, Column: 0 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - NumStackBytes:   '0'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '102'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 6, Column: 0 }
+Function:        _ZN16MixedBaseCounterC2EPii
+Args:
+  - NumInstructions: '102'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 21, Column: 23 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 23, Column: 27 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '13'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 26, Column: 1 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 20, Column: 0 }
+Function:        _ZN16MixedBaseCounterC2ERS_S0_
+Args:
+  - NumInstructions: '20'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 3 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 31, Column: 24 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 30, Column: 21 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 38, Column: 1 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 29, Column: 0 }
+Function:        _ZN16MixedBaseCounter4nextEv
+Args:
+  - NumInstructions: '14'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 43, Column: 9 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 43, Column: 9 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 42, Column: 21 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 41, Column: 0 }
+Function:        _ZN16MixedBaseCounter7is_zeroEv
+Args:
+  - NumInstructions: '22'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '10'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 52, Column: 37 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 53, Column: 23 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 58, Column: 12 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/MixedBaseCounter.cpp', Line: 49, Column: 0 }
+Function:        _ZN16MixedBaseCounter7productEPi
+Args:
+  - NumInstructions: '57'
+  - String:          ' instructions in function'
+...

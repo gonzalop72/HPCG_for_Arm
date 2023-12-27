@@ -1,0 +1,1523 @@
+### Starting TaskPrologue of job 593758 on f0204 at Wed May 17 16:53:17 CEST 2023
+#   SLURM_JOB_NODELIST=f[0204,0215,0219-0222,0225,0228-0231]
+#   SLURM_JOB_NUM_NODES=11
+#   SLURM_NTASKS=256
+#   SLURM_NPROCS=256
+#   SLURM_TASKS_PER_NODE=24(x3),23(x8)
+#   SLURM_JOB_CPUS_PER_NODE=72(x11)
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=100 --ny=50 --nz=50 --npx=4 --npy=8 --npz=8
+(f0204:0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23)
+(f0215:24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47)
+(f0219:48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71)
+(f0220:72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94)
+(f0221:95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117)
+(f0222:118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140)
+(f0225:141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163)
+(f0228:164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186)
+(f0229:187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209)
+(f0230:210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232)
+(f0231:233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255)
+
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nyf%2==0' failed.
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 95 PID 204581 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 96 PID 204582 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 97 PID 204583 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 187 PID 745466 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 188 PID 745467 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 189 PID 745468 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 98 PID 204584 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 99 PID 204585 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 100 PID 204586 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 101 PID 204587 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 102 PID 204588 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 103 PID 204589 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 210 PID 4060406 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 211 PID 4060407 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 212 PID 4060408 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 190 PID 745469 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 191 PID 745470 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 192 PID 745471 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 193 PID 745472 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 194 PID 745473 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 195 PID 745474 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 196 PID 745475 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 197 PID 745476 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 198 PID 745477 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 72 PID 3450015 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 73 PID 3450016 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 104 PID 204590 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 105 PID 204591 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 106 PID 204592 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 107 PID 204593 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 108 PID 204594 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 118 PID 3334886 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 199 PID 745478 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 200 PID 745479 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 201 PID 745480 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 202 PID 745481 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 203 PID 745482 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 74 PID 3450017 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 75 PID 3450018 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 213 PID 4060409 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 76 PID 3450019 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 77 PID 3450020 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 78 PID 3450021 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 214 PID 4060410 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 215 PID 4060411 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 216 PID 4060412 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 79 PID 3450022 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 217 PID 4060413 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 80 PID 3450023 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 81 PID 3450024 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 218 PID 4060414 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 219 PID 4060415 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 82 PID 3450025 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 220 PID 4060416 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 221 PID 4060417 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 222 PID 4060418 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 223 PID 4060419 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 83 PID 3450026 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 224 PID 4060420 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 84 PID 3450027 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 85 PID 3450028 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 86 PID 3450029 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 87 PID 3450030 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 88 PID 3450031 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 89 PID 3450032 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 90 PID 3450033 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 233 PID 317429 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 119 PID 3334887 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 120 PID 3334888 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 121 PID 3334889 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 122 PID 3334890 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 123 PID 3334891 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 124 PID 3334892 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 125 PID 3334893 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 126 PID 3334894 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 127 PID 3334895 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 128 PID 3334896 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 129 PID 3334897 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 234 PID 317430 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 235 PID 317431 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 236 PID 317432 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 237 PID 317433 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 238 PID 317434 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 239 PID 317435 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 240 PID 317436 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 241 PID 317437 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 242 PID 317438 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 243 PID 317439 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 244 PID 317440 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 245 PID 317441 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 246 PID 317442 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 247 PID 317443 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 248 PID 317444 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 249 PID 317445 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 250 PID 317446 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 251 PID 317447 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 252 PID 317448 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 253 PID 317449 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 254 PID 317450 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 255 PID 317451 RUNNING AT f0231
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 109 PID 204595 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 110 PID 204596 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 111 PID 204597 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 112 PID 204598 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 113 PID 204599 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 114 PID 204600 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 115 PID 204601 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 116 PID 204602 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 117 PID 204603 RUNNING AT f0221
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 91 PID 3450034 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 92 PID 3450035 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 93 PID 3450036 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 225 PID 4060421 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 204 PID 745483 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 205 PID 745484 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 206 PID 745485 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 226 PID 4060422 RUNNING AT f0230
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 207 PID 745486 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 227 PID 4060423 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+=   RANK 208 PID 745487 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 209 PID 745488 RUNNING AT f0229
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 228 PID 4060424 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 229 PID 4060425 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 230 PID 4060426 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 231 PID 4060427 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 232 PID 4060428 RUNNING AT f0230
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 130 PID 3334898 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 131 PID 3334899 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 132 PID 3334900 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 133 PID 3334901 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 134 PID 3334902 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 135 PID 3334903 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 136 PID 3334904 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 137 PID 3334905 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 138 PID 3334906 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 139 PID 3334907 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 140 PID 3334908 RUNNING AT f0222
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 141 PID 2875967 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 142 PID 2875968 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 143 PID 2875969 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 144 PID 2875970 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 145 PID 2875971 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 146 PID 2875972 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 147 PID 2875973 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 148 PID 2875974 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 149 PID 2875975 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 150 PID 2875976 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 151 PID 2875977 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 152 PID 2875978 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 153 PID 2875979 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 154 PID 2875980 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 155 PID 2875981 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 156 PID 2875982 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 157 PID 2875983 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 158 PID 2875984 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 159 PID 2875985 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 160 PID 2875986 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 161 PID 2875987 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 162 PID 2875988 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 163 PID 2875989 RUNNING AT f0225
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 94 PID 3450037 RUNNING AT f0220
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 16:53:24 CEST 2023
+= Job-ID             : 593758 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : multinode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=792,node=11,billing=792 for 00:30:00
+= Elapsed runtime    : 00:00:07
+= Total RAM usage    : 0.0 GiB 
+= Node list          : f[0204,0215,0219-0222,0225,0228-0231]
+= Subm/Elig/Start/End: 2023-05-17T16:32:16 / 2023-05-17T16:32:16 / 2023-05-17T16:53:16 / 2023-05-17T16:53:23
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           23.2G    52.4G   104.9G        N/A  39,743      500K   1,000K        N/A    
+    /home/woody          4.0K   500.0G   750.0G        N/A       1                           N/A    
+    /home/vault          0.0K   524.3G  1048.6G        N/A       1      200K     400K        N/A    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================

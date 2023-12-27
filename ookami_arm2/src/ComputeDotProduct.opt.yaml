@@ -1,0 +1,2368 @@
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 51 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_reduce_nowait
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_end_reduce_nowait
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 51 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_reduce_nowait
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_end_reduce_nowait
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 257, Column: 40 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 257, 
+                       Column: 40 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 257, Column: 40 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'hoisting '
+  - Inst:            sext
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 257, 
+                       Column: 40 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 260, Column: 39 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 260, 
+                       Column: 39 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 262, Column: 39 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 262, 
+                       Column: 39 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 297, Column: 23 }
+Function:        .omp_outlined..3
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            licm
+Name:            PromoteLoopAccessesToScalar
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 297, Column: 23 }
+Function:        .omp_outlined..3
+Args:
+  - String:          Moving accesses to memory location out of the loop
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 270, Column: 23 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'hoisting '
+  - Inst:            call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 270, 
+                       Column: 23 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 38 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, Column: 9 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, Column: 9 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, 
+                       Column: 32 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Passed
+Pass:            gvn
+Name:            LoadElim
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' eliminated'
+  - String:          ' in favor of '
+  - InfavorOfValue:  '0.000000e+00'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, Column: 9 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, Column: 9 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, 
+                       Column: 32 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 51 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_reduce_nowait
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_end_reduce_nowait
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 51 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_reduce_nowait
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_end_reduce_nowait
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 213, Column: 40 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 213, 
+                       Column: 40 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 213, Column: 40 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            sext
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 213, 
+                       Column: 40 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 216, Column: 39 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 216, 
+                       Column: 39 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 250, Column: 26 }
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            licm
+Name:            PromoteLoopAccessesToScalar
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 250, Column: 26 }
+Function:        .omp_outlined.
+Args:
+  - String:          Moving accesses to memory location out of the loop
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 225, Column: 23 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 225, 
+                       Column: 23 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 38 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 38 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, Column: 9 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, Column: 9 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, 
+                       Column: 32 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Passed
+Pass:            gvn
+Name:            LoadElim
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' eliminated'
+  - String:          ' in favor of '
+  - InfavorOfValue:  '0.000000e+00'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 38 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 38 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, Column: 9 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, Column: 9 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, 
+                       Column: 32 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 38 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 38 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        _Z26ComputeDotProduct_unrollediPKdS0_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z26ComputeDotProduct_unrollediPKdS0_
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 204, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        _Z26ComputeDotProduct_unrollediPKdS0_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z26ComputeDotProduct_unrollediPKdS0_
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 204, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        _Z26ComputeDotProduct_unrollediPKdS0_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z26ComputeDotProduct_unrollediPKdS0_
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 204, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        _Z26ComputeDotProduct_unrollediPKdS0_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z26ComputeDotProduct_unrollediPKdS0_
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 204, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 301, Column: 9 }
+Function:        _Z26ComputeDotProduct_unrollediPKdS0_
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 205, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 301, Column: 9 }
+Function:        _Z26ComputeDotProduct_unrollediPKdS0_
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 205, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 80, Column: 2 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 78, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 81, Column: 2 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 78, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 80, Column: 2 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 78, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 81, Column: 2 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 78, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 117, Column: 17 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - Callee:          _Z26ComputeDotProduct_unrollediPKdS0_
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 204, 
+                       Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 78, 
+                       Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '135'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          ComputeDotProduct
+  - String:          ':'
+  - Line:            '40'
+  - String:          ':'
+  - Column:          '17'
+  - String:          ';'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 301, Column: 9 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 205, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 301, Column: 9 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 205, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 301, Column: 9 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 205, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 301, Column: 9 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 205, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 83, Column: 17 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 213, Column: 19 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - String:          ' (Callee = '
+  - String:          llvm.aarch64.sve.whilelo.nxv2i1.i64
+  - String:          ', Location = '
+  - Location:        call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 213, 
+                       Column: 19 }
+  - String:          ')'
+  - OptReportRemark: Call instruction to external function llvm.aarch64.sve.whilelo.nxv2i1.i64 cannot be vectorized.
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 213, Column: 19 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - OptReportRemark: Call instruction to external function llvm.aarch64.sve.whilelo.nxv2i1.i64 cannot be vectorized.
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeInstruction
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: '
+  - String:          instruction cannot be vectorized
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, Column: 9 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, Column: 9 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 211, 
+                       Column: 32 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 38 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 38 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 245, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 234, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 220, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 245, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 234, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 220, Column: 20 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 213, Column: 37 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 222, Column: 38 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '6'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 230, Column: 38 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '6'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 257, Column: 19 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - String:          ' (Callee = '
+  - String:          llvm.aarch64.sve.whilelo.nxv2i1.i64
+  - String:          ', Location = '
+  - Location:        call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 257, 
+                       Column: 19 }
+  - String:          ')'
+  - OptReportRemark: Call instruction to external function llvm.aarch64.sve.whilelo.nxv2i1.i64 cannot be vectorized.
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeCall
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 257, Column: 19 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+  - OptReportRemark: Call instruction to external function llvm.aarch64.sve.whilelo.nxv2i1.i64 cannot be vectorized.
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeInstruction
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'loop not vectorized: '
+  - String:          instruction cannot be vectorized
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            NonReductionValueUsedOutsideLoop
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'loop not vectorized: '
+  - String:          value that could not be identified as reduction is used outside the loop
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantComputeNumberOfIterations
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'loop not vectorized: '
+  - String:          could not determine number of loop iterations
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, Column: 9 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, Column: 9 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, 
+                       Column: 9 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 256, 
+                       Column: 32 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 292, Column: 20 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 281, Column: 20 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 269, Column: 20 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 292, Column: 20 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 281, Column: 20 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 269, Column: 20 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 257, Column: 37 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 265, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '6'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 277, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '6'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 257, Column: 37 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 265, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '6'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 277, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '6'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not unrolled
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 78, Column: 0 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - NumStackBytes:   '64'
+  - String:          ' stack bytes in function'
+...
+--- !Missed
+Pass:            regalloc
+Name:            LoopSpillReloadCopies
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - NumVRCopies:     '3'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '2.013158e+01'
+  - String:          ' total copies cost '
+  - String:          generated in loop
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - NumVRCopies:     '4'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '2.034211e+01'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 0 }
+Function:        .omp_outlined.
+Args:
+  - NumStackBytes:   '112'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 0 }
+Function:        .omp.reduction.reduction_func
+Args:
+  - NumStackBytes:   '0'
+  - String:          ' stack bytes in function'
+...
+--- !Missed
+Pass:            regalloc
+Name:            LoopSpillReloadCopies
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - NumVRCopies:     '3'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '2.013158e+01'
+  - String:          ' total copies cost '
+  - String:          generated in loop
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - NumVRCopies:     '4'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '2.034211e+01'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 0 }
+Function:        .omp_outlined..3
+Args:
+  - NumStackBytes:   '112'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 0 }
+Function:        .omp.reduction.reduction_func.4
+Args:
+  - NumStackBytes:   '0'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 81, Column: 2 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 83, Column: 17 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '11'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 301, Column: 9 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 80, Column: 2 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 81, Column: 2 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 78, Column: 0 }
+Function:        _Z17ComputeDotProductiRK13Vector_STRUCTS1_RdS2_Rb
+Args:
+  - NumInstructions: '61'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '31'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '17'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 213, Column: 37 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '41'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 51 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '20'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 38 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '11'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 251, Column: 3 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 0 }
+Function:        .omp_outlined.
+Args:
+  - NumInstructions: '147'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 51 }
+Function:        .omp.reduction.reduction_func
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 209, Column: 0 }
+Function:        .omp.reduction.reduction_func
+Args:
+  - NumInstructions: '7'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '10'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '32'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '18'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 257, Column: 37 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '49'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 51 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '20'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 38 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '11'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 1 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 298, Column: 3 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 0 }
+Function:        .omp_outlined..3
+Args:
+  - NumInstructions: '159'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 51 }
+Function:        .omp.reduction.reduction_func.4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeDotProduct.cpp', Line: 254, Column: 0 }
+Function:        .omp.reduction.reduction_func.4
+Args:
+  - NumInstructions: '7'
+  - String:          ' instructions in function'
+...

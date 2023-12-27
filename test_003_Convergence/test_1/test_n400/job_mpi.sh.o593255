@@ -1,0 +1,77 @@
+### Starting TaskPrologue of job 593255 on f0715 at Wed May 17 16:02:40 CEST 2023
+#   SLURM_JOB_NODELIST=f0715
+#   SLURM_JOB_NUM_NODES=1
+#   SLURM_NTASKS=2
+#   SLURM_NPROCS=2
+#   SLURM_TASKS_PER_NODE=2
+#   SLURM_JOB_CPUS_PER_NODE=72
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=400 --ny=200 --nz=400 --npx=1 --npy=2 --npz=1
+(f0715:0,1)
+
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+[f0715:479909:0:479909] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x51)
+==== backtrace (tid: 479909) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x1497ddc70edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x1497ddc710bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x1497ddc7128a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x1497e6824cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x1497e572cd85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0715:479910:0:479910] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x51)
+==== backtrace (tid: 479910) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x14e9b70f7edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x14e9b70f80bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x14e9b70f828a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14e9bfd75cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x14e9bec7dd85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 0 PID 479909 RUNNING AT f0715
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 1 PID 479910 RUNNING AT f0715
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 16:07:44 CEST 2023
+= Job-ID             : 593255 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : singlenode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=72,node=1,billing=72 for 00:30:00
+= Elapsed runtime    : 00:05:04
+= Total RAM usage    : 73.3 GiB 
+= Node list          : f0715
+= Subm/Elig/Start/End: 2023-05-17T16:02:38 / 2023-05-17T16:02:38 / 2023-05-17T16:02:39 / 2023-05-17T16:07:43
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           23.2G    52.4G   104.9G        N/A  39,580      500K   1,000K        N/A    
+    /home/woody          4.0K   500.0G   750.0G        N/A       1                           N/A    
+    /home/vault          0.0K   524.3G  1048.6G        N/A       1      200K     400K        N/A    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================

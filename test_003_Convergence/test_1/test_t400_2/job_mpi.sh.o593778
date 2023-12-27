@@ -1,0 +1,54 @@
+### Starting TaskPrologue of job 593778 on f0715 at Wed May 17 17:09:40 CEST 2023
+#   SLURM_JOB_NODELIST=f0715
+#   SLURM_JOB_NUM_NODES=1
+#   SLURM_NTASKS=10
+#   SLURM_NPROCS=10
+#   SLURM_TASKS_PER_NODE=10
+#   SLURM_JOB_CPUS_PER_NODE=72
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=400 --ny=400 --nz=40 --npx=1 --npy=1 --npz=10
+(f0715:0,1,2,3,4,5,6,7,8,9)
+
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+Abort(127) on node 1 (rank 1 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 1
+Abort(127) on node 2 (rank 2 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 2
+Abort(127) on node 3 (rank 3 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 3
+Abort(127) on node 4 (rank 4 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 4
+Abort(127) on node 5 (rank 5 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 5
+Abort(127) on node 6 (rank 6 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 6
+Abort(127) on node 7 (rank 7 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 7
+Abort(127) on node 8 (rank 8 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 8
+Abort(127) on node 9 (rank 9 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 9
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 17:09:45 CEST 2023
+= Job-ID             : 593778 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : singlenode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=72,node=1,billing=72 for 00:30:00
+= Elapsed runtime    : 00:00:05
+= Total RAM usage    : 0.0 GiB 
+= Node list          : f0715
+= Subm/Elig/Start/End: 2023-05-17T16:32:17 / 2023-05-17T16:32:17 / 2023-05-17T17:09:39 / 2023-05-17T17:09:44
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           23.2G    52.4G   104.9G        N/A  40,002      500K   1,000K        N/A    
+    /home/woody          4.0K   500.0G   750.0G        N/A       1                           N/A    
+    /home/vault          0.0K   524.3G  1048.6G        N/A       1      200K     400K        N/A    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================

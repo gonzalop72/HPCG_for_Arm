@@ -1,0 +1,287 @@
+### Starting TaskPrologue of job 594445 on f0672 at Wed May 17 21:39:45 CEST 2023
+#   SLURM_JOB_NODELIST=f0672
+#   SLURM_JOB_NUM_NODES=1
+#   SLURM_NTASKS=12
+#   SLURM_NPROCS=12
+#   SLURM_TASKS_PER_NODE=12
+#   SLURM_JOB_CPUS_PER_NODE=72
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=216 --ny=72 --nz=432 --npx=2 --npy=6 --npz=1
+(f0672:0,1,2,3,4,5,6,7,8,9,10,11)
+
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+[f0672:1953768:0:1953768] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953768) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x1469f0242edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x1469f02430bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x1469f024328a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x1469f4ddecf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x1469f3ce6d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953765:0:1953765] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953765) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x14e333978edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x14e3339790bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x14e33397928a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14e33c60ccf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x14e33b514d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953762:0:1953762] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953762) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x14eb545ccedc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x14eb545cd0bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x14eb545cd28a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14eb59168cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x14eb58070d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953767:0:1953767] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953767) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x1495e9375edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x1495e93760bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x1495e937628a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x1495edf11cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x1495ece19d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953764:0:1953764] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953764) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x15155b474edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x15155b4750bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x15155b47528a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x1515640e9cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x151562ff1d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953761:0:1953761] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953761) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x146dcc1acedc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x146dcc1ad0bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x146dcc1ad28a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x146dd0d48cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x146dcfc50d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953766:0:1953766] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953766) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x14cd2898fedc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x14cd289900bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x14cd2899028a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14cd2d52bcf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x14cd2c433d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953760:0:1953760] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953760) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x151fef978edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x151fef9790bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x151fef97928a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x151ff85bbcf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x151ff74c3d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953763:0:1953763] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953763) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x14e57c0ceedc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x14e57c0cf0bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x14e57c0cf28a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14e580c6acf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x14e57fb72d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953769:0:1953769] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953769) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x14920259fedc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x1492025a00bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x1492025a028a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14920b1a5cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x14920a0add85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953771:0:1953771] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953771) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x148993b95edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x148993b960bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x148993b9628a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14899c968cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x14899b870d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0672:1953770:0:1953770] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x21)
+==== backtrace (tid:1953770) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x14a568bc0edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x14a568bc10bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x14a568bc128a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14a56d75ccf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x14a56c664d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 0 PID 1953760 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 1 PID 1953761 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 2 PID 1953762 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 3 PID 1953763 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 4 PID 1953764 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 5 PID 1953765 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 6 PID 1953766 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 7 PID 1953767 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 8 PID 1953768 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 9 PID 1953769 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 10 PID 1953770 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 11 PID 1953771 RUNNING AT f0672
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 21:41:06 CEST 2023
+= Job-ID             : 594445 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : singlenode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=72,node=1,billing=72 for 00:30:00
+= Elapsed runtime    : 00:01:21
+= Total RAM usage    : 61.1 GiB 
+= Node list          : f0672
+= Subm/Elig/Start/End: 2023-05-17T21:37:00 / 2023-05-17T21:37:00 / 2023-05-17T21:39:44 / 2023-05-17T21:41:05
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           23.2G    52.4G   104.9G        N/A  40,494      500K   1,000K        N/A    
+    /home/woody          4.0K   500.0G   750.0G        N/A       1                           N/A    
+    /home/vault          0.0K   524.3G  1048.6G        N/A       1      200K     400K        N/A    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================

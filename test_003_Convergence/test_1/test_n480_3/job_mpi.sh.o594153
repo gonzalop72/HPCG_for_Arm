@@ -1,0 +1,40 @@
+### Starting TaskPrologue of job 594153 on f1066 at Wed May 17 18:35:09 CEST 2023
+#   SLURM_JOB_NODELIST=f1066
+#   SLURM_JOB_NUM_NODES=1
+#   SLURM_NTASKS=5
+#   SLURM_NPROCS=5
+#   SLURM_TASKS_PER_NODE=5
+#   SLURM_JOB_CPUS_PER_NODE=72
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=480 --ny=96 --nz=480 --npx=1 --npy=5 --npz=1
+(f1066:0,1,2,3,4)
+
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 18:43:10 CEST 2023
+= Job-ID             : 594153 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : singlenode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=72,node=1,billing=72 for 00:30:00
+= Elapsed runtime    : 00:08:01
+= Total RAM usage    : 133.3 GiB 
+= Node list          : f1066
+= Subm/Elig/Start/End: 2023-05-17T17:38:16 / 2023-05-17T17:38:16 / 2023-05-17T18:35:08 / 2023-05-17T18:43:09
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/woody          4.0K   500.0G   750.0G        N/A       1                           N/A    
+    /home/hpc           23.2G    52.4G   104.9G        N/A  40,325      500K   1,000K        N/A    
+    /home/vault          0.0K   524.3G  1048.6G        N/A       1      200K     400K        N/A    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================

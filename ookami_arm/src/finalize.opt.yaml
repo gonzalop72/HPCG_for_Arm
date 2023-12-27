@@ -1,0 +1,271 @@
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 158, Column: 15 }
+Function:        _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+Args:
+  - Callee:          _ZNSt9basic_iosIcSt11char_traitsIcEE5clearESt12_Ios_Iostate
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 158, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 158, Column: 15 }
+Function:        _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+Args:
+  - Callee:          _ZNSt9basic_iosIcSt11char_traitsIcEE5clearESt12_Ios_Iostate
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 158, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 158, Column: 27 }
+Function:        _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+Args:
+  - Callee:          _ZNKSt9basic_iosIcSt11char_traitsIcEE7rdstateEv
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 138, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 158, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          setstate
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '27'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 158, Column: 37 }
+Function:        _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+Args:
+  - Callee:          _ZStorSt12_Ios_IostateS_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/ios_base.h', 
+                       Line: 170, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 158, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          setstate
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '37'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                   Line: 1000, Column: 18 }
+Function:        _ZNSt14basic_ofstreamIcSt11char_traitsIcEE5closeEv
+Args:
+  - Callee:          _ZNSt13basic_filebufIcSt11char_traitsIcEE5closeEv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt14basic_ofstreamIcSt11char_traitsIcEE5closeEv
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                       Line: 999, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                   Line: 1000, Column: 18 }
+Function:        _ZNSt14basic_ofstreamIcSt11char_traitsIcEE5closeEv
+Args:
+  - Callee:          _ZNSt13basic_filebufIcSt11char_traitsIcEE5closeEv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt14basic_ofstreamIcSt11char_traitsIcEE5closeEv
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                       Line: 999, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                   Line: 1001, Column: 10 }
+Function:        _ZNSt14basic_ofstreamIcSt11char_traitsIcEE5closeEv
+Args:
+  - Callee:          _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 158, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZNSt14basic_ofstreamIcSt11char_traitsIcEE5closeEv
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                       Line: 999, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '10'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          close
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '10'
+  - String:          ';'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                   Line: 1001, Column: 10 }
+Function:        _ZNSt14basic_ofstreamIcSt11char_traitsIcEE5closeEv
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                       Line: 1000, Column: 18 }
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/finalize.cpp', Line: 28, Column: 13 }
+Function:        _Z13HPCG_Finalizev
+Args:
+  - Callee:          _ZNSt14basic_ofstreamIcSt11char_traitsIcEE5closeEv
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                       Line: 999, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z13HPCG_Finalizev
+    DebugLoc:        { File: '../src/finalize.cpp', Line: 27, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '70'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          HPCG_Finalize
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '13'
+  - String:          ';'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                   Line: 1001, Column: 10 }
+Function:        _Z13HPCG_Finalizev
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                       Line: 1000, Column: 18 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                   Line: 1001, Column: 10 }
+Function:        _Z13HPCG_Finalizev
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                       Line: 1000, Column: 18 }
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/finalize.cpp', Line: 27, Column: 0 }
+Function:        _Z13HPCG_Finalizev
+Args:
+  - NumStackBytes:   '16'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z13HPCG_Finalizev
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/finalize.cpp', Line: 29, Column: 3 }
+Function:        _Z13HPCG_Finalizev
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/fstream', 
+                   Line: 1001, Column: 10 }
+Function:        _Z13HPCG_Finalizev
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '11'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/finalize.cpp', Line: 27, Column: 0 }
+Function:        _Z13HPCG_Finalizev
+Args:
+  - NumInstructions: '20'
+  - String:          ' instructions in function'
+...

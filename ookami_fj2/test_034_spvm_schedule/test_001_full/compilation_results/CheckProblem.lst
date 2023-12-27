@@ -1,0 +1,197 @@
+Fujitsu C/C++ Version 4.7.0   Mon Jul 17 14:56:15 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/CheckProblem.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file CheckProblem.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #ifndef HPCG_NO_MPI
+       22             #include <mpi.h>
+       23             #endif
+       24             
+       25             #ifndef HPCG_NO_OPENMP
+       26             #include <omp.h>
+       27             #endif
+       28             
+       29             #if defined(HPCG_DEBUG) || defined(HPCG_DETAILED_DEBUG)
+       30             #include <fstream>
+       31             using std::endl;
+       32             #include "hpcg.hpp"
+       33             #endif
+       34             #include <cassert>
+       35             
+       36             #include "CheckProblem.hpp"
+       37             
+       38             
+       39             /*!
+       40               Check the contents of the generated sparse matrix to see if values match expected contents.
+       41             
+       42               @param[in]  A      The known system matrix
+       43               @param[inout] b      The newly allocated and generated right hand side vector (if b!=0 on entry)
+       44               @param[inout] x      The newly allocated solution vector with entries set to 0.0 (if x!=0 on entry)
+       45               @param[inout] xexact The newly allocated solution vector with entries set to the exact solution (if the xexact!=0 non-zero on entry)
+       46             
+       47               @see GenerateGeometry
+       48             */
+       49             
+       50             void CheckProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) {
+       51             
+       52               // Make local copies of geometry information.  Use global_int_t since the RHS products in the calculations
+       53               // below may result in global range values.
+       54               global_int_t nx = A.geom->nx;
+       55               global_int_t ny = A.geom->ny;
+       56               global_int_t nz = A.geom->nz;
+       57               global_int_t gnx = A.geom->gnx;
+       58               global_int_t gny = A.geom->gny;
+       59               global_int_t gnz = A.geom->gnz;
+       60               global_int_t gix0 = A.geom->gix0;
+       61               global_int_t giy0 = A.geom->giy0;
+       62               global_int_t giz0 = A.geom->giz0;
+       63             
+       64               local_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
+       65               global_int_t totalNumberOfRows = gnx*gny*gnz; // Total number of grid points in mesh
+       66             
+       67               double * bv = 0;
+       68               double * xv = 0;
+       69               double * xexactv = 0;
+       70               if (b!=0) bv = b->values; // Only compute exact solution if requested
+       71               if (x!=0) xv = x->values; // Only compute exact solution if requested
+       72               if (xexact!=0) xexactv = xexact->values; // Only compute exact solution if requested
+       73             
+       74               local_int_t localNumberOfNonzeros = 0;
+       75               // TODO:  This triply nested loop could be flattened or use nested parallelism
+       76             #ifndef HPCG_NO_OPENMP
+       77               #pragma omp parallel for
+       78             #endif
+       79   p           for (local_int_t iz=0; iz<nz; iz++) {
+       80   p             global_int_t giz = giz0+iz;
+       81   p             for (local_int_t iy=0; iy<ny; iy++) {
+       82   p               global_int_t giy = giy0+iy;
+       83   p               for (local_int_t ix=0; ix<nx; ix++) {
+       84   p                 global_int_t gix = gix0+ix;
+       85   p                 local_int_t currentLocalRow = iz*nx*ny+iy*nx+ix;
+       86   p                 global_int_t currentGlobalRow = giz*gnx*gny+giy*gnx+gix;
+       87   pi                assert(A.localToGlobalMap[currentLocalRow] == currentGlobalRow);
+       88             #ifdef HPCG_DETAILED_DEBUG
+       89                     HPCG_fout << " rank, globalRow, localRow = " << A.geom->rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
+       90             #endif
+       91   p                 char numberOfNonzerosInRow = 0;
+       92   p                 double * currentValuePointer = A.matrixValues[currentLocalRow]; // Pointer to current value in current row
+       93   p                 global_int_t * currentIndexPointerG = A.mtxIndG[currentLocalRow]; // Pointer to current index in current row
+       94   p                 for (int sz=-1; sz<=1; sz++) {
+       95   p                   if (giz+sz>-1 && giz+sz<gnz) {
+       96   p                     for (int sy=-1; sy<=1; sy++) {
+       97   p                       if (giy+sy>-1 && giy+sy<gny) {
+       98   p                         for (int sx=-1; sx<=1; sx++) {
+       99   p                           if (gix+sx>-1 && gix+sx<gnx) {
+      100   p                             global_int_t curcol = currentGlobalRow+sz*gnx*gny+sy*gnx+sx;
+      101   p                             if (curcol==currentGlobalRow) {
+      102   p                               assert(A.matrixDiagonal[currentLocalRow] == currentValuePointer);
+      103   p                               assert(*currentValuePointer++ == 26.0);
+      104   p                             } else {
+      105   p                               assert(*currentValuePointer++ == -1.0);
+      106   p                             }
+      107   p                             assert(*currentIndexPointerG++ == curcol);
+      108   p                             numberOfNonzerosInRow++;
+      109   p                           } // end x bounds test
+      110   p                         } // end sx loop
+      111   p                       } // end y bounds test
+      112   p                     } // end sy loop
+      113   p                   } // end z bounds test
+      114   p                 } // end sz loop
+      115   p                 assert(A.nonzerosInRow[currentLocalRow] == numberOfNonzerosInRow);
+      116             #ifndef HPCG_NO_OPENMP
+      117                     #pragma omp critical
+      118             #endif
+      119   s                 localNumberOfNonzeros += numberOfNonzerosInRow; // Protect this with an atomic
+      120   p                 if (b!=0)      assert(bv[currentLocalRow] == 26.0 - ((double) (numberOfNonzerosInRow-1)));
+      121   p                 if (x!=0)      assert(xv[currentLocalRow] == 0.0);
+      122   p                 if (xexact!=0) assert(xexactv[currentLocalRow] == 1.0);
+      123   p               } // end ix loop
+      124   p             } // end iy loop
+      125   p           } // end iz loop
+      126             #ifdef HPCG_DETAILED_DEBUG
+      127               HPCG_fout     << "Process " << A.geom->rank << " of " << A.geom->size <<" has " << localNumberOfRows    << " rows."     << endl
+      128                   << "Process " << A.geom->rank << " of " << A.geom->size <<" has " << localNumberOfNonzeros<< " nonzeros." <<endl;
+      129             #endif
+      130             
+      131               global_int_t totalNumberOfNonzeros = 0;
+      132             #ifndef HPCG_NO_MPI
+      133               // Use MPI's reduce function to sum all nonzeros
+      134             #ifdef HPCG_NO_LONG_LONG
+      135               MPI_Allreduce(&localNumberOfNonzeros, &totalNumberOfNonzeros, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+      136             #else
+      137               long long lnnz = localNumberOfNonzeros, gnnz = 0; // convert to 64 bit for MPI call
+      138               MPI_Allreduce(&lnnz, &gnnz, 1, MPI_LONG_LONG_INT, MPI_SUM, MPI_COMM_WORLD);
+      139               totalNumberOfNonzeros = gnnz; // Copy back
+      140             #endif
+      141             #else
+      142               totalNumberOfNonzeros = localNumberOfNonzeros;
+      143             #endif
+      144             
+      145               assert(A.totalNumberOfRows == totalNumberOfRows);
+      146               assert(A.totalNumberOfNonzeros == totalNumberOfNonzeros);
+      147               assert(A.localNumberOfRows == localNumberOfRows);
+      148               assert(A.localNumberOfNonzeros == localNumberOfNonzeros);
+      149             
+      150               return;
+      151             }
+Total prefetch num: 0
+Optimization messages
+  jwd8101o-i  "../src/CheckProblem.cpp", line 87: Inline expansion is applied to the user defined function '_ZNSt3__16vectorIxNS_9allocatorIxEEEixEm'.
+  jwd6131s-i  "../src/CheckProblem.cpp", line 98: SIMD conversion is not applied to this loop because the loop has two or more exits.
+  jwd8671o-i  "../src/CheckProblem.cpp", line 98: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -DHPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/CheckProblem.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

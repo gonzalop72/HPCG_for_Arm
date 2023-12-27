@@ -1,0 +1,4 @@
+params: --nx=320 --ny=160 --nz=320 --npx=1 --npy=2 --npz=1
+[fj143:1195325] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]]: [B/B/./././././././././.][./././././././././././.][./././././././././././.][./././././././././././.]
+[fj143:1195325] MCW rank 1 bound to socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [././B/B/./././././././.][./././././././././././.][./././././././././././.][./././././././././././.]
+/cm/local/apps/slurm/var/spool/job138949/slurm_script: line 13: 1195325 Killed                  mpirun -map-by node:PE=2 --bind-to core --report-bindings ../bin/xhpcg --rt=60 --nx=$1 --ny=$2 --nz=$3 --npx=$4 --npy=$5 --npz=$6

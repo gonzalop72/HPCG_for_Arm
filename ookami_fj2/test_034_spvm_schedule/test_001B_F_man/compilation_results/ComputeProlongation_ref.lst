@@ -1,0 +1,105 @@
+Fujitsu C/C++ Version 4.7.0   Fri Jul 21 02:56:51 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/ComputeProlongation_ref.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file ComputeProlongation_ref.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #ifndef HPCG_NO_OPENMP
+       22             #include <omp.h>
+       23             #endif
+       24             
+       25             #include "ComputeProlongation_ref.hpp"
+       26             
+       27             /*!
+       28               Routine to compute the coarse residual vector.
+       29             
+       30               @param[in]  Af - Fine grid sparse matrix object containing pointers to current coarse grid correction and the f2c operator.
+       31               @param[inout] xf - Fine grid solution vector, update with coarse grid correction.
+       32             
+       33               Note that the fine grid residual is never explicitly constructed.
+       34               We only compute it for the fine grid points that will be injected into corresponding coarse grid points.
+       35             
+       36               @return Returns zero on success and a non-zero value otherwise.
+       37             */
+       38             int ComputeProlongation_ref(const SparseMatrix & Af, Vector & xf) {
+       39             
+       40               double * xfv = xf.values;
+       41               double * xcv = Af.mgData->xc->values;
+       42               local_int_t * f2c = Af.mgData->f2cOperator;
+       43               local_int_t nc = Af.mgData->rc->localLength;
+       44             
+       45             #ifndef HPCG_NO_OPENMP
+       46             #pragma omp parallel for
+       47             #endif
+       48             // TODO: Somehow note that this loop can be safely vectorized since f2c has no repeated indices
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SOFTWARE PIPELINING(IPC: 0.28, ITR: 8, MVE: 2, POL: L)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       49   p     2s    for (local_int_t i=0; i<nc; ++i) xfv[f2c[i]] += xcv[i]; // This loop is safe to vectorize
+       50             
+       51               return 0;
+       52             }
+Total prefetch num: 0
+Optimization messages
+  jwd6228s-i  "../src/ComputeProlongation_ref.cpp", line 49: SIMD conversion is not applied to this loop because the order of the definition and reference to the variable is different from serial execution because of data dependency.
+  jwd6208s-i  "../src/ComputeProlongation_ref.cpp", line 49: SIMD conversion is not applied to this loop because the uncertain order of the definition and reference to variable 'xfv' may cause different results from serial execution.
+  jwd8204o-i  "../src/ComputeProlongation_ref.cpp", line 49: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeProlongation_ref.cpp", line 49: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 8.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DUNROLLING_4_B -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/ComputeProlongation_ref.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

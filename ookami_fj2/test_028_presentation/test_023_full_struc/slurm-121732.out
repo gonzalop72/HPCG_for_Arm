@@ -1,0 +1,530 @@
+N=144
+1 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[fj004:2591025] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591025] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x40000038e6f0]
+[fj004:2591025] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001c24a8]
+[fj004:2591025] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001afc98]
+[fj004:2591025] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001af880]
+[fj004:2591025] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000001e66b4]
+[fj004:2591025] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591025] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001404384]
+[fj004:2591025] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591025] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+[1;34m[likwid-pin] Main PID -> hwthread 0 - OK[0m
+2 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368788409152 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591028] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591028] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591028] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591028] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591028] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591028] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591028] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591028] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591028] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591028] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+3 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m1->2  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34m	threadid 70368794700864 -> hwthread 2 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368796928832 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591099] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591099] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591099] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591099] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591099] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591099] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591099] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591099] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591099] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591099] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+4 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m1->2  [0m[1;34m2->3  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34m	threadid 70368794700864 -> hwthread 2 - OK[0m[1;34m
+[0m[1;34m	threadid 70368803220672 -> hwthread 3 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368805448512 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591175] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591175] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591175] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591175] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591175] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591175] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591175] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591175] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591175] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591175] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+5 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m1->2  [0m[1;34m2->3  [0m[1;34m3->4  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34m	threadid 70368794700864 -> hwthread 2 - OK[0m[1;34m
+[0m[1;34m	threadid 70368803220672 -> hwthread 3 - OK[0m[1;34m
+[0m[1;34m	threadid 70368811740480 -> hwthread 4 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368813968192 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591205] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591205] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591205] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591205] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591205] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591205] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591205] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591205] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591205] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591205] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+6 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m1->2  [0m[1;34m2->3  [0m[1;34m3->4  [0m[1;34m4->5  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34m	threadid 70368794700864 -> hwthread 2 - OK[0m[1;34m
+[0m[1;34m	threadid 70368803220672 -> hwthread 3 - OK[0m[1;34m
+[0m[1;34m	threadid 70368811740480 -> hwthread 4 - OK[0m[1;34m
+[0m[1;34m	threadid 70368820260288 -> hwthread 5 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368822487872 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591242] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591242] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591242] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591242] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591242] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591242] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591242] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591242] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591242] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591242] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+7 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m1->2  [0m[1;34m2->3  [0m[1;34m3->4  [0m[1;34m4->5  [0m[1;34m5->6  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34m	threadid 70368794700864 -> hwthread 2 - OK[0m[1;34m
+[0m[1;34m	threadid 70368803220672 -> hwthread 3 - OK[0m[1;34m
+[0m[1;34m	threadid 70368811740480 -> hwthread 4 - OK[0m[1;34m
+[0m[1;34m	threadid 70368820260288 -> hwthread 5 - OK[0m[1;34m
+[0m[1;34m	threadid 70368828780096 -> hwthread 6 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368831007552 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591286] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591286] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591286] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591286] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591286] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591286] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591286] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591286] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591286] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591286] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+8 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m1->2  [0m[1;34m2->3  [0m[1;34m3->4  [0m[1;34m4->5  [0m[1;34m5->6  [0m[1;34m6->7  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34m	threadid 70368794700864 -> hwthread 2 - OK[0m[1;34m
+[0m[1;34m	threadid 70368803220672 -> hwthread 3 - OK[0m[1;34m
+[0m[1;34m	threadid 70368811740480 -> hwthread 4 - OK[0m[1;34m
+[0m[1;34m	threadid 70368820260288 -> hwthread 5 - OK[0m[1;34m
+[0m[1;34m	threadid 70368828780096 -> hwthread 6 - OK[0m[1;34m
+[0m[1;34m	threadid 70368837299904 -> hwthread 7 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368839527232 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591337] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591337] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591337] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591337] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591337] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591337] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591337] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591337] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591337] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591337] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+9 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m1->2  [0m[1;34m2->3  [0m[1;34m3->4  [0m[1;34m4->5  [0m[1;34m5->6  [0m[1;34m6->7  [0m[1;34m7->8  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34m	threadid 70368794700864 -> hwthread 2 - OK[0m[1;34m
+[0m[1;34m	threadid 70368803220672 -> hwthread 3 - OK[0m[1;34m
+[0m[1;34m	threadid 70368811740480 -> hwthread 4 - OK[0m[1;34m
+[0m[1;34m	threadid 70368820260288 -> hwthread 5 - OK[0m[1;34m
+[0m[1;34m	threadid 70368828780096 -> hwthread 6 - OK[0m[1;34m
+[0m[1;34m	threadid 70368837299904 -> hwthread 7 - OK[0m[1;34m
+[0m[1;34m	threadid 70368845819712 -> hwthread 8 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368848046912 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591406] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591406] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591406] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591406] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591406] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591406] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591406] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591406] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591406] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591406] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+10 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m1->2  [0m[1;34m2->3  [0m[1;34m3->4  [0m[1;34m4->5  [0m[1;34m5->6  [0m[1;34m6->7  [0m[1;34m7->8  [0m[1;34m8->9  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34m	threadid 70368794700864 -> hwthread 2 - OK[0m[1;34m
+[0m[1;34m	threadid 70368803220672 -> hwthread 3 - OK[0m[1;34m
+[0m[1;34m	threadid 70368811740480 -> hwthread 4 - OK[0m[1;34m
+[0m[1;34m	threadid 70368820260288 -> hwthread 5 - OK[0m[1;34m
+[0m[1;34m	threadid 70368828780096 -> hwthread 6 - OK[0m[1;34m
+[0m[1;34m	threadid 70368837299904 -> hwthread 7 - OK[0m[1;34m
+[0m[1;34m	threadid 70368845819712 -> hwthread 8 - OK[0m[1;34m
+[0m[1;34m	threadid 70368854339520 -> hwthread 9 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368856566592 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591471] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591471] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591471] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591471] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591471] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591471] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591471] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591471] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591471] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591471] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+11 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m1->2  [0m[1;34m2->3  [0m[1;34m3->4  [0m[1;34m4->5  [0m[1;34m5->6  [0m[1;34m6->7  [0m[1;34m7->8  [0m[1;34m8->9  [0m[1;34m9->10  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34m	threadid 70368794700864 -> hwthread 2 - OK[0m[1;34m
+[0m[1;34m	threadid 70368803220672 -> hwthread 3 - OK[0m[1;34m
+[0m[1;34m	threadid 70368811740480 -> hwthread 4 - OK[0m[1;34m
+[0m[1;34m	threadid 70368820260288 -> hwthread 5 - OK[0m[1;34m
+[0m[1;34m	threadid 70368828780096 -> hwthread 6 - OK[0m[1;34m
+[0m[1;34m	threadid 70368837299904 -> hwthread 7 - OK[0m[1;34m
+[0m[1;34m	threadid 70368845819712 -> hwthread 8 - OK[0m[1;34m
+[0m[1;34m	threadid 70368854339520 -> hwthread 9 - OK[0m[1;34m
+[0m[1;34m	threadid 70368862859328 -> hwthread 10 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368865086272 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591543] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591543] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591543] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591543] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591543] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591543] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591543] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591543] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591543] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591543] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!
+12 cores
+OMP: Warning #181: OMP_PROC_BIND: ignored because KMP_AFFINITY has been defined
+[1;34m[pthread wrapper] 
+[0m[1;34m[pthread wrapper] MAIN -> 0
+[0m[1;34m[pthread wrapper] PIN_MASK: [0m[1;34m0->1  [0m[1;34m1->2  [0m[1;34m2->3  [0m[1;34m3->4  [0m[1;34m4->5  [0m[1;34m5->6  [0m[1;34m6->7  [0m[1;34m7->8  [0m[1;34m8->9  [0m[1;34m9->10  [0m[1;34m10->11  [0m[1;34m
+[pthread wrapper] SKIP MASK: 0x0
+[0m[1;34m	threadid 70368786181056 -> hwthread 1 - OK[0m[1;34m
+[0m[1;34m	threadid 70368794700864 -> hwthread 2 - OK[0m[1;34m
+[0m[1;34m	threadid 70368803220672 -> hwthread 3 - OK[0m[1;34m
+[0m[1;34m	threadid 70368811740480 -> hwthread 4 - OK[0m[1;34m
+[0m[1;34m	threadid 70368820260288 -> hwthread 5 - OK[0m[1;34m
+[0m[1;34m	threadid 70368828780096 -> hwthread 6 - OK[0m[1;34m
+[0m[1;34m	threadid 70368837299904 -> hwthread 7 - OK[0m[1;34m
+[0m[1;34m	threadid 70368845819712 -> hwthread 8 - OK[0m[1;34m
+[0m[1;34m	threadid 70368854339520 -> hwthread 9 - OK[0m[1;34m
+[0m[1;34m	threadid 70368862859328 -> hwthread 10 - OK[0m[1;34m
+[0m[1;34m	threadid 70368871379136 -> hwthread 11 - OK[0m[1;34m
+[0m[1;34mRoundrobin placement triggered
+	threadid 70368873605952 -> hwthread 0 - OK[0m[1;34m
+[0m[fj004:2591623] OPAL ERROR: Not initialized in file ../../../../src/opal/mca/pmix/pmix3x/pmix3x_client.c at line 112
+--------------------------------------------------------------------------
+[mpi::ess-base::slurm-error]
+The application appears to have been direct launched using "srun",
+but OMPI was not built with SLURM's PMI support and therefore cannot
+execute. There are several options for building PMI support under
+SLURM, depending upon the SLURM version you are using:
+
+  version 16.05 or later: you can use SLURM's PMIx support. This
+  requires that you configure and build SLURM --with-pmix.
+
+  Versions earlier than 16.05: you must use either SLURM's PMI-1 or
+  PMI-2 support. SLURM builds PMI-1 by default, or you can manually
+  install PMI-2. You must then build Open MPI using --with-pmi pointing
+  to the SLURM PMI library location.
+
+Please configure as appropriate and try again.
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+[fj004:2591623] [0] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(opal_backtrace_buffer+0x28) [0x4000003be6f0]
+[fj004:2591623] [1] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_abort+0xb8) [0x4000001f24a8]
+[fj004:2591623] [2] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_mpi_errors_are_fatal_comm_handler+0x108) [0x4000001dfc98]
+[fj004:2591623] [3] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(ompi_errhandler_invoke+0x60) [0x4000001df880]
+[fj004:2591623] [4] func:/opt/FJSVstclanga/cp-1.0.21.01/lib64/libmpi.so.0(MPI_Init+0x15c) [0x4000002166b4]
+[fj004:2591623] [5] func:./xhpcg() [0x40ca68]
+[fj004:2591623] [6] func:/lib64/libc.so.6(__libc_start_main+0xdc) [0x400001434384]
+[fj004:2591623] [7] func:./xhpcg() [0x40c92c]
+[fj004:2591623] Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!

@@ -3,6 +3,9 @@
 struct TraceData {
     int level=1;
     bool enabled=false;
+#ifdef CONVERGENCE_TEST
+    std::vector<double> convergence_list;
+#endif    
 };
 
 #ifdef ENABLE_MG_COUNTERS

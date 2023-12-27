@@ -1,0 +1,968 @@
+### Starting TaskPrologue of job 593698 on f0271 at Wed May 17 16:52:55 CEST 2023
+#   SLURM_JOB_NODELIST=f[0271,0273-0275,0277-0283]
+#   SLURM_JOB_NUM_NODES=11
+#   SLURM_NTASKS=256
+#   SLURM_NPROCS=256
+#   SLURM_TASKS_PER_NODE=24(x3),23(x8)
+#   SLURM_JOB_CPUS_PER_NODE=72(x11)
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=50 --ny=50 --nz=100 --npx=8 --npy=8 --npz=4
+(f0271:0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23)
+(f0273:24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47)
+(f0274:48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71)
+(f0275:72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94)
+(f0277:95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117)
+(f0278:118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140)
+(f0279:141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163)
+(f0280:164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186)
+(f0281:187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209)
+(f0282:210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232)
+(f0283:233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255)
+
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+xhpcg: ../src/GenerateCoarseProblem.cpp:50: void GenerateCoarseProblem(const SparseMatrix_STRUCT &, int): Assertion `nxf%2==0' failed.
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 72 PID 2535272 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 95 PID 962790 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 96 PID 962791 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 73 PID 2535273 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 74 PID 2535274 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 75 PID 2535275 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 76 PID 2535276 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 77 PID 2535277 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 97 PID 962792 RUNNING AT f0277
+=   KILLED BY SIGNAL: 9 (Killed)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 98 PID 962793 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 99 PID 962794 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 100 PID 962795 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 101 PID 962796 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 102 PID 962797 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 103 PID 962798 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 104 PID 962799 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 105 PID 962800 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 106 PID 962801 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 107 PID 962802 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 108 PID 962803 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 109 PID 962804 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 110 PID 962805 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 111 PID 962806 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 112 PID 962807 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 113 PID 962808 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 233 PID 1513624 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 234 PID 1513625 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 235 PID 1513626 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 236 PID 1513627 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 237 PID 1513628 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 238 PID 1513629 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 239 PID 1513630 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 240 PID 1513631 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 78 PID 2535278 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 79 PID 2535279 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 80 PID 2535280 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 81 PID 2535281 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 82 PID 2535282 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 83 PID 2535283 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 84 PID 2535284 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 85 PID 2535286 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 86 PID 2535287 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 87 PID 2535288 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 88 PID 2535289 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 89 PID 2535290 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 90 PID 2535291 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 91 PID 2535292 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 92 PID 2535293 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 93 PID 2535294 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 94 PID 2535295 RUNNING AT f0275
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 241 PID 1513632 RUNNING AT f0283
+=   KILLED BY SIGNAL: 9 (Killed)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 242 PID 1513633 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 243 PID 1513634 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 244 PID 1513635 RUNNING AT f0283
+=   KILLED BY SIGNAL: 9 (Killed)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 245 PID 1513636 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 246 PID 1513637 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 247 PID 1513638 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 248 PID 1513639 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 249 PID 1513640 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 250 PID 1513641 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 251 PID 1513642 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 252 PID 1513643 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 253 PID 1513644 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 254 PID 1513645 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 255 PID 1513646 RUNNING AT f0283
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 114 PID 962809 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 115 PID 962810 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 116 PID 962812 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 117 PID 962813 RUNNING AT f0277
+=   KILLED BY SIGNAL: 6 (Aborted)
+===================================================================================
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 16:53:03 CEST 2023
+= Job-ID             : 593698 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : multinode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=792,node=11,billing=792 for 00:30:00
+= Elapsed runtime    : 00:00:08
+= Total RAM usage    : 0.0 GiB 
+= Node list          : f[0271,0273-0275,0277-0283]
+= Subm/Elig/Start/End: 2023-05-17T16:32:14 / 2023-05-17T16:32:14 / 2023-05-17T16:52:54 / 2023-05-17T16:53:02
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           23.2G    52.4G   104.9G        N/A  39,735      500K   1,000K        N/A    
+    /home/woody          4.0K   500.0G   750.0G        N/A       1                           N/A    
+    /home/vault          0.0K   524.3G  1048.6G        N/A       1      200K     400K        N/A    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================

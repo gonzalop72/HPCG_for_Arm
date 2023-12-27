@@ -403,7 +403,7 @@ LIKWID_MARKER_INIT;
   ////////////////////
 
   // Report results to YAML file
-  ReportResults(A, numberOfMgLevels, numberOfCgSets, refMaxIters, optMaxIters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure, quickPath);
+  ReportResults(A, numberOfMgLevels, numberOfCgSets, refMaxIters, optMaxIters, &times[0], testcg_data, testsymmetry_data, testnorms_data, global_failure, quickPath, tdEnabled);
 
   // Clean up
   DeleteMatrix(A); // This delete will recursively delete all coarse grid data
