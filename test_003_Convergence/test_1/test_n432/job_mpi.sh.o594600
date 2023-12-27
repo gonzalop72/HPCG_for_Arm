@@ -1,0 +1,76 @@
+### Starting TaskPrologue of job 594600 on f0946 at Wed May 17 22:05:20 CEST 2023
+#   SLURM_JOB_NODELIST=f[0946,0948]
+#   SLURM_JOB_NUM_NODES=2
+#   SLURM_NTASKS=27
+#   SLURM_NPROCS=27
+#   SLURM_TASKS_PER_NODE=14,13
+#   SLURM_JOB_CPUS_PER_NODE=72(x2)
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=432 --ny=48 --nz=144 --npx=1 --npy=9 --npz=3
+(f0946:0,1,2,3,4,5,6,7,8,9,10,11,12,13)
+(f0948:14,15,16,17,18,19,20,21,22,23,24,25,26)
+
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+Abort(127) on node 1 (rank 1 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 1
+Abort(127) on node 2 (rank 2 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 2
+Abort(127) on node 3 (rank 3 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 3
+Abort(127) on node 4 (rank 4 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 4
+Abort(127) on node 5 (rank 5 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 5
+Abort(127) on node 6 (rank 6 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 6
+Abort(127) on node 7 (rank 7 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 7
+Abort(127) on node 8 (rank 8 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 8
+Abort(127) on node 9 (rank 9 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 9
+Abort(127) on node 10 (rank 10 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 10
+Abort(127) on node 11 (rank 11 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 11
+Abort(127) on node 12 (rank 12 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 12
+Abort(127) on node 13 (rank 13 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 127) - process 13
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 22:05:25 CEST 2023
+= Job-ID             : 594600 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : multinode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=144,node=2,billing=144 for 00:30:00
+= Elapsed runtime    : 00:00:05
+= Total RAM usage    : 0.0 GiB 
+= Node list          : f[0946,0948]
+= Subm/Elig/Start/End: 2023-05-17T21:37:05 / 2023-05-17T21:37:05 / 2023-05-17T22:05:19 / 2023-05-17T22:05:24
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/woody          4.0K   500.0G   750.0G        N/A       1                           N/A    
+    /home/vault          0.0K   524.3G  1048.6G        N/A       1      200K     400K        N/A    
+    /home/hpc           23.4G    52.4G   104.9G        N/A  41,186      500K   1,000K        N/A    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================

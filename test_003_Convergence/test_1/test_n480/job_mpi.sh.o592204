@@ -1,0 +1,119 @@
+### Starting TaskPrologue of job 592204 on f0310 at Wed May 17 11:30:42 CEST 2023
+#   SLURM_JOB_NODELIST=f0310
+#   SLURM_JOB_NUM_NODES=1
+#   SLURM_NTASKS=4
+#   SLURM_NPROCS=4
+#   SLURM_TASKS_PER_NODE=4
+#   SLURM_JOB_CPUS_PER_NODE=72
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=200 --ny=200 --nz=400 --npx=2 --npy=2 --npz=1
+(f0310:0,1,2,3)
+
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+[f0310:148939:0:148939] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x51)
+==== backtrace (tid: 148939) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x1485390ebedc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x1485390ec0bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x1485390ec28a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14853dc87cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x14853cb8fd85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0310:148942:0:148942] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x51)
+==== backtrace (tid: 148942) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x154eefdcfedc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x154eefdd00bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x154eefdd028a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x154ef8987cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x154ef788fd85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0310:148941:0:148941] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x51)
+==== backtrace (tid: 148941) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x14d27cbb9edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x14d27cbba0bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x14d27cbba28a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14d281755cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x14d28065dd85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+[f0310:148940:0:148940] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x51)
+==== backtrace (tid: 148940) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x152e2f0f7edc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x152e2f0f80bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x152e2f0f828a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x152e37d69cf0]
+ 4  ../bin/xhpcg() [0x40f6ea]
+ 5  ../bin/xhpcg() [0x410a34]
+ 6  ../bin/xhpcg() [0x410a34]
+ 7  ../bin/xhpcg() [0x40eceb]
+ 8  ../bin/xhpcg() [0x40443d]
+ 9  /lib64/libc.so.6(__libc_start_main+0xe5) [0x152e36c71d85]
+10  ../bin/xhpcg() [0x403b2e]
+=================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 0 PID 148939 RUNNING AT f0310
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 1 PID 148940 RUNNING AT f0310
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 2 PID 148941 RUNNING AT f0310
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 3 PID 148942 RUNNING AT f0310
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 11:33:56 CEST 2023
+= Job-ID             : 592204 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : singlenode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=72,node=1,billing=72 for 00:30:00
+= Elapsed runtime    : 00:03:14
+= Total RAM usage    : 48.3 GiB 
+= Node list          : f0310
+= Subm/Elig/Start/End: 2023-05-17T10:58:15 / 2023-05-17T10:58:15 / 2023-05-17T11:30:41 / 2023-05-17T11:33:55
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/woody          4.0K   500.0G   750.0G        N/A       1                           N/A    
+    /home/hpc           23.1G    52.4G   104.9G        N/A  38,935      500K   1,000K        N/A    
+    /home/vault          0.0K   524.3G  1048.6G        N/A       1      200K     400K        N/A    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================

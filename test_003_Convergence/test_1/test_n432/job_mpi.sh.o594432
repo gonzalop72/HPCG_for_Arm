@@ -1,0 +1,56 @@
+### Starting TaskPrologue of job 594432 on f1124 at Wed May 17 21:37:01 CEST 2023
+#   SLURM_JOB_NODELIST=f1124
+#   SLURM_JOB_NUM_NODES=1
+#   SLURM_NTASKS=1
+#   SLURM_NPROCS=1
+#   SLURM_TASKS_PER_NODE=1
+#   SLURM_JOB_CPUS_PER_NODE=72
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=432 --ny=432 --nz=432 --npx=1 --npy=1 --npz=1
+(f1124:0)
+
+MPI startup(): Warning: I_MPI_PMI_LIBRARY will be ignored since the hydra process manager was found
+[f1124:1545764:0:1545766] Caught signal 11 (Segmentation fault: address not mapped to object at address 0x14bf80d7b090)
+==== backtrace (tid:1545766) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x2dc) [0x14cef042aedc]
+ 1  /lib64/libucs.so.0(+0x2b0bc) [0x14cef042b0bc]
+ 2  /lib64/libucs.so.0(+0x2b28a) [0x14cef042b28a]
+ 3  /lib64/libpthread.so.0(+0x12cf0) [0x14cef4fc6cf0]
+ 4  ../bin/xhpcg() [0x408a19]
+ 5  /apps/SPACK/0.17.0/opt/linux-almalinux8-icelake/gcc-8.5.0/intel-oneapi-compilers-2021.4.0-a4gydnve3i4d7aqc33zo6lp336r2kysd/compiler/2021.4.0/linux/compiler/lib/intel64_lin/libiomp5.so(__kmp_invoke_microtask+0x93) [0x14cef45b0053]
+ 6  /apps/SPACK/0.17.0/opt/linux-almalinux8-icelake/gcc-8.5.0/intel-oneapi-compilers-2021.4.0-a4gydnve3i4d7aqc33zo6lp336r2kysd/compiler/2021.4.0/linux/compiler/lib/intel64_lin/libiomp5.so(+0xba353) [0x14cef452c353]
+ 7  /apps/SPACK/0.17.0/opt/linux-almalinux8-icelake/gcc-8.5.0/intel-oneapi-compilers-2021.4.0-a4gydnve3i4d7aqc33zo6lp336r2kysd/compiler/2021.4.0/linux/compiler/lib/intel64_lin/libiomp5.so(+0xb9362) [0x14cef452b362]
+ 8  /apps/SPACK/0.17.0/opt/linux-almalinux8-icelake/gcc-8.5.0/intel-oneapi-compilers-2021.4.0-a4gydnve3i4d7aqc33zo6lp336r2kysd/compiler/2021.4.0/linux/compiler/lib/intel64_lin/libiomp5.so(+0x13ecdc) [0x14cef45b0cdc]
+ 9  /lib64/libpthread.so.0(+0x81cf) [0x14cef4fbc1cf]
+10  /lib64/libc.so.6(clone+0x43) [0x14cef3ecde73]
+=================================
+
+===================================================================================
+=   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+=   RANK 0 PID 1545764 RUNNING AT f1124
+=   KILLED BY SIGNAL: 11 (Segmentation fault)
+===================================================================================
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 21:37:38 CEST 2023
+= Job-ID             : 594432 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : singlenode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=72,node=1,billing=72 for 00:30:00
+= Elapsed runtime    : 00:00:37
+= Total RAM usage    : 34.4 GiB 
+= Node list          : f1124
+= Subm/Elig/Start/End: 2023-05-17T21:36:59 / 2023-05-17T21:36:59 / 2023-05-17T21:37:00 / 2023-05-17T21:37:37
+======================
+=== Quota infos ======
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc           23.2G    52.4G   104.9G        N/A  40,452      500K   1,000K        N/A    
+    /home/woody          4.0K   500.0G   750.0G        N/A       1                           N/A    
+    /home/vault          0.0K   524.3G  1048.6G        N/A       1      200K     400K        N/A    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================

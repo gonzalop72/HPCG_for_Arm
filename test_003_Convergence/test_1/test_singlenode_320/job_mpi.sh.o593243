@@ -1,0 +1,32 @@
+### Starting TaskPrologue of job 593243 on f0565 at Wed May 17 15:25:15 CEST 2023
+#   SLURM_JOB_NODELIST=f0565
+#   SLURM_JOB_NUM_NODES=1
+#   SLURM_NTASKS=1
+#   SLURM_NPROCS=1
+#   SLURM_TASKS_PER_NODE=1
+#   SLURM_JOB_CPUS_PER_NODE=72
+#   SLURM_EXPORT_ENV=
+Running on cores 0-71 with governor powersave
+### Finished TaskPrologue
+params: --nx=320 --ny=320 --nz=320 --npx=1 --npy=1 --npz=1
+/var/tmp/slurmd_spool/job593243/slurm_script: line 23: mpirun: command not found
+=== JOB_STATISTICS ===
+=== current date     : Wed May 17 15:25:21 CEST 2023
+= Job-ID             : 593243 on fritz
+= Job-Name           : job_mpi.sh
+= Job-Command        : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1/job_mpi.sh
+= Initial workdir    : /home/hpc/ihpc/ihpc061h/arm_code/optimized_version/HPCG_for_Arm/test_003_Convergence/test_1
+= Queue/Partition    : singlenode
+= Slurm account      : ihpc with QOS=normal
+= Features           : hwperf
+= Requested resources: cpu=72,node=1,billing=72 for 00:30:00
+= Elapsed runtime    : 00:00:06
+= Total RAM usage    : 0.0 GiB 
+= Node list          : f0565
+= Subm/Elig/Start/End: 2023-05-17T15:25:14 / 2023-05-17T15:25:14 / 2023-05-17T15:25:15 / 2023-05-17T15:25:21
+======================
+=== Quota infos ======
+/usr/bin/shownicerquota.pl: timeout running quota command - quota data will be incomplete.
+    Path              Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /lustre             12.0K     0.0K     0.0K        N/A       1   20,000      250K        N/A    
+======================
