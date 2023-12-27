@@ -1,0 +1,331 @@
+Fujitsu C/C++ Version 4.7.0   Fri Dec  2 08:27:37 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/TestCG.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file TestCG.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             // Changelog
+       22             //
+       23             // Version 0.4
+       24             // - Added timing of setup time for sparse MV
+       25             // - Corrected percentages reported for sparse MV with overhead
+       26             //
+       27             /////////////////////////////////////////////////////////////////////////
+       28             
+       29             #include <fstream>
+       30             #include <iostream>
+       31             using std::endl;
+       32             #include <vector>
+       33             #include "hpcg.hpp"
+       34             
+       35             #include "TestCG.hpp"
+       36             #include "CG.hpp"
+       37             
+       38             /*!
+       39               Test the correctness of the Preconditined CG implementation by using a system matrix with a dominant diagonal.
+       40             
+       41               @param[in]    geom The description of the problem's geometry.
+       42               @param[in]    A    The known system matrix
+       43               @param[in]    data the data structure with all necessary CG vectors preallocated
+       44               @param[in]    b    The known right hand side vector
+       45               @param[inout] x    On entry: the initial guess; on exit: the new approximate solution
+       46               @param[out]   testcg_data the data structure with the results of the test including pass/fail information
+       47             
+       48               @return Returns zero on success and a non-zero value otherwise.
+       49             
+       50               @see CG()
+       51              */
+       52             int TestCG(SparseMatrix & A, CGData & data, Vector & b, Vector & x, TestCGData & testcg_data) {
+       53             
+       54             
+       55               // Use this array for collecting timing information
+       56               std::vector< double > times(8,0.0);
+       57               // Temporary storage for holding original diagonal and RHS
+       58               Vector origDiagA, exaggeratedDiagA, origB;
+       59    i          InitializeVector(origDiagA, A.localNumberOfRows);
+       60    i          InitializeVector(exaggeratedDiagA, A.localNumberOfRows);
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       61    i          InitializeVector(origB, A.localNumberOfRows);
+       62    i          CopyMatrixDiagonal(A, origDiagA);
+       63    i          CopyVector(origDiagA, exaggeratedDiagA);
+       64    i          CopyVector(b, origB);
+       65             
+       66               // Modify the matrix diagonal to greatly exaggerate diagonal values.
+       67               // CG should converge in about 10 iterations for this problem, regardless of problem size
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SPILLS :
+                       <<<      GENERAL   : SPILL 0  FILL 4
+                       <<<      SIMD&FP   : SPILL 0  FILL 0
+                       <<<      SCALABLE  : SPILL 0  FILL 0
+                       <<<      PREDICATE : SPILL 0  FILL 0
+                       <<< Loop-information  End >>>
+       68               for (local_int_t i=0; i< A.localNumberOfRows; ++i) {
+       69    i            global_int_t globalRowID = A.localToGlobalMap[i];
+       70                 if (globalRowID<9) {
+       71                   double scale = (globalRowID+2)*1.0e6;
+       72    i              ScaleVectorValue(exaggeratedDiagA, i, scale);
+       73    i              ScaleVectorValue(b, i, scale);
+       74                 } else {
+       75    i              ScaleVectorValue(exaggeratedDiagA, i, 1.0e6);
+       76    i              ScaleVectorValue(b, i, 1.0e6);
+       77                 }
+       78               }
+       79    i          ReplaceMatrixDiagonal(A, exaggeratedDiagA);
+       80             
+       81               TraceData tdDisabled;
+       82             
+       83               int niters = 0;
+       84               double normr = 0.0;
+       85               double normr0 = 0.0;
+       86               int maxIters = 50;
+       87               int numberOfCgCalls = 2;
+       88               double tolerance = 1.0e-12; // Set tolerance to reasonable value for grossly scaled diagonal terms
+       89               testcg_data.expected_niters_no_prec = 12; // For the unpreconditioned CG call, we should take about 10 iterations, permit 12
+       90               testcg_data.expected_niters_prec = 2;   // For the preconditioned case, we should take about 1 iteration, permit 2
+       91               testcg_data.niters_max_no_prec = 0;
+       92               testcg_data.niters_max_prec = 0;
+       93               for (int k=0; k<2; ++k) { // This loop tests both unpreconditioned and preconditioned runs
+       94                 int expected_niters = testcg_data.expected_niters_no_prec;
+       95                 if (k==1) expected_niters = testcg_data.expected_niters_prec;
+       96                 for (int i=0; i< numberOfCgCalls; ++i) {
+       97    i              ZeroVector(x); // Zero out x
+       98    i              int ierr = CG(A, data, b, x, maxIters, tolerance, niters, normr, normr0, &times[0], k==1, tdDisabled);
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       99    i              if (ierr) HPCG_fout << "Error in call to CG: " << ierr << ".\n" << endl;
+      100                   if (niters <= expected_niters) {
+      101                     ++testcg_data.count_pass;
+      102                   } else {
+      103                     ++testcg_data.count_fail;
+      104                   }
+      105                   if (k==0 && niters>testcg_data.niters_max_no_prec) testcg_data.niters_max_no_prec = niters; // Keep track of largest iter count
+      106                   if (k==1 && niters>testcg_data.niters_max_prec) testcg_data.niters_max_prec = niters; // Same for preconditioned run
+      107                   if (A.geom->rank==0) {
+      108    i                HPCG_fout << "Call [" << i << "] Number of Iterations [" << niters <<"] Scaled Residual [" << normr/normr0 << "]" << endl;
+      109                     if (niters > expected_niters)
+      110    i                  HPCG_fout << " Expected " << expected_niters << " iterations.  Performed " << niters << "." << endl;
+      111                   }
+      112                 }
+      113               }
+      114             
+      115               // Restore matrix diagonal and RHS
+      116    i          ReplaceMatrixDiagonal(A, origDiagA);
+      117    i          CopyVector(origB, b);
+      118               // Delete vectors
+      119    i          DeleteVector(origDiagA);
+      120    i          DeleteVector(exaggeratedDiagA);
+      121    i          DeleteVector(origB);
+      122               testcg_data.normr = normr;
+      123             
+      124               return 0;
+      125             }
+Total prefetch num: 0
+Optimization messages
+  jwd8101o-i  "../src/TestCG.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EEC1Ev'.
+  jwd8101o-i  "../src/TestCG.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__120__vector_base_commonILb1EEC1Ev'.
+  jwd8101o-i  "../src/TestCG.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impIPdNS_9allocatorIdEELj2EEC1ES1_'.
+  jwd8101o-i  "../src/TestCG.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1EOS5_'.
+  jwd8101o-i  "../src/TestCG.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEEC1EOS5_'.
+  jwd8101o-i  "../src/TestCG.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1Emc'.
+  jwd8101o-i  "../src/TestCG.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__113__vector_baseIdNS_9allocatorIdEEEC1Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 0: Inline expansion is applied to the user defined function '_ZNSt3__113__vector_baseIdNS_9allocatorIdEEED2Ev'.
+  jwd8101o-i  "../src/TestCG.cpp", line 59: Inline expansion is applied to the user defined function '_Z16InitializeVectorR13Vector_STRUCTi'.
+  jwd8101o-i  "../src/TestCG.cpp", line 60: Inline expansion is applied to the user defined function '_Z16InitializeVectorR13Vector_STRUCTi'.
+  jwd8101o-i  "../src/TestCG.cpp", line 61: Inline expansion is applied to the user defined function '_Z16InitializeVectorR13Vector_STRUCTi'.
+  jwd6001s-i  "../src/Vector.hpp", line 61: SIMD conversion is applied to this loop with the loop variable 'i'.
+  jwd8663o-i  "../src/Vector.hpp", line 61: This loop is not software pipelined because the software pipelining does not improve the performance.
+  jwd8101o-i  "../src/TestCG.cpp", line 62: Inline expansion is applied to the user defined function '_Z18CopyMatrixDiagonalR19SparseMatrix_STRUCTR13Vector_STRUCT'.
+  jwd8101o-i  "../src/TestCG.cpp", line 63: Inline expansion is applied to the user defined function '_Z10CopyVectorRK13Vector_STRUCTRS_'.
+  jwd8101o-i  "../src/TestCG.cpp", line 64: Inline expansion is applied to the user defined function '_Z10CopyVectorRK13Vector_STRUCTRS_'.
+  jwd6142s-i  "../src/TestCG.cpp", line 68: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/TestCG.cpp", line 68: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "../src/TestCG.cpp", line 69: Inline expansion is applied to the user defined function '_ZNSt3__16vectorIxNS_9allocatorIxEEEixEm'.
+  jwd8101o-i  "../src/TestCG.cpp", line 72: Inline expansion is applied to the user defined function '_Z16ScaleVectorValueR13Vector_STRUCTid'.
+  jwd8101o-i  "../src/TestCG.cpp", line 73: Inline expansion is applied to the user defined function '_Z16ScaleVectorValueR13Vector_STRUCTid'.
+  jwd8101o-i  "../src/TestCG.cpp", line 75: Inline expansion is applied to the user defined function '_Z16ScaleVectorValueR13Vector_STRUCTid'.
+  jwd8101o-i  "../src/TestCG.cpp", line 76: Inline expansion is applied to the user defined function '_Z16ScaleVectorValueR13Vector_STRUCTid'.
+  jwd8101o-i  "../src/TestCG.cpp", line 79: Inline expansion is applied to the user defined function '_Z21ReplaceMatrixDiagonalR19SparseMatrix_STRUCTR13Vector_STRUCT'.
+  jwd8101o-i  "../src/TestCG.cpp", line 97: Inline expansion is applied to the user defined function '_Z10ZeroVectorR13Vector_STRUCT'.
+  jwd8101o-i  "../src/TestCG.cpp", line 98: Inline expansion is applied to the user defined function '_ZNSt3__16vectorIdNS_9allocatorIdEEEixEm'.
+  jwd8101o-i  "../src/TestCG.cpp", line 99: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestCG.cpp", line 99: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd6208s-i  "../src/Vector.hpp", line 99: SIMD conversion is not applied to this loop because the uncertain order of the definition and reference to variable 'wv' may cause different results from serial execution.
+  jwd8663o-i  "../src/Vector.hpp", line 99: This loop is not software pipelined because the software pipelining does not improve the performance.
+  jwd8101o-i  "../src/TestCG.cpp", line 108: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestCG.cpp", line 108: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestCG.cpp", line 110: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/TestCG.cpp", line 110: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/TestCG.cpp", line 116: Inline expansion is applied to the user defined function '_Z21ReplaceMatrixDiagonalR19SparseMatrix_STRUCTR13Vector_STRUCT'.
+  jwd8101o-i  "../src/TestCG.cpp", line 117: Inline expansion is applied to the user defined function '_Z10CopyVectorRK13Vector_STRUCTRS_'.
+  jwd8101o-i  "../src/TestCG.cpp", line 119: Inline expansion is applied to the user defined function '_Z12DeleteVectorR13Vector_STRUCT'.
+  jwd8101o-i  "../src/TestCG.cpp", line 120: Inline expansion is applied to the user defined function '_Z12DeleteVectorR13Vector_STRUCT'.
+  jwd8101o-i  "../src/TestCG.cpp", line 121: Inline expansion is applied to the user defined function '_Z12DeleteVectorR13Vector_STRUCT'.
+  jwd6142s-i  "../src/SparseMatrix.hpp", line 176: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/SparseMatrix.hpp", line 176: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd6142s-i  "../src/SparseMatrix.hpp", line 189: SIMD conversion is not applied to this loop because the iteration count is uncertainty.
+  jwd8671o-i  "../src/SparseMatrix.hpp", line 189: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 350: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairIPdNS_9allocatorIdEEE6secondEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 353: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairIPdNS_9allocatorIdEEE6secondEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 356: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairIPdNS_9allocatorIdEEE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 359: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairIPdNS_9allocatorIdEEE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 368: Inline expansion is applied to the user defined function '_ZNSt3__113__vector_baseIdNS_9allocatorIdEEE17__destruct_at_endEPd'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 371: Inline expansion is applied to the user defined function '_ZNKSt3__113__vector_baseIdNS_9allocatorIdEEE9__end_capEv'.
+  jwd8671o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 423: This loop cannot be software pipelined because the shape of the loop is not covered by software pipelining.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 424: Inline expansion is applied to the user defined function '_ZNSt3__113__vector_baseIdNS_9allocatorIdEEE7__allocEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 424: Inline expansion is applied to the user defined function '_ZNSt3__116__to_raw_pointerIdEEPT_S2_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 424: Inline expansion is applied to the user defined function '_ZNSt3__116allocator_traitsINS_9allocatorIdEEE7destroyIdEEvRS2_PT_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 434: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairIPdNS_9allocatorIdEEEC1ES1_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 451: Inline expansion is applied to the user defined function '_ZNSt3__113__vector_baseIdNS_9allocatorIdEEE5clearEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 452: Inline expansion is applied to the user defined function '_ZNSt3__113__vector_baseIdNS_9allocatorIdEEE7__allocEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 452: Inline expansion is applied to the user defined function '_ZNKSt3__113__vector_baseIdNS_9allocatorIdEEE8capacityEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 452: Inline expansion is applied to the user defined function '_ZNSt3__116allocator_traitsINS_9allocatorIdEEE10deallocateERS2_Pdm'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 589: Inline expansion is applied to the user defined function '_ZNSt3__18ios_base8setstateEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 644: Inline expansion is applied to the user defined function '_ZNKSt3__113__vector_baseIdNS_9allocatorIdEEE8capacityEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 683: Inline expansion is applied to the user defined function '_ZNSt3__116__to_raw_pointerIdEEPT_S2_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 696: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5rdbufEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 734: Inline expansion is applied to the user defined function '_ZNSt3__19use_facetINS_5ctypeIcEEEERKT_RKNS_6localeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 734: Inline expansion is applied to the user defined function '_ZNKSt3__15ctypeIcE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 742: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11eq_int_typeEii'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 743: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 752: Inline expansion is applied to the user defined function '_ZNKSt3__113basic_ostreamIcNS_11char_traitsIcEEE6sentrycvbEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNSt3__119ostreambuf_iteratorIcNS_11char_traitsIcEEEC1ERNS_13basic_ostreamIcS2_EE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5flagsEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE4fillEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__119ostreambuf_iteratorIcNS_11char_traitsIcEEE6failedEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 763: Inline expansion is applied to the user defined function '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEE8setstateEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 840: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIdNS_9allocatorIdEEE4dataEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 840: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIdNS_9allocatorIdEEE8capacityEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 840: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIdNS_9allocatorIdEEE31__annotate_contiguous_containerEPKvS5_S5_S5_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 894: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE6lengthEPKc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/iterator", line 925: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5rdbufEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 928: Inline expansion is applied to the user defined function '_ZNSt3__113__vector_baseIdNS_9allocatorIdEEE7__allocEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 928: Inline expansion is applied to the user defined function '_ZNSt3__116allocator_traitsINS_9allocatorIdEEE8allocateERS2_m'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 929: Inline expansion is applied to the user defined function '_ZNSt3__113__vector_baseIdNS_9allocatorIdEEE9__end_capEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 930: Inline expansion is applied to the user defined function '_ZNKSt3__16vectorIdNS_9allocatorIdEEE14__annotate_newEm'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 932: Inline expansion is applied to the user defined function '_ZNSt3__19addressofIKcEEPT_RS2_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 949: Inline expansion is applied to the user defined function '_ZNKSt3__113__vector_baseIdNS_9allocatorIdEEE7__allocEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 949: Inline expansion is applied to the user defined function '_ZNSt3__116allocator_traitsINS_9allocatorIdEEE8max_sizeERKS2_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 949: Inline expansion is applied to the user defined function '_ZNSt3__13minImEERKT_S3_S3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 998: Inline expansion is applied to the user defined function '_ZNSt3__113__vector_baseIdNS_9allocatorIdEEE7__allocEv'.
+  jwd6101s-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 999: SIMD conversion is not applied because a statement that prevents SIMD conversion exists.
+  jwd8670o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 1000: This loop cannot be software pipelined because the loop contains a branch instruction.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 1002: Inline expansion is applied to the user defined function '_ZNSt3__116__to_raw_pointerIdEEPT_S2_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 1002: Inline expansion is applied to the user defined function '_ZNSt3__116allocator_traitsINS_9allocatorIdEEE9constructIdJRKdEEEvRS2_PT_DpOT0_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 1005: Inline expansion is applied to the user defined function '_ZNSt3__16vectorIdNS_9allocatorIdEEE24__RAII_IncreaseAnnotator6__doneEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 1034: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 1093: Inline expansion is applied to the user defined function '_ZNSt3__113__vector_baseIdNS_9allocatorIdEEEC2Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/vector", line 1100: Inline expansion is applied to the user defined function '_ZNSt3__16vectorIdNS_9allocatorIdEEE18__construct_at_endEmRKd'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1479: Inline expansion is applied to the user defined function '_ZNSt3__19allocatorIdE8allocateEmPKv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1487: Inline expansion is applied to the user defined function '_ZNSt3__19allocatorIdE10deallocateEPdm'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1490: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5widthEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1493: Inline expansion is applied to the user defined function '_ZNSt3__17forwardIRKdEEOT_RNS_16remove_referenceIS3_E4typeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1493: Inline expansion is applied to the user defined function '_ZNSt3__116allocator_traitsINS_9allocatorIdEEE11__constructIdJRKdEEEvNS_17integral_constantIbLb1EEERS2_PT_DpOT0_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1498: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1506: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1Emc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1507: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE4dataEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1507: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1516: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1522: Inline expansion is applied to the user defined function '_ZNSt3__18ios_base5widthEl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1527: Inline expansion is applied to the user defined function '_ZNSt3__116allocator_traitsINS_9allocatorIdEEE9__destroyIdEEvNS_17integral_constantIbLb1EEERS2_PT_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1531: Inline expansion is applied to the user defined function '_ZNSt3__116allocator_traitsINS_9allocatorIdEEE10__max_sizeENS_17integral_constantIbLb1EEERKS2_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1626: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE13__get_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1626: Inline expansion is applied to the user defined function '_ZNSt3__116__to_raw_pointerIKcEEPT_S3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1647: Inline expansion is applied to the user defined function '_ZNSt3__17forwardIRKdEEOT_RNS_16remove_referenceIS3_E4typeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1647: Inline expansion is applied to the user defined function '_ZNSt3__19allocatorIdE9constructIdJRKdEEEvPT_DpOT0_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1659: Inline expansion is applied to the user defined function '_ZNSt3__19allocatorIdE7destroyEPd'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1669: Inline expansion is applied to the user defined function '_ZNKSt3__19allocatorIdE8max_sizeEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1690: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1724: Inline expansion is applied to the user defined function '_ZNSt3__110__allocateEm'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1726: Inline expansion is applied to the user defined function '_ZNSt3__112__deallocateEPv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1735: Inline expansion is applied to the user defined function '_ZnwmPv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1735: Inline expansion is applied to the user defined function '_ZNSt3__17forwardIRKdEEOT_RNS_16remove_referenceIS3_E4typeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 1735: Inline expansion is applied to the user defined function '_ZdlPvS_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1772: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1778: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1778: Inline expansion is applied to the user defined function '_ZNSt3__114pointer_traitsIPKcE10pointer_toERS1_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE9__is_longEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE18__get_long_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE19__get_short_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1789: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1789: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2106: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRNS_17__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES6_EEEEONS_16remove_referenceIT_E4typeEOSC_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2106: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRNS_17__compressed_pairINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES6_EEEEONS_16remove_referenceIT_E4typeEOSC_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2107: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__zeroEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2107: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE6__zeroEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2163: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_EC1Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2237: Inline expansion is applied to the user defined function '_ZNSt3__17forwardIPdEEOT_RNS_16remove_referenceIS2_E4typeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2414: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EEC2Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2416: Inline expansion is applied to the user defined function '_ZNSt3__17forwardIPdEEOT_RNS_16remove_referenceIS2_E4typeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2416: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impIPdNS_9allocatorIdEELj2EEC2ES1_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impIPdNS_9allocatorIdEELj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2470: Inline expansion is applied to the user defined function '_ZNKSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2470: Inline expansion is applied to the user defined function '_ZNKSt3__128__libcpp_compressed_pair_impIPdNS_9allocatorIdEELj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2472: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impIPdNS_9allocatorIdEELj2EE6secondEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2473: Inline expansion is applied to the user defined function '_ZNKSt3__128__libcpp_compressed_pair_impIPdNS_9allocatorIdEELj2EE6secondEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2594: Inline expansion is applied to the user defined function '_ZNKSt3__16__lessImmEclERKmS3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/algorithm", line 2602: Inline expansion is applied to the user defined function '_ZNSt3__13minImNS_6__lessImmEEEERKT_S5_S5_T0_'.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -I./src -I./src/OOKAMI_OMP_FJ -I/lustre/software/arm/22.1/armpl-22.1.0_AArch64_RHEL-8_arm-linux-compiler_aarch64-linux/include -Kfast -KSVE -Kopenmp -Koptmsg=2 -Nlst=t -Kocl -I../src -o src/TestCG.o
+    Effective options    : -g0 -mt -Qy -std=gnu++14 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_3_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Knozfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta
