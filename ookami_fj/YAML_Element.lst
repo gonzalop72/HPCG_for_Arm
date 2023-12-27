@@ -1,0 +1,211 @@
+Fujitsu C/C++ Version 4.7.0   Fri Nov 11 03:48:07 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj
+  Source file       : ../src/YAML_Element.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file YAML_Element.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #include <iostream>
+       22             #include <fstream>
+       23             #include <sstream>
+       24             #include "YAML_Element.hpp"
+       25             using namespace std;
+       26    i        YAML_Element::YAML_Element(const std::string & key_arg, const std::string & value_arg) {
+       27    i          key = key_arg;
+       28    i          value = value_arg;
+       29    i        }
+       30             
+       31             YAML_Element::~YAML_Element() {
+       32    i     s    for (size_t i=0; i<children.size(); i++) {
+       33    i            delete children[i];
+       34               }
+       35    i          children.clear();
+       36    i        }
+       37             
+       38             /*!
+       39               Add an element to the vector
+       40               QUESTION: if an element is not added because the key already exists,
+       41               will this lead to memory leakage?
+       42             
+       43               @param[in] key_arg   The key under which the element is stored
+       44               @param[in] value_arg The value of the element
+       45             
+       46               @return Returns the added element
+       47             */
+       48             YAML_Element * YAML_Element::add(const std::string & key_arg, double value_arg) {
+       49    i          this->value = "";
+       50               string converted_value = convert_double_to_string(value_arg);
+       51    i          YAML_Element * element = new YAML_Element(key_arg,converted_value);
+       52    i          children.push_back(element);
+       53               return element;
+       54    i        }
+       55             
+       56             /*!
+       57               Add an element to the vector
+       58             
+       59               @param[in] key_arg   The key under which the element is stored
+       60               @param[in] value_arg The value of the element
+       61             
+       62               @return Returns the added element
+       63             */
+       64             YAML_Element * YAML_Element::add(const std::string & key_arg, int value_arg) {
+       65    i          this->value = "";
+       66               string converted_value = convert_int_to_string(value_arg);
+       67    i          YAML_Element * element = new YAML_Element(key_arg,converted_value);
+       68    i          children.push_back(element);
+       69               return element;
+       70    i        }
+       71             
+       72             #ifndef HPCG_NO_LONG_LONG
+       73             
+       74             /*!
+       75               Add an element to the vector
+       76             
+       77               @param[in] key_arg   The key under which the element is stored
+       78               @param[in] value_arg The value of the element
+       79             
+       80               @return Returns the added element
+       81             */
+       82             YAML_Element * YAML_Element::add(const std::string & key_arg, long long value_arg) {
+       83    i          this->value = "";
+       84               string converted_value = convert_long_long_to_string(value_arg);
+       85    i          YAML_Element * element = new YAML_Element(key_arg,converted_value);
+       86    i          children.push_back(element);
+       87               return element;
+       88    i        }
+       89             
+       90             #endif
+       91             
+       92             /*!
+       93               Add an element to the vector
+       94             
+       95               @param[in] key_arg   The key under which the element is stored
+       96               @param[in] value_arg The value of the element
+       97             
+       98               @return Returns the added element
+       99             */
+      100             YAML_Element * YAML_Element::add(const std::string & key_arg, size_t value_arg) {
+      101    i          this->value = "";
+      102               string converted_value = convert_size_t_to_string(value_arg);
+      103    i          YAML_Element * element = new YAML_Element(key_arg,converted_value);
+      104    i          children.push_back(element);
+      105               return element;
+      106    i        }
+      107             
+      108             /*!
+      109               Add an element to the vector
+      110             
+      111               @param[in] key_arg   The key under which the element is stored
+      112               @param[in] value_arg The value of the element
+      113             
+      114               @return Returns the added element
+      115             */
+      116             YAML_Element * YAML_Element::add(const std::string & key_arg, const std::string & value_arg) {
+      117    i          this->value = "";
+      118    i          YAML_Element * element = new YAML_Element(key_arg, value_arg);
+      119    i          children.push_back(element);
+      120               return element;
+      121             }
+      122             
+      123             /*!
+      124               Returns the pointer to the YAML_Element for the given key.
+      125               @param[in] key_arg   The key under which the element was stored
+      126             
+      127               @return If found, returns the element, otherwise returns NULL
+      128             */
+      129             YAML_Element * YAML_Element::get(const std::string & key_arg) {
+      130    i     s    for (size_t i=0; i<children.size(); i++) {
+      131    i            if (children[i]->getKey() == key_arg) {
+      132    i              return children[i];
+      133                 }
+      134               }
+      135               return 0;
+      136             }
+      137             
+      138             /*!
+      139               Prints a line of a YAML document.  Correct YAML depends on
+      140               correct spacing; the parameter space should be the proper
+      141               amount of space for the parent element
+      142             
+      143               @param[in] space spacing inserted at the beginning of the line
+      144             
+      145               @return Returns a single line of the YAML document without the leading white space
+      146             */
+      147             string YAML_Element::printYAML(std::string space) {
+      148    i          string yaml_line = space + key + ": " + value + "\n";
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information End >>>
+      149    i    f     for (int i=0; i<2; i++) space = space + " ";
+      150    i     s    for (size_t i=0; i<children.size(); i++) {
+      151    i            yaml_line = yaml_line + children[i]->printYAML(space);
+      152               }
+      153               return yaml_line;
+      154    i        }
+      155             
+      156             /*!
+      157               Converts a double precision value to a string.
+      158             
+      159               @param[in] value_arg The value to be converted.
+      160             */
+      161             string YAML_Element::convert_double_to_string(double value_arg) {
+      162    i          stringstream strm;
+      163    i          strm << value_arg;
+      164    i          return strm.str();
+      165    i        }
+      166             
+      167             /*!
+      168               Converts a integer value to a string.
+      169             
+      170               @param[in] value_arg The value to be converted.
+      171             */
+      172             string YAML_Element::convert_int_to_string(int value_arg) {
+      173    i          stringstream strm;
+      174               strm << value_arg;
+      175    i          return strm.str();
+      176    i        }
+      177             
+      178             #ifndef HPCG_NO_LONG_LONG
+      179             
+      180             /*!
+      181               Converts a "long long" integer value to a string.
+      182             
+      183               @param[in] value_arg The value to be converted.
+      184             */
+      185             string YAML_Element::convert_long_long_to_string(long long value_arg) {
+      186    i          stringstream strm;
+      187    i          strm << value_arg;
+      188    i          return strm.str();
+      189    i        }
+      190             
+      191             #endif
+      192             
+      193             /*!
+      194               Converts a "size_t" integer value to a string.
+      195             
+      196               @param[in] value_arg The value to be converted.
+      197             */
+      198             string YAML_Element::convert_size_t_to_string(size_t value_arg) {
+      199    i          stringstream strm;
+      200    i          strm << value_arg;
+      201    i          return strm.str();
+      202    i        }

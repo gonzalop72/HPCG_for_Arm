@@ -1,0 +1,57 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov  2 18:24:17 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj
+  Source file       : ../src/ComputeProlongation.cpp
+(line-no.)(optimize)
+        1             // ***************************************************
+        2             //
+        3             // HPCG: High Performance Conjugate Gradient Benchmark
+        4             //
+        5             // Contact:
+        6             // Michael A. Heroux ( maherou@sandia.gov)
+        7             // Jack Dongarra     (dongarra@eecs.utk.edu)
+        8             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+        9             //
+       10             // ***************************************************
+       11             //@HEADER
+       12             
+       13             /*!
+       14              @file ComputeProlongation.cpp
+       15             
+       16              HPCG routine
+       17              */
+       18             
+       19             #ifndef HPCG_NO_OPENMP
+       20             #include <omp.h>
+       21             #endif
+       22             
+       23             #include "ComputeProlongation.hpp"
+       24             #include "ComputeProlongation_ref.hpp"
+       25             
+       26             /*!
+       27               Routine to compute the coarse residual vector.
+       28             
+       29               @param[in]  Af - Fine grid sparse matrix object containing pointers to current coarse grid correction and the f2c operator.
+       30               @param[inout] xf - Fine grid solution vector, update with coarse grid correction.
+       31             
+       32               Note that the fine grid residual is never explicitly constructed.
+       33               We only compute it for the fine grid points that will be injected into corresponding coarse grid points.
+       34             
+       35               @return Returns zero on success and a non-zero value otherwise.
+       36             */
+       37             int ComputeProlongation(const SparseMatrix & Af, Vector & xf) {
+       38             
+       39               double * xfv = xf.values;
+       40               double * xcv = Af.mgData->xc->values;
+       41               local_int_t * f2c = Af.mgData->f2cOperator;
+       42               local_int_t nc = Af.mgData->rc->localLength;
+       43             
+       44             #ifndef HPCG_NO_OPENMP
+       45          s  #pragma omp parallel for
+       46             #endif
+       47               for (local_int_t i=0; i<nc; ++i) {
+       48    i        	  xfv[f2c[i]] += xcv[Af.Ac->whichNewRowIsOldRow[i]]; // This loop is safe to vectorize
+       49               }
+       50             
+       51               return 0;
+       52             }

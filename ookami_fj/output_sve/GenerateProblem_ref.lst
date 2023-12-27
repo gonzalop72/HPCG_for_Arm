@@ -1,0 +1,232 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov  2 15:03:41 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj
+  Source file       : ../src/GenerateProblem_ref.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file GenerateProblem_ref.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #ifndef HPCG_NO_MPI
+       22             #include <mpi.h>
+       23             #endif
+       24             
+       25             #ifndef HPCG_NO_OPENMP
+       26             #include <omp.h>
+       27             #endif
+       28             
+       29             #if defined(HPCG_DEBUG) || defined(HPCG_DETAILED_DEBUG)
+       30             #include <fstream>
+       31             using std::endl;
+       32             #include "hpcg.hpp"
+       33             #endif
+       34             #include <cassert>
+       35             
+       36             #include "GenerateProblem_ref.hpp"
+       37             
+       38             
+       39             /*!
+       40               Reference version of GenerateProblem to generate the sparse matrix, right hand side, initial guess, and exact solution.
+       41             
+       42               @param[in]  A      The known system matrix
+       43               @param[inout] b      The newly allocated and generated right hand side vector (if b!=0 on entry)
+       44               @param[inout] x      The newly allocated solution vector with entries set to 0.0 (if x!=0 on entry)
+       45               @param[inout] xexact The newly allocated solution vector with entries set to the exact solution (if the xexact!=0 non-zero on entry)
+       46             
+       47               @see GenerateGeometry
+       48             */
+       49             
+       50             void GenerateProblem_ref(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact) {
+       51             
+       52               // Make local copies of geometry information.  Use global_int_t since the RHS products in the calculations
+       53               // below may result in global range values.
+       54               global_int_t nx = A.geom->nx;
+       55               global_int_t ny = A.geom->ny;
+       56               global_int_t nz = A.geom->nz;
+       57               global_int_t gnx = A.geom->gnx;
+       58               global_int_t gny = A.geom->gny;
+       59               global_int_t gnz = A.geom->gnz;
+       60               global_int_t gix0 = A.geom->gix0;
+       61               global_int_t giy0 = A.geom->giy0;
+       62               global_int_t giz0 = A.geom->giz0;
+       63             
+       64               local_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
+       65               // If this assert fails, it most likely means that the local_int_t is set to int and should be set to long long
+       66               assert(localNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
+       67               local_int_t numberOfNonzerosPerRow = 27; // We are approximating a 27-point finite element/volume/difference 3D stencil
+       68             
+       69               global_int_t totalNumberOfRows = gnx*gny*gnz; // Total number of grid points in mesh
+       70               // If this assert fails, it most likely means that the global_int_t is set to int and should be set to long long
+       71               assert(totalNumberOfRows>0); // Throw an exception of the number of rows is less than zero (can happen if int overflow)
+       72             
+       73             
+       74               // Allocate arrays that are of length localNumberOfRows
+       75               char * nonzerosInRow = new char[localNumberOfRows];
+       76               global_int_t ** mtxIndG = new global_int_t*[localNumberOfRows];
+       77               local_int_t  ** mtxIndL = new local_int_t*[localNumberOfRows];
+       78               double ** matrixValues = new double*[localNumberOfRows];
+       79               double ** matrixDiagonal = new double*[localNumberOfRows];
+       80             
+       81    i          if (b!=0) InitializeVector(*b, localNumberOfRows);
+       82    i          if (x!=0) InitializeVector(*x, localNumberOfRows);
+       83    i          if (xexact!=0) InitializeVector(*xexact, localNumberOfRows);
+       84               double * bv = 0;
+       85               double * xv = 0;
+       86               double * xexactv = 0;
+       87               if (b!=0) bv = b->values; // Only compute exact solution if requested
+       88               if (x!=0) xv = x->values; // Only compute exact solution if requested
+       89               if (xexact!=0) xexactv = xexact->values; // Only compute exact solution if requested
+       90    i          A.localToGlobalMap.resize(localNumberOfRows);
+       91             
+       92               // Use a parallel loop to do initial assignment:
+       93               // distributes the physical placement of arrays of pointers across the memory system
+       94             #ifndef HPCG_NO_OPENMP
+       95          s    #pragma omp parallel for
+       96             #endif
+       97               for (local_int_t i=0; i< localNumberOfRows; ++i) {
+       98                 matrixValues[i] = 0;
+       99                 matrixDiagonal[i] = 0;
+      100                 mtxIndG[i] = 0;
+      101                 mtxIndL[i] = 0;
+      102               }
+      103             
+      104             #ifndef HPCG_CONTIGUOUS_ARRAYS
+      105               // Now allocate the arrays pointed to
+      106               for (local_int_t i=0; i< localNumberOfRows; ++i)
+      107                 mtxIndL[i] = new local_int_t[numberOfNonzerosPerRow];
+      108               for (local_int_t i=0; i< localNumberOfRows; ++i)
+      109                 matrixValues[i] = new double[numberOfNonzerosPerRow];
+      110               for (local_int_t i=0; i< localNumberOfRows; ++i)
+      111                mtxIndG[i] = new global_int_t[numberOfNonzerosPerRow];
+      112             
+      113             #else
+      114               // Now allocate the arrays pointed to
+      115               mtxIndL[0] = new local_int_t[localNumberOfRows * numberOfNonzerosPerRow];
+      116               matrixValues[0] = new double[localNumberOfRows * numberOfNonzerosPerRow];
+      117               mtxIndG[0] = new global_int_t[localNumberOfRows * numberOfNonzerosPerRow];
+      118             
+      119         8s    for (local_int_t i=1; i< localNumberOfRows; ++i) {
+      120               mtxIndL[i] = mtxIndL[0] + i * numberOfNonzerosPerRow;
+      121               matrixValues[i] = matrixValues[0] + i * numberOfNonzerosPerRow;
+      122               mtxIndG[i] = mtxIndG[0] + i * numberOfNonzerosPerRow;
+      123               }
+      124             #endif
+      125             
+      126               local_int_t localNumberOfNonzeros = 0;
+      127               // TODO:  This triply nested loop could be flattened or use nested parallelism
+      128             #ifndef HPCG_NO_OPENMP
+      129               #pragma omp parallel for
+      130             #endif
+      131               for (local_int_t iz=0; iz<nz; iz++) {
+      132                 global_int_t giz = giz0+iz;
+      133                 for (local_int_t iy=0; iy<ny; iy++) {
+      134                   global_int_t giy = giy0+iy;
+      135                   for (local_int_t ix=0; ix<nx; ix++) {
+      136                     global_int_t gix = gix0+ix;
+      137                     local_int_t currentLocalRow = iz*nx*ny+iy*nx+ix;
+      138                     global_int_t currentGlobalRow = giz*gnx*gny+giy*gnx+gix;
+      139             #ifndef HPCG_NO_OPENMP
+      140             // C++ std::map is not threadsafe for writing
+      141                     #pragma omp critical
+      142             #endif
+      143    i                A.globalToLocalMap[currentGlobalRow] = currentLocalRow;
+      144             
+      145    i                A.localToGlobalMap[currentLocalRow] = currentGlobalRow;
+      146             #ifdef HPCG_DETAILED_DEBUG
+      147                     HPCG_fout << " rank, globalRow, localRow = " << A.geom->rank << " " << currentGlobalRow << " " << A.globalToLocalMap[currentGlobalRow] << endl;
+      148             #endif
+      149                     char numberOfNonzerosInRow = 0;
+      150                     double * currentValuePointer = matrixValues[currentLocalRow]; // Pointer to current value in current row
+      151                     global_int_t * currentIndexPointerG = mtxIndG[currentLocalRow]; // Pointer to current index in current row
+      152                     for (int sz=-1; sz<=1; sz++) {
+      153                       if (giz+sz>-1 && giz+sz<gnz) {
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information End >>>
+      154         f               for (int sy=-1; sy<=1; sy++) {
+      155                           if (giy+sy>-1 && giy+sy<gny) {
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information End >>>
+      156         f                   for (int sx=-1; sx<=1; sx++) {
+      157                               if (gix+sx>-1 && gix+sx<gnx) {
+      158                                 global_int_t curcol = currentGlobalRow+sz*gnx*gny+sy*gnx+sx;
+      159                                 if (curcol==currentGlobalRow) {
+      160                                   matrixDiagonal[currentLocalRow] = currentValuePointer;
+      161                                   *currentValuePointer++ = 26.0;
+      162                                 } else {
+      163                                   *currentValuePointer++ = -1.0;
+      164                                 }
+      165                                 *currentIndexPointerG++ = curcol;
+      166                                 numberOfNonzerosInRow++;
+      167                               } // end x bounds test
+      168                             } // end sx loop
+      169                           } // end y bounds test
+      170                         } // end sy loop
+      171                       } // end z bounds test
+      172                     } // end sz loop
+      173                     nonzerosInRow[currentLocalRow] = numberOfNonzerosInRow;
+      174             #ifndef HPCG_NO_OPENMP
+      175                     #pragma omp critical
+      176             #endif
+      177                     localNumberOfNonzeros += numberOfNonzerosInRow; // Protect this with an atomic
+      178                     if (b!=0)      bv[currentLocalRow] = 26.0 - ((double) (numberOfNonzerosInRow-1));
+      179                     if (x!=0)      xv[currentLocalRow] = 0.0;
+      180                     if (xexact!=0) xexactv[currentLocalRow] = 1.0;
+      181                   } // end ix loop
+      182                 } // end iy loop
+      183               } // end iz loop
+      184             #ifdef HPCG_DETAILED_DEBUG
+      185               HPCG_fout     << "Process " << A.geom->rank << " of " << A.geom->size <<" has " << localNumberOfRows    << " rows."     << endl
+      186                   << "Process " << A.geom->rank << " of " << A.geom->size <<" has " << localNumberOfNonzeros<< " nonzeros." <<endl;
+      187             #endif
+      188             
+      189               global_int_t totalNumberOfNonzeros = 0;
+      190             #ifndef HPCG_NO_MPI
+      191               // Use MPI's reduce function to sum all nonzeros
+      192             #ifdef HPCG_NO_LONG_LONG
+      193               MPI_Allreduce(&localNumberOfNonzeros, &totalNumberOfNonzeros, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+      194             #else
+      195               long long lnnz = localNumberOfNonzeros, gnnz = 0; // convert to 64 bit for MPI call
+      196               MPI_Allreduce(&lnnz, &gnnz, 1, MPI_LONG_LONG_INT, MPI_SUM, MPI_COMM_WORLD);
+      197               totalNumberOfNonzeros = gnnz; // Copy back
+      198             #endif
+      199             #else
+      200               totalNumberOfNonzeros = localNumberOfNonzeros;
+      201             #endif
+      202               // If this assert fails, it most likely means that the global_int_t is set to int and should be set to long long
+      203               // This assert is usually the first to fail as problem size increases beyond the 32-bit integer range.
+      204               assert(totalNumberOfNonzeros>0); // Throw an exception of the number of nonzeros is less than zero (can happen if int overflow)
+      205             
+      206               A.title = 0;
+      207               A.totalNumberOfRows = totalNumberOfRows;
+      208               A.totalNumberOfNonzeros = totalNumberOfNonzeros;
+      209               A.localNumberOfRows = localNumberOfRows;
+      210               A.localNumberOfColumns = localNumberOfRows;
+      211               A.localNumberOfNonzeros = localNumberOfNonzeros;
+      212               A.nonzerosInRow = nonzerosInRow;
+      213               A.mtxIndG = mtxIndG;
+      214               A.mtxIndL = mtxIndL;
+      215               A.matrixValues = matrixValues;
+      216               A.matrixDiagonal = matrixDiagonal;
+      217             
+      218               return;
+      219             }
