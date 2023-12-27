@@ -1,0 +1,88 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov  9 16:01:37 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj
+  Source file       : ../src/YAML_Doc.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             #include <cstdlib>
+       16             #include <ctime>
+       17             #include <iostream>
+       18             #include <fstream>
+       19             #include <sstream>
+       20             #include "YAML_Doc.hpp"
+       21             using namespace std;
+       22             
+       23             /*!
+       24               Sets the application name and version which will become part of the YAML doc.
+       25             
+       26               @param[in] miniApp_Name application name
+       27               @param[in] miniApp_Version application name
+       28               @param[in] destination_Directory destination directory for the YAML document
+       29               @param[in] destination_FileName file name for the YAML document
+       30             */
+       31    i        YAML_Doc::YAML_Doc(const std::string & miniApp_Name, const std::string & miniApp_Version, const std::string & destination_Directory, const std::string & destination_FileName) {
+       32    i          miniAppName = miniApp_Name;
+       33    i          miniAppVersion = miniApp_Version;
+       34    i          destinationDirectory = destination_Directory;
+       35    i          destinationFileName = destination_FileName;
+       36    i        }
+       37             
+       38             //inherits the destructor from YAML_Element
+       39             YAML_Doc::~YAML_Doc(void) {
+       40    i        }
+       41             
+       42             /*!
+       43               Generates YAML from the elements of the document and saves it to a file.
+       44             
+       45               @return returns the complete YAML document as a string
+       46             */
+       47             string YAML_Doc::generateYAML() {
+       48    i          string yaml;
+       49             
+       50    i          yaml =  yaml + miniAppName + " version: " + miniAppVersion + "\n";
+       51             
+       52    i     s    for (size_t i=0; i<children.size(); i++) {
+       53    i            yaml = yaml + children[i]->printYAML("");
+       54               }
+       55             
+       56               time_t rawtime;
+       57               tm * ptm;
+       58               time ( &rawtime );
+       59               ptm = localtime(&rawtime);
+       60               char sdate[25];
+       61               //use tm_mon+1 because tm_mon is 0 .. 11 instead of 1 .. 12
+       62               sprintf (sdate,"%04d.%02d.%02d.%02d.%02d.%02d",ptm->tm_year + 1900, ptm->tm_mon+1,
+       63                   ptm->tm_mday, ptm->tm_hour, ptm->tm_min,ptm->tm_sec);
+       64             
+       65    i          string filename;
+       66    i          if (destinationFileName=="")
+       67    i            filename = miniAppName + "-" + miniAppVersion + "_";
+       68               else
+       69    i            filename = destinationFileName;
+       70    i          filename = filename + string(sdate) + ".yaml";
+       71    i          if (destinationDirectory!="" && destinationDirectory!=".") {
+       72                 string mkdir_cmd = "mkdir " + destinationDirectory;
+       73    i            system(mkdir_cmd.c_str());
+       74    i            filename = destinationDirectory + "/" + destinationFileName;
+       75    i          } else
+       76    i            filename = "./" + filename;
+       77             
+       78               ofstream myfile;
+       79    i          myfile.open(filename.c_str());
+       80    i          myfile << yaml;
+       81    i          myfile.close();
+       82               return yaml;
+       83    i        }

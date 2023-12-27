@@ -1,0 +1,59 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov  9 15:55:35 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj
+  Source file       : ../src/TestNorms.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file TestNorms.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #include <cmath>
+       22             #include "TestNorms.hpp"
+       23             
+       24             /*!
+       25               Computes the mean and standard deviation of the array of norm results.
+       26             
+       27               @param[in] testnorms_data data structure with the results of norm test
+       28             
+       29               @return Returns 0 upon success or non-zero otherwise
+       30             */
+       31             int TestNorms(TestNormsData & testnorms_data) {
+       32              double mean_delta = 0.0;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: AGNOSTIC; VL: 2 in 128-bit Interleave: 1)
+                       <<< Loop-information End >>>
+       33          v   for (int i= 0; i<testnorms_data.samples; ++i) mean_delta += (testnorms_data.values[i] - testnorms_data.values[0]);
+       34              double mean = testnorms_data.values[0] + mean_delta/(double)testnorms_data.samples;
+       35              testnorms_data.mean = mean;
+       36             
+       37              // Compute variance
+       38              double sumdiff = 0.0;
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: AGNOSTIC; VL: 2 in 128-bit Interleave: 1)
+                       <<< Loop-information End >>>
+       39          v   for (int i= 0; i<testnorms_data.samples; ++i) sumdiff += (testnorms_data.values[i] - mean) * (testnorms_data.values[i] - mean);
+       40              testnorms_data.variance = sumdiff/(double)testnorms_data.samples;
+       41             
+       42              // Determine if variation is sufficiently small to declare success
+       43              testnorms_data.pass = (testnorms_data.variance<1.0e-6);
+       44             
+       45              return 0;
+       46             }

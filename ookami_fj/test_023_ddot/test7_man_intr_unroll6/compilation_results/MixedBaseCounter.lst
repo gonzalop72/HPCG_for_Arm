@@ -1,0 +1,72 @@
+Fujitsu C/C++ Version 4.7.0   Wed Nov  9 16:25:57 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj
+  Source file       : ../src/MixedBaseCounter.cpp
+(line-no.)(optimize)
+        1             
+        2             #include <map>
+        3             
+        4             #include "MixedBaseCounter.hpp"
+        5             
+        6             MixedBaseCounter::MixedBaseCounter(int *counts, int length) {
+        7               this->length = length;
+        8             
+        9               int i;
+       10             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    FULL UNROLLING
+                       <<< Loop-information End >>>
+       11         f     for (i = 0; i < 32; ++i) {
+       12                 this->max_counts[i] = counts[i];
+       13                 this->cur_counts[i] = 0;
+       14               }
+       15               // terminate with 0's
+       16               this->max_counts[i]      = this->cur_counts[i]      = 0;
+       17               this->max_counts[length] = this->cur_counts[length] = 0;
+       18             }
+       19             
+       20             MixedBaseCounter::MixedBaseCounter(MixedBaseCounter & left, MixedBaseCounter & right) {
+       21               this->length = left.length;
+       22          s    for (int i = 0; i < left.length; ++i) {
+       23                 this->max_counts[i] = left.max_counts[i] - right.cur_counts[i];
+       24                 this->cur_counts[i] = 0;
+       25               }
+       26             }
+       27             
+       28             void
+       29             MixedBaseCounter::next() {
+       30          s    for (int i = 0; i < this->length; ++i) {
+       31                 this->cur_counts[i]++;
+       32                 if (this->cur_counts[i] > this->max_counts[i]) {
+       33                   this->cur_counts[i] = 0;
+       34                   continue;
+       35                 }
+       36                 break;
+       37               }
+       38             }
+       39             
+       40             int
+       41             MixedBaseCounter::is_zero() {
+       42          s    for (int i = 0; i < this->length; ++i)
+       43                 if (this->cur_counts[i])
+       44                   return 0;
+       45               return 1;
+       46             }
+       47             
+       48             int
+       49             MixedBaseCounter::product(int * multipliers) {
+       50               int k=0, x=1;
+       51             
+       52         2     for (int i = 0; i < this->length; ++i)
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: AGNOSTIC; VL: 4 in 128-bit Interleave: 1)
+                       <<< Loop-information End >>>
+       53          v      for (int j = 0; j < this->cur_counts[i]; ++j) {
+       54                   k = 1;
+       55                   x *= multipliers[i];
+       56                 }
+       57             
+       58               return x * k;
+       59             }
