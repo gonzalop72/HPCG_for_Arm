@@ -1,0 +1,56 @@
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/SetupHalo.cpp', Line: 44, Column: 10 }
+Function:        _Z9SetupHaloR19SparseMatrix_STRUCT
+Args:
+  - Callee:          _Z13SetupHalo_refR19SparseMatrix_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z9SetupHaloR19SparseMatrix_STRUCT
+    DebugLoc:        { File: '../src/SetupHalo.cpp', Line: 42, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/SetupHalo.cpp', Line: 44, Column: 10 }
+Function:        _Z9SetupHaloR19SparseMatrix_STRUCT
+Args:
+  - Callee:          _Z13SetupHalo_refR19SparseMatrix_STRUCT
+  - String:          ' will not be inlined into '
+  - Caller:          _Z9SetupHaloR19SparseMatrix_STRUCT
+    DebugLoc:        { File: '../src/SetupHalo.cpp', Line: 42, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/SetupHalo.cpp', Line: 42, Column: 0 }
+Function:        _Z9SetupHaloR19SparseMatrix_STRUCT
+Args:
+  - NumStackBytes:   '0'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/SetupHalo.cpp', Line: 44, Column: 10 }
+Function:        _Z9SetupHaloR19SparseMatrix_STRUCT
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/SetupHalo.cpp', Line: 42, Column: 0 }
+Function:        _Z9SetupHaloR19SparseMatrix_STRUCT
+Args:
+  - NumInstructions: '1'
+  - String:          ' instructions in function'
+...

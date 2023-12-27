@@ -1,0 +1,227 @@
+Fujitsu C/C++ Version 4.7.0   Sat Feb 11 05:31:23 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/SetupHalo_ref.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file SetupHalo_ref.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #ifndef HPCG_NO_MPI
+       22             #include <mpi.h>
+       23             #include <map>
+       24             #include <set>
+       25             #endif
+       26             
+       27             #ifndef HPCG_NO_OPENMP
+       28             #include <omp.h>
+       29             #endif
+       30             
+       31             #ifdef HPCG_DETAILED_DEBUG
+       32             #include <fstream>
+       33             using std::endl;
+       34             #include "hpcg.hpp"
+       35             #include <cassert>
+       36             #endif
+       37             
+       38             #include "SetupHalo_ref.hpp"
+       39             #include "mytimer.hpp"
+       40             
+       41             /*!
+       42               Reference version of SetupHalo that prepares system matrix data structure and creates data necessary
+       43               for communication of boundary values of this process.
+       44             
+       45               @param[inout] A    The known system matrix
+       46             
+       47               @see ExchangeHalo
+       48             */
+       49             void SetupHalo_ref(SparseMatrix & A) {
+       50             
+       51               // Extract Matrix pieces
+       52             
+       53               local_int_t localNumberOfRows = A.localNumberOfRows;
+       54               char  * nonzerosInRow = A.nonzerosInRow;
+       55               global_int_t ** mtxIndG = A.mtxIndG;
+       56               local_int_t ** mtxIndL = A.mtxIndL;
+       57             
+       58             #ifdef HPCG_NO_MPI  // In the non-MPI case we simply copy global indices to local index storage
+       59             #ifndef HPCG_NO_OPENMP
+       60               #pragma omp parallel for
+       61             #endif
+       62   p           for (local_int_t i=0; i< localNumberOfRows; i++) {
+       63   p             int cur_nnz = nonzerosInRow[i];
+       64   p     2       for (int j=0; j<cur_nnz; j++) mtxIndL[i][j] = mtxIndG[i][j];
+       65   p           }
+       66             
+       67             #else // Run this section if compiling for MPI
+       68             
+       69               // Scan global IDs of the nonzeros in the matrix.  Determine if the column ID matches a row ID.  If not:
+       70               // 1) We call the ComputeRankOfMatrixRow function, which tells us the rank of the processor owning the row ID.
+       71               //  We need to receive this value of the x vector during the halo exchange.
+       72               // 2) We record our row ID since we know that the other processor will need this value from us, due to symmetry.
+       73             
+       74               std::map< int, std::set< global_int_t> > sendList, receiveList;
+       75               typedef std::map< int, std::set< global_int_t> >::iterator map_iter;
+       76               typedef std::set<global_int_t>::iterator set_iter;
+       77               std::map< local_int_t, local_int_t > externalToLocalMap;
+       78             
+       79               // TODO: With proper critical and atomic regions, this loop could be threaded, but not attempting it at this time
+       80               for (local_int_t i=0; i< localNumberOfRows; i++) {
+       81                 global_int_t currentGlobalRow = A.localToGlobalMap[i];
+       82                 for (int j=0; j<nonzerosInRow[i]; j++) {
+       83                   global_int_t curIndex = mtxIndG[i][j];
+       84                   int rankIdOfColumnEntry = ComputeRankOfMatrixRow(*(A.geom), curIndex);
+       85             #ifdef HPCG_DETAILED_DEBUG
+       86                   HPCG_fout << "rank, row , col, globalToLocalMap[col] = " << A.geom->rank << " " << currentGlobalRow << " "
+       87                       << curIndex << " " << A.globalToLocalMap[curIndex] << endl;
+       88             #endif
+       89                   if (A.geom->rank!=rankIdOfColumnEntry) {// If column index is not a row index, then it comes from another processor
+       90                     receiveList[rankIdOfColumnEntry].insert(curIndex);
+       91                     sendList[rankIdOfColumnEntry].insert(currentGlobalRow); // Matrix symmetry means we know the neighbor process wants my value
+       92                   }
+       93                 }
+       94               }
+       95             
+       96               // Count number of matrix entries to send and receive
+       97               local_int_t totalToBeSent = 0;
+       98               for (map_iter curNeighbor = sendList.begin(); curNeighbor != sendList.end(); ++curNeighbor) {
+       99                 totalToBeSent += (curNeighbor->second).size();
+      100               }
+      101               local_int_t totalToBeReceived = 0;
+      102               for (map_iter curNeighbor = receiveList.begin(); curNeighbor != receiveList.end(); ++curNeighbor) {
+      103                 totalToBeReceived += (curNeighbor->second).size();
+      104               }
+      105             
+      106             #ifdef HPCG_DETAILED_DEBUG
+      107               // These are all attributes that should be true, due to symmetry
+      108               HPCG_fout << "totalToBeSent = " << totalToBeSent << " totalToBeReceived = " << totalToBeReceived << endl;
+      109               assert(totalToBeSent==totalToBeReceived); // Number of sent entry should equal number of received
+      110               assert(sendList.size()==receiveList.size()); // Number of send-to neighbors should equal number of receive-from
+      111               // Each receive-from neighbor should be a send-to neighbor, and send the same number of entries
+      112               for (map_iter curNeighbor = receiveList.begin(); curNeighbor != receiveList.end(); ++curNeighbor) {
+      113                 assert(sendList.find(curNeighbor->first)!=sendList.end());
+      114                 assert(sendList[curNeighbor->first].size()==receiveList[curNeighbor->first].size());
+      115               }
+      116             #endif
+      117             
+      118               // Build the arrays and lists needed by the ExchangeHalo function.
+      119               double * sendBuffer = new double[totalToBeSent];
+      120               local_int_t * elementsToSend = new local_int_t[totalToBeSent];
+      121               int * neighbors = new int[sendList.size()];
+      122               local_int_t * receiveLength = new local_int_t[receiveList.size()];
+      123               local_int_t * sendLength = new local_int_t[sendList.size()];
+      124               int neighborCount = 0;
+      125               local_int_t receiveEntryCount = 0;
+      126               local_int_t sendEntryCount = 0;
+      127               for (map_iter curNeighbor = receiveList.begin(); curNeighbor != receiveList.end(); ++curNeighbor, ++neighborCount) {
+      128                 int neighborId = curNeighbor->first; // rank of current neighbor we are processing
+      129                 neighbors[neighborCount] = neighborId; // store rank ID of current neighbor
+      130                 receiveLength[neighborCount] = receiveList[neighborId].size();
+      131                 sendLength[neighborCount] = sendList[neighborId].size(); // Get count if sends/receives
+      132                 for (set_iter i = receiveList[neighborId].begin(); i != receiveList[neighborId].end(); ++i, ++receiveEntryCount) {
+      133                   externalToLocalMap[*i] = localNumberOfRows + receiveEntryCount; // The remote columns are indexed at end of internals
+      134                 }
+      135                 for (set_iter i = sendList[neighborId].begin(); i != sendList[neighborId].end(); ++i, ++sendEntryCount) {
+      136                   //if (geom.rank==1) HPCG_fout << "*i, globalToLocalMap[*i], sendEntryCount = " << *i << " " << A.globalToLocalMap[*i] << " " << sendEntryCount << endl;
+      137                   elementsToSend[sendEntryCount] = A.globalToLocalMap[*i]; // store local ids of entry to send
+      138                 }
+      139               }
+      140             
+      141               // Convert matrix indices to local IDs
+      142             #ifndef HPCG_NO_OPENMP
+      143               #pragma omp parallel for
+      144             #endif
+      145               for (local_int_t i=0; i< localNumberOfRows; i++) {
+      146                 for (int j=0; j<nonzerosInRow[i]; j++) {
+      147                   global_int_t curIndex = mtxIndG[i][j];
+      148                   int rankIdOfColumnEntry = ComputeRankOfMatrixRow(*(A.geom), curIndex);
+      149                   if (A.geom->rank==rankIdOfColumnEntry) { // My column index, so convert to local index
+      150                     mtxIndL[i][j] = A.globalToLocalMap[curIndex];
+      151                   } else { // If column index is not a row index, then it comes from another processor
+      152                     mtxIndL[i][j] = externalToLocalMap[curIndex];
+      153                   }
+      154                 }
+      155               }
+      156             
+      157               // Store contents in our matrix struct
+      158               A.numberOfExternalValues = externalToLocalMap.size();
+      159               A.localNumberOfColumns = A.localNumberOfRows + A.numberOfExternalValues;
+      160               A.numberOfSendNeighbors = sendList.size();
+      161               A.totalToBeSent = totalToBeSent;
+      162               A.elementsToSend = elementsToSend;
+      163               A.neighbors = neighbors;
+      164               A.receiveLength = receiveLength;
+      165               A.sendLength = sendLength;
+      166               A.sendBuffer = sendBuffer;
+      167             
+      168             #ifdef HPCG_DETAILED_DEBUG
+      169               HPCG_fout << " For rank " << A.geom->rank << " of " << A.geom->size << ", number of neighbors = " << A.numberOfSendNeighbors << endl;
+      170               for (int i = 0; i < A.numberOfSendNeighbors; i++) {
+      171                 HPCG_fout << "     rank " << A.geom->rank << " neighbor " << neighbors[i] << " send/recv length = " << sendLength[i] << "/" << receiveLength[i] << endl;
+      172                 for (local_int_t j = 0; j<sendLength[i]; ++j)
+      173                   HPCG_fout << "       rank " << A.geom->rank << " elementsToSend[" << j << "] = " << elementsToSend[j] << endl;
+      174               }
+      175             #endif
+      176             
+      177             #endif
+      178             // ifdef HPCG_NO_MPI
+      179             
+      180               return;
+      181             }
+Total prefetch num: 0
+Optimization messages
+  jwd6101s-i  "../src/SetupHalo_ref.cpp", line 64: SIMD conversion is not applied because a statement that prevents SIMD conversion exists.
+  jwd8663o-i  "../src/SetupHalo_ref.cpp", line 64: This loop is not software pipelined because the software pipelining does not improve the performance.
+  jwd8202o-i  "../src/SetupHalo_ref.cpp", line 64: Loop unrolling expanding 2 times is applied to this loop.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/SetupHalo_ref.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

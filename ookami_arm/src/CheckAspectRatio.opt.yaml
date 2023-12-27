@@ -1,0 +1,1864 @@
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 158, Column: 15 }
+Function:        _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+Args:
+  - Callee:          _ZNSt9basic_iosIcSt11char_traitsIcEE5clearESt12_Ios_Iostate
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 158, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 158, Column: 15 }
+Function:        _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+Args:
+  - Callee:          _ZNSt9basic_iosIcSt11char_traitsIcEE5clearESt12_Ios_Iostate
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 158, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 158, Column: 27 }
+Function:        _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+Args:
+  - Callee:          _ZNKSt9basic_iosIcSt11char_traitsIcEE7rdstateEv
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 138, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 158, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          setstate
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '27'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 158, Column: 37 }
+Function:        _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+Args:
+  - Callee:          _ZStorSt12_Ios_IostateS_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/ios_base.h', 
+                       Line: 170, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 158, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          setstate
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '37'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/char_traits.h', 
+                   Line: 371, Column: 9 }
+Function:        _ZNSt11char_traitsIcE6lengthEPKc
+Args:
+  - Callee:          strlen
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt11char_traitsIcE6lengthEPKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/char_traits.h', 
+                       Line: 366, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/char_traits.h', 
+                   Line: 371, Column: 9 }
+Function:        _ZNSt11char_traitsIcE6lengthEPKc
+Args:
+  - Callee:          strlen
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt11char_traitsIcE6lengthEPKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/char_traits.h', 
+                       Line: 366, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 611, Column: 2 }
+Function:        _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+Args:
+  - Callee:          _ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l
+  - String:          ' will not be inlined into '
+  - Caller:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 611, Column: 2 }
+Function:        _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+Args:
+  - Callee:          _ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l
+  - String:          ' will not be inlined into '
+  - Caller:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 609, Column: 8 }
+Function:        _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+Args:
+  - Callee:          _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 158, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '10'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          'operator<<<std::char_traits<char> >'
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '8'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 612, Column: 29 }
+Function:        _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+Args:
+  - Callee:          _ZNSt11char_traitsIcE6lengthEPKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/char_traits.h', 
+                       Line: 366, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '0'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          'operator<<<std::char_traits<char> >'
+  - String:          ':'
+  - Line:            '6'
+  - String:          ':'
+  - Column:          '29'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 221, Column: 16 }
+Function:        _ZNSolsEd
+Args:
+  - Callee:          _ZNSo9_M_insertIdEERSoT_
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSolsEd
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 221, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 221, Column: 16 }
+Function:        _ZNSolsEd
+Args:
+  - Callee:          _ZNSo9_M_insertIdEERSoT_
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSolsEd
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 221, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 50, Column: 2 }
+Function:        _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
+Args:
+  - Callee:          _ZSt16__throw_bad_castv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 48, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 50, Column: 2 }
+Function:        _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
+Args:
+  - Callee:          _ZSt16__throw_bad_castv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 48, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 879, Column: 8 }
+Function:        _ZNKSt5ctypeIcE5widenEc
+Args:
+  - Callee:          _ZNKSt5ctypeIcE13_M_widen_initEv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNKSt5ctypeIcE5widenEc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 876, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 879, Column: 8 }
+Function:        _ZNKSt5ctypeIcE5widenEc
+Args:
+  - Callee:          _ZNKSt5ctypeIcE13_M_widen_initEv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNKSt5ctypeIcE5widenEc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 876, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _ZNKSt5ctypeIcE5widenEc
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _ZNKSt5ctypeIcE5widenEc
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 450, Column: 16 }
+Function:        _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
+Args:
+  - Callee:          _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 48, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 450, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '5'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          widen
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '16'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 450, Column: 40 }
+Function:        _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
+Args:
+  - Callee:          _ZNKSt5ctypeIcE5widenEc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 876, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 450, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '45'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          widen
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '40'
+  - String:          ';'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 704, Column: 19 }
+Function:        _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+Args:
+  - Callee:          _ZNSo5flushEv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 704, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 704, Column: 19 }
+Function:        _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+Args:
+  - Callee:          _ZNSo5flushEv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 704, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 25 }
+Function:        _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+Args:
+  - Callee:          _ZNSo3putEc
+  - String:          ' will not be inlined into '
+  - Caller:          _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 682, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 25 }
+Function:        _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+Args:
+  - Callee:          _ZNSo3putEc
+  - String:          ' will not be inlined into '
+  - Caller:          _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 682, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 34 }
+Function:        _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+Args:
+  - Callee:          _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                       Line: 450, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 682, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '85'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          'endl<char, std::char_traits<char> >'
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '34'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 14 }
+Function:        _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+Args:
+  - Callee:          _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 704, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 682, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '0'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          'endl<char, std::char_traits<char> >'
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '14'
+  - String:          ';'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 49 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSolsEi
+  - String:          ' will not be inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 61 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSolsEi
+  - String:          ' will not be inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 73 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSolsEi
+  - String:          ' will not be inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 40, Column: 17 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSo5flushEv
+  - String:          ' will not be inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 49 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSolsEi
+  - String:          ' will not be inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 61 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSolsEi
+  - String:          ' will not be inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 73 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSolsEi
+  - String:          ' will not be inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 40, Column: 17 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSo5flushEv
+  - String:          ' will not be inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 32, Column: 35 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZSt3minIiERKT_S2_S2_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/stl_algobase.h', 
+                       Line: 231, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-20'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '35'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 32, Column: 26 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZSt3minIiERKT_S2_S2_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/stl_algobase.h', 
+                       Line: 231, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-20'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '26'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 32, Column: 72 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZSt3maxIiERKT_S2_S2_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/stl_algobase.h', 
+                       Line: 255, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-20'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '72'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 32, Column: 63 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZSt3maxIiERKT_S2_S2_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/stl_algobase.h', 
+                       Line: 255, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-20'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '63'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 17 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '40'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '17'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 27 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '110'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '27'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 35 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '40'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '35'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 54 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '40'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '54'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 66 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '40'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '66'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 36, Column: 78 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '40'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '78'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 37, Column: 66 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSolsEd
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 221, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '0'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '6'
+  - String:          ':'
+  - Column:          '66'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 37, Column: 83 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '40'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '6'
+  - String:          ':'
+  - Column:          '83'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 38, Column: 36 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSolsEd
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 221, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '0'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '7'
+  - String:          ':'
+  - Column:          '36'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 38, Column: 54 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '40'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '7'
+  - String:          ':'
+  - Column:          '54'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 38, Column: 74 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSolsEPFRSoS_E
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 109, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-175'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '7'
+  - String:          ':'
+  - Column:          '74'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 39, Column: 17 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 607, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '40'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '17'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 39, Column: 88 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZNSolsEPFRSoS_E
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 109, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-175'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '88'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 113, Column: 9 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 682, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '180'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          'operator<<'
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '9'
+  - String:          ' @ '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '7'
+  - String:          ':'
+  - Column:          '74'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 113, Column: 9 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - Callee:          _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 682, Column: 0 }
+  - String:          ' inlined into '
+  - Caller:          _Z16CheckAspectRatiodiiiPKcb
+    DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '180'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          'operator<<'
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '9'
+  - String:          ' @ '
+  - String:          CheckAspectRatio
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '88'
+  - String:          ';'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 609, Column: 2 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 29 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 29 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i64
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 450, Column: 30 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            '%"class.std::ctype"*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 877, Column: 6 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 878, Column: 11 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 29 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 609, Column: 2 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 29 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i64
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 450, Column: 30 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            '%"class.std::ctype"*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 877, Column: 6 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 878, Column: 11 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 609, Column: 2 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 29 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 29 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i64
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 450, Column: 30 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            '%"class.std::ctype"*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 877, Column: 6 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 878, Column: 11 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 29 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8*'
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 609, Column: 2 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 29 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i64
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/basic_ios.h', 
+                   Line: 450, Column: 30 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            '%"class.std::ctype"*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 877, Column: 6 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 878, Column: 11 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            i8
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                       Line: 611, Column: 2 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)**'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 880, Column: 15 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'load of type '
+  - Type:            'i8 (%"class.std::ctype"*, i8)*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                       Line: 879, Column: 8 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 32, Column: 26 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '9'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - NumStackBytes:   '80'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '23'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 34, Column: 7 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 611, Column: 2 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '11'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/char_traits.h', 
+                   Line: 371, Column: 9 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 609, Column: 2 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 611, Column: 2 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '52'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 877, Column: 6 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 878, Column: 11 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 879, Column: 8 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 25 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '13'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 877, Column: 6 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 878, Column: 11 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/bits/locale_facets.h', 
+                   Line: 879, Column: 8 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: 'software/arm/22.1/gcc-11.2.0_Generic-AArch64_RHEL-8_aarch64-linux/lib/gcc/aarch64-linux-gnu/11.2.0/../../../../include/c++/11.2.0/ostream', 
+                   Line: 682, Column: 25 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 51, Column: 1 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 0, Column: 0 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/CheckAspectRatio.cpp', Line: 31, Column: 0 }
+Function:        _Z16CheckAspectRatiodiiiPKcb
+Args:
+  - NumInstructions: '153'
+  - String:          ' instructions in function'
+...

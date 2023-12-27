@@ -1,0 +1,131 @@
+Fujitsu C/C++ Version 4.7.0   Fri Nov 25 10:53:59 2022
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/ComputeSPMV_ref.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file ComputeSPMV_ref.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #include "ComputeSPMV_ref.hpp"
+       22             
+       23             #ifndef HPCG_NO_MPI
+       24             #include "ExchangeHalo.hpp"
+       25             #endif
+       26             
+       27             #ifndef HPCG_NO_OPENMP
+       28             #include <omp.h>
+       29             #endif
+       30             #include <cassert>
+       31             
+       32             /*!
+       33               Routine to compute matrix vector product y = Ax where:
+       34               Precondition: First call exchange_externals to get off-processor values of x
+       35             
+       36               This is the reference SPMV implementation.  It CANNOT be modified for the
+       37               purposes of this benchmark.
+       38             
+       39               @param[in]  A the known system matrix
+       40               @param[in]  x the known vector
+       41               @param[out] y the On exit contains the result: Ax.
+       42             
+       43               @return returns 0 upon success and non-zero otherwise
+       44             
+       45               @see ComputeSPMV
+       46             */
+       47             int ComputeSPMV_ref( const SparseMatrix & A, Vector & x, Vector & y) {
+       48             
+       49               assert(x.localLength>=A.localNumberOfColumns); // Test vector lengths
+       50               assert(y.localLength>=A.localNumberOfRows);
+       51             
+       52             #ifndef HPCG_NO_MPI
+       53                 ExchangeHalo(A,x);
+       54             #endif
+       55               const double * const xv = x.values;
+       56               double * const yv = y.values;
+       57               const local_int_t nrow = A.localNumberOfRows;
+       58             #ifndef HPCG_NO_OPENMP
+       59               #pragma omp parallel for
+       60             #endif
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       61   p           for (local_int_t i=0; i< nrow; i++)  {
+       62   p             double sum = 0.0;
+       63   p             const double * const cur_vals = A.matrixValues[i];
+       64   p             const local_int_t * const cur_inds = A.mtxIndL[i];
+       65   p             const int cur_nnz = A.nonzerosInRow[i];
+       66             
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 1.16, ITR: 192, MVE: 2, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       67   p     8v      for (int j=0; j< cur_nnz; j++)
+       68   p     8v        sum += cur_vals[j]*xv[cur_inds[j]];
+       69   p             yv[i] = sum;
+       70   p           }
+       71               return 0;
+       72             }
+Total prefetch num: 0
+Optimization messages
+  jwd6004s-i  "../src/ComputeSPMV_ref.cpp", line 67: SIMD conversion is applied to this loop with the loop variable 'j'. The loop contains a reduction operation.
+  jwd8204o-i  "../src/ComputeSPMV_ref.cpp", line 67: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeSPMV_ref.cpp", line 67: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 192.
+  jwd8208o-i  "../src/ComputeSPMV_ref.cpp", line 68: Method of calculating sum or product is changed.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DHPCG_MAN_OPT_SCHEDULE_ON -I./src -I./src/OOKAMI_OMP_FJ -I/lustre/software/arm/22.1/armpl-22.1.0_AArch64_RHEL-8_arm-linux-compiler_aarch64-linux/include -Kfast -KSVE -Kopenmp -Koptmsg=2 -Nlst=t -Kocl -I../src -o src/ComputeSPMV_ref.o
+    Effective options    : -g0 -mt -Qy -std=gnu++14 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_3_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

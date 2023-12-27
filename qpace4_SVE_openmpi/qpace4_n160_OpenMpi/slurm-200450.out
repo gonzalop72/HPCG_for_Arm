@@ -1,0 +1,26 @@
+[qp4-node-062:93720] MCW rank 1 bound to socket 1[core 12[hwt 0]], socket 1[core 13[hwt 0]], socket 1[core 14[hwt 0]], socket 1[core 15[hwt 0]], socket 1[core 16[hwt 0]], socket 1[core 17[hwt 0]], socket 1[core 18[hwt 0]], socket 1[core 19[hwt 0]], socket 1[core 20[hwt 0]], socket 1[core 21[hwt 0]], socket 1[core 22[hwt 0]], socket 1[core 23[hwt 0]]: [./././././././././././.][B/B/B/B/B/B/B/B/B/B/B/B][./././././././././././.][./././././././././././.]
+[qp4-node-062:93720] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [B/B/B/B/B/B/B/B/B/B/B/B][./././././././././././.][./././././././././././.][./././././././././././.]
+[qp4-node-064:80352] MCW rank 4 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [B/B/B/B/B/B/B/B/B/B/B/B][./././././././././././.][./././././././././././.][./././././././././././.]
+[qp4-node-064:80352] MCW rank 5 bound to socket 1[core 12[hwt 0]], socket 1[core 13[hwt 0]], socket 1[core 14[hwt 0]], socket 1[core 15[hwt 0]], socket 1[core 16[hwt 0]], socket 1[core 17[hwt 0]], socket 1[core 18[hwt 0]], socket 1[core 19[hwt 0]], socket 1[core 20[hwt 0]], socket 1[core 21[hwt 0]], socket 1[core 22[hwt 0]], socket 1[core 23[hwt 0]]: [./././././././././././.][B/B/B/B/B/B/B/B/B/B/B/B][./././././././././././.][./././././././././././.]
+[qp4-node-063:80256] MCW rank 2 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]], socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]]: [B/B/B/B/B/B/B/B/B/B/B/B][./././././././././././.][./././././././././././.][./././././././././././.]
+[qp4-node-063:80256] MCW rank 3 bound to socket 1[core 12[hwt 0]], socket 1[core 13[hwt 0]], socket 1[core 14[hwt 0]], socket 1[core 15[hwt 0]], socket 1[core 16[hwt 0]], socket 1[core 17[hwt 0]], socket 1[core 18[hwt 0]], socket 1[core 19[hwt 0]], socket 1[core 20[hwt 0]], socket 1[core 21[hwt 0]], socket 1[core 22[hwt 0]], socket 1[core 23[hwt 0]]: [./././././././././././.][B/B/B/B/B/B/B/B/B/B/B/B][./././././././././././.][./././././././././././.]
+[qp4-node-063:80262:0:80262] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+==== backtrace (tid:  80262) ====
+ 0  /lib64/libucs.so.0(ucs_handle_error+0x28c) [0x400002f0f0dc]
+ 1  /lib64/libucs.so.0(+0x1f28c) [0x400002f0f28c]
+ 2  /lib64/libucs.so.0(+0x1f474) [0x400002f0f474]
+ 3  linux-vdso.so.1(__kernel_rt_sigreturn+0) [0x4000000707a0]
+=================================
+[qp4-node-063:80262] *** Process received signal ***
+[qp4-node-063:80262] Signal: Segmentation fault (11)
+[qp4-node-063:80262] Signal code:  (-6)
+[qp4-node-063:80262] Failing at address: 0x4cfc00013986
+[qp4-node-063:80262] [ 0] linux-vdso.so.1(__kernel_rt_sigreturn+0x0)[0x4000000707a0]
+[qp4-node-063:80262] *** End of error message ***
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 2 with PID 80262 on node qp4-node-063 exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------

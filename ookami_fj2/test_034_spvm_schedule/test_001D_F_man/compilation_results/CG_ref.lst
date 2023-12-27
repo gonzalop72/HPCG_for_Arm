@@ -1,0 +1,241 @@
+Fujitsu C/C++ Version 4.7.0   Fri Jul 21 02:57:29 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/CG_ref.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file CG_ref.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #include <fstream>
+       22             
+       23             #include <cmath>
+       24             
+       25             #include "hpcg.hpp"
+       26             
+       27             #include "CG_ref.hpp"
+       28             #include "mytimer.hpp"
+       29             #include "ComputeSPMV_ref.hpp"
+       30             #include "ComputeMG_ref.hpp"
+       31             #include "ComputeDotProduct_ref.hpp"
+       32             #include "ComputeWAXPBY_ref.hpp"
+       33             
+       34             
+       35             // Use TICK and TOCK to time a code section in MATLAB-like fashion
+       36             #define TICK()  t0 = mytimer() //!< record current time in 't0'
+       37             #define TOCK(t) t += mytimer() - t0 //!< store time difference in 't' using time in 't0'
+       38             
+       39             /*!
+       40               Reference routine to compute an approximate solution to Ax = b
+       41             
+       42               @param[inout] A    The known system matrix
+       43               @param[inout] data The data structure with all necessary CG vectors preallocated
+       44               @param[in]    b    The known right hand side vector
+       45               @param[inout] x    On entry: the initial guess; on exit: the new approximate solution
+       46               @param[in]    max_iter  The maximum number of iterations to perform, even if tolerance is not met.
+       47               @param[in]    tolerance The stopping criterion to assert convergence: if norm of residual is <= to tolerance.
+       48               @param[out]   niters    The number of iterations actually performed.
+       49               @param[out]   normr     The 2-norm of the residual vector after the last iteration.
+       50               @param[out]   normr0    The 2-norm of the residual vector before the first iteration.
+       51               @param[out]   times     The 7-element vector of the timing information accumulated during all of the iterations.
+       52               @param[in]    doPreconditioning The flag to indicate whether the preconditioner should be invoked at each iteration.
+       53             
+       54               @return Returns zero on success and a non-zero value otherwise.
+       55             
+       56               @see CG()
+       57             */
+       58             int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
+       59                 const int max_iter, const double tolerance, int & niters, double & normr, double & normr0,
+       60                 double * times, bool doPreconditioning) {
+       61             
+       62               double t_begin = mytimer();  // Start timing right away
+       63               normr = 0.0;
+       64               double rtz = 0.0, oldrtz = 0.0, alpha = 0.0, beta = 0.0, pAp = 0.0;
+       65             
+       66             
+       67               double t0 = 0.0, t1 = 0.0, t2 = 0.0, t3 = 0.0, t4 = 0.0, t5 = 0.0;
+       68             //#ifndef HPCG_NO_MPI
+       69             //  double t6 = 0.0;
+       70             //#endif
+       71             
+       72               local_int_t nrow = A.localNumberOfRows;
+       73             
+       74               Vector & r = data.r; // Residual vector
+       75               Vector & z = data.z; // Preconditioned residual vector
+       76               Vector & p = data.p; // Direction vector (in MPI mode ncol>=nrow)
+       77               Vector & Ap = data.Ap;
+       78             
+       79    i          if (!doPreconditioning && A.geom->rank==0) HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << std::endl;
+       80             
+       81             #ifdef HPCG_DEBUG
+       82               int print_freq = 1;
+       83               if (print_freq>50) print_freq=50;
+       84               if (print_freq<1)  print_freq=1;
+       85             #endif
+       86               // p is of length ncols, copy x to p for sparse MV operation
+       87    i          CopyVector(x, p);
+       88               TICK(); ComputeSPMV_ref(A, p, Ap);  TOCK(t3); // Ap = A*p
+       89               TICK(); ComputeWAXPBY_ref(nrow, 1.0, b, -1.0, Ap, r); TOCK(t2); // r = b - Ax (x stored in p)
+       90               TICK(); ComputeDotProduct_ref(nrow, r, r, normr, t4);  TOCK(t1);
+       91               normr = sqrt(normr);
+       92             #ifdef HPCG_DEBUG
+       93               if (A.geom->rank==0) HPCG_fout << "Initial Residual = "<< normr << std::endl;
+       94             #endif
+       95             
+       96               // Record initial residual for convergence testing
+       97               normr0 = normr;
+       98             
+       99               // Start iterations
+      100             
+      101               for (int k=1; k<=max_iter && normr/normr0 > tolerance; k++ ) {
+      102                 TICK();
+      103                 if (doPreconditioning)
+      104                   ComputeMG_ref(A, r, z); // Apply preconditioner
+      105                 else
+      106                   ComputeWAXPBY_ref(nrow, 1.0, r, 0.0, r, z); // copy r to z (no preconditioning)
+      107                 TOCK(t5); // Preconditioner apply time
+      108             
+      109                 if (k == 1) {
+      110    i              CopyVector(z, p); TOCK(t2); // Copy Mr to p
+      111                   TICK(); ComputeDotProduct_ref(nrow, r, z, rtz, t4); TOCK(t1); // rtz = r'*z
+      112                 } else {
+      113                   oldrtz = rtz;
+      114                   TICK(); ComputeDotProduct_ref(nrow, r, z, rtz, t4); TOCK(t1); // rtz = r'*z
+      115                   beta = rtz/oldrtz;
+      116                   TICK(); ComputeWAXPBY_ref(nrow, 1.0, z, beta, p, p);  TOCK(t2); // p = beta*p + z
+      117                 }
+      118             
+      119                 TICK(); ComputeSPMV_ref(A, p, Ap); TOCK(t3); // Ap = A*p
+      120                 TICK(); ComputeDotProduct_ref(nrow, p, Ap, pAp, t4); TOCK(t1); // alpha = p'*Ap
+      121                 alpha = rtz/pAp;
+      122                 TICK(); ComputeWAXPBY_ref(nrow, 1.0, x, alpha, p, x);// x = x + alpha*p
+      123                         ComputeWAXPBY_ref(nrow, 1.0, r, -alpha, Ap, r);  TOCK(t2);// r = r - alpha*Ap
+      124                 TICK(); ComputeDotProduct_ref(nrow, r, r, normr, t4); TOCK(t1);
+      125                 normr = sqrt(normr);
+      126             #ifdef HPCG_DEBUG
+      127                 if (A.geom->rank==0 && (k%print_freq == 0 || k == max_iter))
+      128                   HPCG_fout << "Iteration = "<< k << "   Scaled Residual = "<< normr/normr0 << std::endl;
+      129             #endif
+      130                 niters = k;
+      131               }
+      132             
+      133               // Store times
+      134               times[1] += t1; // dot product time
+      135               times[2] += t2; // WAXPBY time
+      136               times[3] += t3; // SPMV time
+      137               times[4] += t4; // AllReduce time
+      138               times[5] += t5; // preconditioner apply time
+      139             //#ifndef HPCG_NO_MPI
+      140             //  times[6] += t6; // exchange halo time
+      141             //#endif
+      142               times[0] += mytimer() - t_begin;  // Total time. All done...
+      143               return 0;
+      144             }
+      145             
+Total prefetch num: 0
+Optimization messages
+  jwd8101o-i  "../src/CG_ref.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EEC1Ev'.
+  jwd8101o-i  "../src/CG_ref.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1EOS5_'.
+  jwd8101o-i  "../src/CG_ref.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1Emc'.
+  jwd8101o-i  "../src/CG_ref.cpp", line 0: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEEC1EOS5_'.
+  jwd8101o-i  "../src/CG_ref.cpp", line 79: Inline expansion is applied to the user defined function '_ZNSt3__1lsINS_11char_traitsIcEEEERNS_13basic_ostreamIcT_EES6_PKc'.
+  jwd8101o-i  "../src/CG_ref.cpp", line 79: Inline expansion is applied to the user defined function '_ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEPFRS3_S4_E'.
+  jwd8101o-i  "../src/CG_ref.cpp", line 87: Inline expansion is applied to the user defined function '_Z10CopyVectorRK13Vector_STRUCTRS_'.
+  jwd6208s-i  "../src/Vector.hpp", line 99: SIMD conversion is not applied to this loop because the uncertain order of the definition and reference to variable 'wv' may cause different results from serial execution.
+  jwd8663o-i  "../src/Vector.hpp", line 99: This loop is not software pipelined because the software pipelining does not improve the performance.
+  jwd8101o-i  "../src/CG_ref.cpp", line 110: Inline expansion is applied to the user defined function '_Z10CopyVectorRK13Vector_STRUCTRS_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 589: Inline expansion is applied to the user defined function '_ZNSt3__18ios_base8setstateEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 696: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5rdbufEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 734: Inline expansion is applied to the user defined function '_ZNSt3__19use_facetINS_5ctypeIcEEEERKT_RKNS_6localeE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 734: Inline expansion is applied to the user defined function '_ZNKSt3__15ctypeIcE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 742: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE11eq_int_typeEii'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ios", line 743: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 752: Inline expansion is applied to the user defined function '_ZNKSt3__113basic_ostreamIcNS_11char_traitsIcEEE6sentrycvbEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNSt3__119ostreambuf_iteratorIcNS_11char_traitsIcEEEC1ERNS_13basic_ostreamIcS2_EE'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5flagsEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE4fillEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 755: Inline expansion is applied to the user defined function '_ZNKSt3__119ostreambuf_iteratorIcNS_11char_traitsIcEEE6failedEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 763: Inline expansion is applied to the user defined function '_ZNSt3__19basic_iosIcNS_11char_traitsIcEEE8setstateEj'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 894: Inline expansion is applied to the user defined function '_ZNSt3__111char_traitsIcE6lengthEPKc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/iterator", line 925: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5rdbufEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 932: Inline expansion is applied to the user defined function '_ZNSt3__19addressofIKcEEPT_RS2_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/ostream", line 1034: Inline expansion is applied to the user defined function '_ZNKSt3__19basic_iosIcNS_11char_traitsIcEEE5widenEc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1490: Inline expansion is applied to the user defined function '_ZNKSt3__18ios_base5widthEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1498: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1506: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC1Emc'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1507: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE4dataEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1507: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1516: Inline expansion is applied to the user defined function '_ZNSt3__115basic_streambufIcNS_11char_traitsIcEEE5sputnEPKcl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/locale", line 1522: Inline expansion is applied to the user defined function '_ZNSt3__18ios_base5widthEl'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1626: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE13__get_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1626: Inline expansion is applied to the user defined function '_ZNSt3__116__to_raw_pointerIKcEEPT_S3_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1690: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1772: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1778: Inline expansion is applied to the user defined function '_ZNKSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1778: Inline expansion is applied to the user defined function '_ZNSt3__114pointer_traitsIPKcE10pointer_toERS1_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE9__is_longEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE18__get_long_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1784: Inline expansion is applied to the user defined function '_ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE19__get_short_pointerEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1789: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 1789: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_E5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2106: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRNS_17__compressed_pairINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES6_EEEEONS_16remove_referenceIT_E4typeEOSC_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2106: Inline expansion is applied to the user defined function '_ZNSt3__14moveIRNS_17__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES6_EEEEONS_16remove_referenceIT_E4typeEOSC_'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2107: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE6__zeroEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2107: Inline expansion is applied to the user defined function '_ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__zeroEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/string", line 2163: Inline expansion is applied to the user defined function '_ZNSt3__117__compressed_pairINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_EC1Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2414: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EEC2Ev'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2469: Inline expansion is applied to the user defined function '_ZNSt3__128__libcpp_compressed_pair_impINS_12basic_stringIwNS_11char_traitsIwEENS_9allocatorIwEEE5__repES5_Lj2EE5firstEv'.
+  jwd8101o-i  "/opt/FJSVstclanga/cp-1.0.21.01/bin/../include/libc++/v371/memory", line 2470: Inline expansion is applied to the user defined function '_ZNKSt3__128__libcpp_compressed_pair_impINS_12basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE5__repES5_Lj2EE5firstEv'.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DUNROLLING_4_B -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/CG_ref.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

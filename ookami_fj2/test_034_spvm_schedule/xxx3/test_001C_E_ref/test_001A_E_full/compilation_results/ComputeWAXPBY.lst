@@ -1,0 +1,294 @@
+Fujitsu C/C++ Version 4.7.0   Tue Jul 18 15:53:33 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2
+  Source file       : ../src/ComputeWAXPBY.cpp
+(line-no.)(optimize)
+        1             /*
+        2              *
+        3              *  SPDX-License-Identifier: Apache-2.0
+        4              *
+        5              *  Copyright (C) 2019, Arm Limited and contributors
+        6              *
+        7              *  Licensed under the Apache License, Version 2.0 (the "License");
+        8              *  you may not use this file except in compliance with the License.
+        9              *  You may obtain a copy of the License at
+       10              *
+       11              *      http://www.apache.org/licenses/LICENSE-2.0
+       12              *
+       13              *  Unless required by applicable law or agreed to in writing, software
+       14              *  distributed under the License is distributed on an "AS IS" BASIS,
+       15              *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       16              *  See the License for the specific language governing permissions and
+       17              *  limitations under the License.
+       18              *
+       19              */
+       20             
+       21             
+       22             //@HEADER
+       23             // ***************************************************
+       24             //
+       25             // HPCG: High Performance Conjugate Gradient Benchmark
+       26             //
+       27             // Contact:
+       28             // Michael A. Heroux ( maherou@sandia.gov)
+       29             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       30             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       31             //
+       32             // ***************************************************
+       33             //@HEADER
+       34             
+       35             /*!
+       36              @file ComputeWAXPBY.cpp
+       37             
+       38              HPCG routine
+       39              */
+       40             
+       41             #include "ComputeWAXPBY.hpp"
+       42             #include "ComputeWAXPBY_ref.hpp"
+       43             #include <cassert>
+       44             
+       45             #ifndef HPCG_NO_OPENMP
+       46             #include <omp.h>
+       47             #endif
+       48             
+       49             #ifdef HPCG_USE_WAXPBY_ARMPL
+       50             #include "armpl.h"
+       51             #endif
+       52             
+       53             #ifdef HPCG_USE_SVE
+       54             #include "arm_sve.h"
+       55             #endif
+       56             
+       57             
+       58             /*!
+       59               Routine to compute the update of a vector with the sum of two
+       60               scaled vectors where: w = alpha*x + beta*y
+       61             
+       62               This routine calls the reference WAXPBY implementation by default, but
+       63               can be replaced by a custom, optimized routine suited for
+       64               the target system.
+       65             
+       66               @param[in] n the number of vector elements (on this processor)
+       67               @param[in] alpha, beta the scalars applied to x and y respectively.
+       68               @param[in] x, y the input vectors
+       69               @param[out] w the output vector
+       70               @param[out] isOptimized should be set to false if this routine uses the reference implementation (is not optimized); otherwise leave it unchanged
+       71             
+       72               @return returns 0 upon success and non-zero otherwise
+       73             
+       74               @see ComputeWAXPBY_ref
+       75             */
+       76             int ComputeWAXPBY(const local_int_t n, const double alpha, const Vector & x,
+       77                 const double beta, const Vector & y, Vector & w, bool & isOptimized) {
+       78             
+       79             	assert(x.localLength >= n);
+       80             	assert(y.localLength >= n);
+       81             	
+       82             	const double * const xv = x.values;
+       83             	const double * const yv = y.values;
+       84             	double * const wv = w.values;
+       85             
+       86             #if (defined __armclang_version__ || defined __FUJITSU) && defined HPCG_USE_SVE && !defined WAXPBY_AUTO_OPT
+       87             	if ( alpha == 1.0 && beta == 1.0 ) {
+       88             		// w[i] = xv[i] + yv[i]
+       89             #ifndef HPCG_NO_OPENMP
+       90             #pragma omp parallel for
+       91             #endif
+       92             		for ( local_int_t i = 0; i < n; i += svcntd() ) {
+       93             			svbool_t pg = svwhilelt_b64(i, n);
+       94             
+       95             			svfloat64_t svx = svld1(pg, &xv[i]);
+       96             			svfloat64_t svy = svld1(pg, &yv[i]);
+       97             
+       98             			svfloat64_t svw = svadd_f64_z(pg, svx, svy);
+       99             
+      100             			svst1_f64(pg, &wv[i], svw);
+      101             		}
+      102             	} else if ( alpha == 1.0 ) {
+      103             		// w[i] = xv[i] + beta*yv[i]
+      104             		svfloat64_t svb = svdup_f64(beta);
+      105             #ifndef HPCG_NO_OPENMP
+      106             #pragma omp parallel for
+      107             #endif
+      108             		for ( local_int_t i = 0; i < n; i += svcntd() ) {
+      109             			svbool_t pg = svwhilelt_b64(i, n);
+      110             
+      111             			svfloat64_t svx = svld1(pg, &xv[i]);
+      112             			svfloat64_t svy = svld1(pg, &yv[i]);
+      113             
+      114             			svfloat64_t svw = svmla_f64_z(pg, svx, svb, svy);
+      115             
+      116             			svst1_f64(pg, &wv[i], svw);
+      117             		}
+      118             	} else if ( beta == 1.0 ) {
+      119             		// w[i] = alpha*xv[i] + yv[i]
+      120             		svfloat64_t sva = svdup_f64(alpha);
+      121             #ifndef HPCG_NO_OPENMP
+      122             #pragma omp parallel for
+      123             #endif
+      124             		for ( local_int_t i = 0; i < n; i += svcntd() ) {
+      125             			svbool_t pg = svwhilelt_b64(i, n);
+      126             
+      127             			svfloat64_t svx = svld1(pg, &xv[i]);
+      128             			svfloat64_t svy = svld1(pg, &yv[i]);
+      129             
+      130             			svfloat64_t svw = svmad_f64_z(pg, svx, sva, svy);
+      131             
+      132             			svst1_f64(pg, &wv[i], svw);
+      133             		}
+      134             	} else {
+      135             		// w[i] = alpha*xv[i] + beta*yv[i]
+      136             		svfloat64_t sva = svdup_f64(alpha);
+      137             		svfloat64_t svb = svdup_f64(beta);
+      138             #ifndef HPCG_NO_OPENMP
+      139             #pragma omp parallel for
+      140             #endif
+      141             		for ( local_int_t i = 0; i < n; i += svcntd() ) {
+      142             			svbool_t pg = svwhilelt_b64(i, n);
+      143             
+      144             			svfloat64_t svx = svld1(pg, &xv[i]);
+      145             			svfloat64_t svy = svld1(pg, &yv[i]);
+      146             
+      147             			svfloat64_t svax = svmul_f64_z(pg, svx, sva);
+      148             
+      149             			svfloat64_t svw = svmad_f64_z(pg, svb, svy, svax);
+      150             
+      151             			svst1_f64(pg, &wv[i], svw);
+      152             		}
+      153             	}
+      154             
+      155             
+      156             #else
+      157             
+      158             #ifdef HPCG_USE_WAXPBY_ARMPL
+      159             #ifndef HPCG_NO_OPENMP
+      160             #pragma omp parallel default(shared)
+      161             	{
+      162             		local_int_t nthreads = omp_get_num_threads();
+      163             		local_int_t elemsPerThread = n / nthreads;
+      164             		local_int_t threadID = omp_get_thread_num();
+      165             		local_int_t firstElement = elemsPerThread * threadID;
+      166             		local_int_t lastElement = firstElement + elemsPerThread;
+      167             		if ( elemsPerThread * nthreads != n && threadID == nthreads-1 ) {
+      168             			lastElement = n;
+      169             		}
+      170             
+      171             		BLAS_dwaxpby_x(lastElement-firstElement, alpha, &xv[firstElement], 1, beta, &yv[firstElement], 1, &wv[firstElement], 1, blas_prec_double);
+      172             	}
+      173             #else // HPCG_NO_OPENMP
+      174             	BLAS_dwaxpby_x(n, alpha, xv, 1, beta, yv, 1, wv, 1, blas_prec_double);
+      175             #endif // HPCG_NO_OPENMP
+      176             
+      177             #else //HPCG_USE_WAXPBY_ARMPL
+      178             	if ( alpha == 1.0 && beta == 1.0 ) {
+      179             #ifndef HPCG_NO_OPENMP
+      180             #pragma omp parallel for
+      181             #endif //HPCG_NO_OPENMP
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 2.75, ITR: 176, MVE: 6, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+      182   p     2v  		for ( local_int_t i = 0; i < n; i++ ) {
+      183   p     2v  			wv[i] = xv[i] + yv[i];
+      184   p     2v  		}
+      185             	} else if ( alpha == 1.0 ) {
+      186             #ifndef HPCG_NO_OPENMP
+      187             #pragma omp parallel for
+      188             #endif //HPCG_NO_OPENMP
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 2.75, ITR: 176, MVE: 6, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+      189   p     2v  		for ( local_int_t i = 0; i < n; i++ ) {
+      190   p     2v  			wv[i] = xv[i] + beta*yv[i];
+      191   p     2v  		}
+      192             	} else if ( beta == 1.0 ) {
+      193             #ifndef HPCG_NO_OPENMP
+      194             #pragma omp parallel for
+      195             #endif //HPCG_NO_OPENMP
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 2.75, ITR: 176, MVE: 6, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+      196   p     2v  		for ( local_int_t i = 0; i < n; i++ ) {
+      197   p     2v  			wv[i] = alpha*xv[i] + yv[i];
+      198   p     2v  		}
+      199             	} else {
+      200             #ifndef HPCG_NO_OPENMP
+      201             #pragma omp parallel for
+      202             #endif //HPCG_NO_OPENMP
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 3.25, ITR: 272, MVE: 9, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+      203   p     2v  		for ( local_int_t i = 0; i < n; i++ ) {
+      204   p     2v  			wv[i] = alpha*xv[i] + beta*yv[i];
+      205   p     2v  		}
+      206             	}
+      207             #endif // HPCG_USE_WAXPBY_ARMPL
+      208             #endif // HPCG_USE_SVE
+      209             
+      210             	return 0;
+      211             }
+Total prefetch num: 0
+Optimization messages
+  jwd6001s-i  "../src/ComputeWAXPBY.cpp", line 182: SIMD conversion is applied to this loop with the loop variable 'i'.
+  jwd8204o-i  "../src/ComputeWAXPBY.cpp", line 182: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeWAXPBY.cpp", line 182: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 176.
+  jwd6001s-i  "../src/ComputeWAXPBY.cpp", line 189: SIMD conversion is applied to this loop with the loop variable 'i'.
+  jwd8204o-i  "../src/ComputeWAXPBY.cpp", line 189: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeWAXPBY.cpp", line 189: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 176.
+  jwd6001s-i  "../src/ComputeWAXPBY.cpp", line 196: SIMD conversion is applied to this loop with the loop variable 'i'.
+  jwd8204o-i  "../src/ComputeWAXPBY.cpp", line 196: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeWAXPBY.cpp", line 196: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 176.
+  jwd6001s-i  "../src/ComputeWAXPBY.cpp", line 203: SIMD conversion is applied to this loop with the loop variable 'i'.
+  jwd8204o-i  "../src/ComputeWAXPBY.cpp", line 203: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeWAXPBY.cpp", line 203: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 272.
+Statistics information
+  Option information
+    Command line options : -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_NO_MPI -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -HPCG_MAN_OPT_SCHEDULE_ON -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DUNROLLING_4_A -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/ComputeWAXPBY.o
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

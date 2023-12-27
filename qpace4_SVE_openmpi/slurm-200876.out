@@ -1,0 +1,11 @@
+rm -f src/*.o bin/xhpcg
+mpicxx -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_USE_SVE -I./src -I./src/QPACE4_SVE   -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp -funroll-loops -std=c++11 -march=armv8.2-a+sve -I../src ../src/main.cpp -o src/main.o
+mpicxx -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_USE_SVE -I./src -I./src/QPACE4_SVE   -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp -funroll-loops -std=c++11 -march=armv8.2-a+sve -I../src ../src/CG.cpp -o src/CG.o
+mpicxx -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_USE_SVE -I./src -I./src/QPACE4_SVE   -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp -funroll-loops -std=c++11 -march=armv8.2-a+sve -I../src ../src/CG_ref.cpp -o src/CG_ref.o
+mpicxx -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_USE_SVE -I./src -I./src/QPACE4_SVE   -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp -funroll-loops -std=c++11 -march=armv8.2-a+sve -I../src ../src/TestCG.cpp -o src/TestCG.o
+mpicxx -c -DHPCG_CONTIGUOUS_ARRAYS -DHPCG_USE_SVE -I./src -I./src/QPACE4_SVE   -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp -funroll-loops -std=c++11 -march=armv8.2-a+sve -I../src ../src/ComputeResidual.cpp -o src/ComputeResidual.o
+../src/ComputeResidual.cpp: In function ‘int ComputeResidual(local_int_t, const Vector&, const Vector&, double&)’:
+../src/ComputeResidual.cpp:57:73: error: ‘n’ is predetermined ‘shared’ for ‘shared’
+   #pragma omp parallel default(none) shared(local_residual, v1v, v2v, n)
+                                                                         ^
+make: *** [Makefile:78: src/ComputeResidual.o] Error 1

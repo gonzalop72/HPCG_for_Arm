@@ -1,0 +1,143 @@
+Fujitsu C/C++ Version 4.7.0   Wed Aug  9 10:43:53 2023
+Compilation information
+  Current directory : /lustre/home/gapinzon/arm_code/HPCG_for_Arm/ookami_fj2_mpi_2
+  Source file       : ../src/ComputeWAXPBY_ref.cpp
+(line-no.)(optimize)
+        1             
+        2             //@HEADER
+        3             // ***************************************************
+        4             //
+        5             // HPCG: High Performance Conjugate Gradient Benchmark
+        6             //
+        7             // Contact:
+        8             // Michael A. Heroux ( maherou@sandia.gov)
+        9             // Jack Dongarra     (dongarra@eecs.utk.edu)
+       10             // Piotr Luszczek    (luszczek@eecs.utk.edu)
+       11             //
+       12             // ***************************************************
+       13             //@HEADER
+       14             
+       15             /*!
+       16              @file ComputeWAXPBY_ref.cpp
+       17             
+       18              HPCG routine
+       19              */
+       20             
+       21             #include "ComputeWAXPBY_ref.hpp"
+       22             #ifndef HPCG_NO_OPENMP
+       23             #include <omp.h>
+       24             #endif
+       25             #include <cassert>
+       26             /*!
+       27               Routine to compute the update of a vector with the sum of two
+       28               scaled vectors where: w = alpha*x + beta*y
+       29             
+       30               This is the reference WAXPBY impmentation.  It CANNOT be modified for the
+       31               purposes of this benchmark.
+       32             
+       33               @param[in] n the number of vector elements (on this processor)
+       34               @param[in] alpha, beta the scalars applied to x and y respectively.
+       35               @param[in] x, y the input vectors
+       36               @param[out] w the output vector.
+       37             
+       38               @return returns 0 upon success and non-zero otherwise
+       39             
+       40               @see ComputeWAXPBY
+       41             */
+       42             int ComputeWAXPBY_ref(const local_int_t n, const double alpha, const Vector & x,
+       43                 const double beta, const Vector & y, Vector & w) {
+       44             
+       45               assert(x.localLength>=n); // Test vector lengths
+       46               assert(y.localLength>=n);
+       47             
+       48               const double * const xv = x.values;
+       49               const double * const yv = y.values;
+       50               double * const wv = w.values;
+       51             
+       52               if (alpha==1.0) {
+       53             #ifndef HPCG_NO_OPENMP
+       54                 #pragma omp parallel for
+       55             #endif
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 2.75, ITR: 176, MVE: 6, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       56   p     2v      for (local_int_t i=0; i<n; i++) wv[i] = xv[i] + beta * yv[i];
+       57               } else if (beta==1.0) {
+       58             #ifndef HPCG_NO_OPENMP
+       59                 #pragma omp parallel for
+       60             #endif
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 2.75, ITR: 176, MVE: 6, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       61   p     2v      for (local_int_t i=0; i<n; i++) wv[i] = alpha * xv[i] + yv[i];
+       62               } else  {
+       63             #ifndef HPCG_NO_OPENMP
+       64                 #pragma omp parallel for
+       65             #endif
+                       <<< Loop-information Start >>>
+                       <<<  [OPTIMIZATION]
+                       <<<    SIMD(VL: 8)
+                       <<<    SOFTWARE PIPELINING(IPC: 3.25, ITR: 272, MVE: 9, POL: S)
+                       <<<    PREFETCH(HARD) Expected by compiler :
+                       <<<      (unknown)
+                       <<< Loop-information  End >>>
+       66   p     2v      for (local_int_t i=0; i<n; i++) wv[i] = alpha * xv[i] + beta * yv[i];
+       67               }
+       68             
+       69               return 0;
+       70             }
+Total prefetch num: 0
+Optimization messages
+  jwd6001s-i  "../src/ComputeWAXPBY_ref.cpp", line 56: SIMD conversion is applied to this loop with the loop variable 'i'.
+  jwd8204o-i  "../src/ComputeWAXPBY_ref.cpp", line 56: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeWAXPBY_ref.cpp", line 56: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 176.
+  jwd6001s-i  "../src/ComputeWAXPBY_ref.cpp", line 61: SIMD conversion is applied to this loop with the loop variable 'i'.
+  jwd8204o-i  "../src/ComputeWAXPBY_ref.cpp", line 61: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeWAXPBY_ref.cpp", line 61: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 176.
+  jwd6001s-i  "../src/ComputeWAXPBY_ref.cpp", line 66: SIMD conversion is applied to this loop with the loop variable 'i'.
+  jwd8204o-i  "../src/ComputeWAXPBY_ref.cpp", line 66: This loop is software pipelined.
+  jwd8205o-i  "../src/ComputeWAXPBY_ref.cpp", line 66: The software-pipelined loop is chosen at run time when the iteration count is greater than or equal to 272.
+Statistics information
+  Option information
+    Command line options : -Kident_mpi -c -DHPCG_CONTIGUOUS_ARRAYS -DENABLE_MG_COUNTERS -DHPCG_USE_SVE -DHPCG_MAN_OPT_DDOT -DDDOT_2_UNROLL -DWAXPBY_AUTO_OPT -DHPCG_MAN_SPVM_SCHEDULE -DHPCG_MAN_OPT_SPMV_UNROLL -DSPMV_4_UNROLL -Khpctag -Kzfill -DUNROLLING_4_B -DHPCG_MAN_SPVM_SCHEDULE_528 -I./src -I./src/OOKAMI_OMP_FJ -Kfast -KSVE -Kopenmp -ffast-math -funroll-loops -std=c++11 -ffp-contract=fast -march=armv8.2-a+sve -Kocl -Koptmsg=2 -Nlst=t -I../src -o src/ComputeWAXPBY_ref.o -I/opt/FJSVstclanga/cp-1.0.21.01/include/mpi/fujitsu -pthread
+    Effective options    : -g0 -mt -Qy -std=gnu++11 -x- -x=quick -O3 -Knoalias_const
+                           -Kalign_loops -Knoarray_declaration_opt -Kassume=noshortloop
+                           -Kassume=nomemory_bandwidth -Kassume=notime_saving_compilation
+                           -Kcmodel=small -Keval -Keval_noconcurrent
+                           -Knoextract_stride_store -Kfast_matmul -Knofenv_access
+                           -Kfp_contract -Kfp_relaxed -Kfsimple -Kfz -Khpctag
+                           -Kilfunc=procedure -Klargepage -Klib -Kloop_blocking
+                           -Kloop_fission -Kloop_nofission_stripmining
+                           -Kloop_fission_threshold=50 -Kloop_fusion -Kloop_interchange
+                           -Kloop_part_simd -Kloop_perfect_nest -Kloop_noversioning
+                           -Klooptype=f -Knomemalias -Kmfunc=1 -Kocl -Komitfp -Kopenmp
+                           -Kopenmp_noassume_norecurrence
+                           -Kopenmp_nocollapse_except_innermost
+                           -Kopenmp_loop_variable=private -Kopenmp_noordered_reduction
+                           -Knoopenmp_simd -Knooptlib_string -Koptmsg=2
+                           -Knopc_relative_literal_loads -Knoparallel
+                           -Kparallel_nofp_precision -Knopreex -Kprefetch_cache_level=all
+                           -Kprefetch_noconditional -Kprefetch_noindirect -Kprefetch_noinfer
+                           -Kprefetch_sequential=auto -Kprefetch_nostride -Kprefetch_strong
+                           -Kprefetch_strong_L2 -Knopreload -Krdconv=1
+                           -Kremove_inlinefunction -Knorestp -Ksch_post_ra -Ksch_pre_ra
+                           -Ksibling_calls -Ksimd=auto -Ksimd_packed_promotion
+                           -Ksimd_reduction_product -Ksimd_reg_size=512
+                           -Ksimd_nouncounted_loop -Ksimd_use_multiple_structures
+                           -Knostrict_aliasing -Knostriping -KA64FX -KARMV8_2_A -KSVE -Kswp
+                           -Kswp_freg_rate=100 -Kswp_ireg_rate=100 -Kswp_preg_rate=100
+                           -Kswp_policy=auto -Kunroll -Knounroll_and_jam -Kzfill
+                           -Ncancel_overtime_compilation -Nnocoverage -Nexceptions -Nnofjcex
+                           -Nfjprof -Nnohook_func -Nnohook_time -Nlibomp -Nline -Nlst=p
+                           -Nlst=t -Nquickdbg=noheapchk -Nquickdbg=nosubchk -NRnotrap
+                           -Nnoreordered_variable_stack -Nrt_notune -Nsetvalue=noheap
+                           -Nsetvalue=nostack -Nsetvalue=noscalar -Nsetvalue=noarray
+                           -Nsetvalue=nostruct -Nsrc -Nsta

@@ -1,0 +1,527 @@
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 25 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 25 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                       Column: 45 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 49 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                       Column: 49 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 59 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                       Column: 59 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 36 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                       Column: 36 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                       Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                       Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'i32*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        _Z22ComputeRestriction_refRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z22ComputeRestriction_refRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 40, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        _Z22ComputeRestriction_refRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z22ComputeRestriction_refRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 40, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            CantIdentifyArrayBounds
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: '
+  - String:          cannot identify array bounds
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            UnknownArrayBounds
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: '
+  - String:          Unknown array bounds
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            UnknownArrayBounds
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 59 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: '
+  - String:          Unknown array bounds
+...
+--- !Missed
+Pass:            sve-loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantIdentifyArrayBounds
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: '
+  - String:          cannot identify array bounds
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                       Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 8 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                       Column: 8 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'i32*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                       Column: 1 }
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 40, 
+                   Column: 0 }
+Function:        _Z22ComputeRestriction_refRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+Args:
+  - NumStackBytes:   '64'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 0 }
+Function:        .omp_outlined.
+Args:
+  - NumStackBytes:   '96'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z22ComputeRestriction_refRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '28'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 40, 
+                   Column: 0 }
+Function:        _Z22ComputeRestriction_refRK19SparseMatrix_STRUCTRK13Vector_STRUCT
+Args:
+  - NumInstructions: '28'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '10'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 1 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '26'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 49 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 25 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 51, 
+                   Column: 70 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeRestriction_ref.cpp', Line: 49, 
+                   Column: 0 }
+Function:        .omp_outlined.
+Args:
+  - NumInstructions: '63'
+  - String:          ' instructions in function'
+...

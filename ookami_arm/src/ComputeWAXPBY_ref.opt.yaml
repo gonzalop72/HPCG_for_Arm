@@ -1,0 +1,3422 @@
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..4
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 29 }
+Function:        .omp_outlined..4
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..4
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..4
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 29 }
+Function:        .omp_outlined..4
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..4
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 53 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 53 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 68 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 68 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 37 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 37 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 10 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 10 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 29 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 29 }
+Function:        .omp_outlined..3
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined..3
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 53 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 53 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 61 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 61 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 37 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 37 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 10 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 10 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 29 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_init_4
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 29 }
+Function:        .omp_outlined.
+Args:
+  - Callee:          __kmpc_for_static_fini
+  - String:          ' will not be inlined into '
+  - Caller:          .omp_outlined.
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 45 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 60 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 60 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 37 }
+Function:        .omp_outlined.
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 37 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 45, Column: 3 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 46, Column: 3 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 45, Column: 3 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 46, Column: 3 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - Callee:          __assert_fail
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - Callee:          __kmpc_fork_call
+  - String:          ' will not be inlined into '
+  - Caller:          _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, 
+                       Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            InterleavingNotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          the cost-model indicates that interleaving is not beneficial
+...
+--- !Passed
+Pass:            sve-loop-vectorize
+Name:            Vectorized
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'vectorized loop (vectorization width: '
+  - VectorizationFactor: vscale x 2
+  - String:          ', interleaved count: '
+  - InterleaveCount: '1'
+  - String:          ')'
+  - String:          '(runtime checks: '
+  - RTNeeded:        ''
+  - String:          ')'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 60 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 10 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 60 }
+Function:        .omp_outlined.
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '10'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 53 }
+Function:        .omp_outlined.
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            InterleavingNotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          the cost-model indicates that interleaving is not beneficial
+...
+--- !Passed
+Pass:            sve-loop-vectorize
+Name:            Vectorized
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'vectorized loop (vectorization width: '
+  - VectorizationFactor: vscale x 2
+  - String:          ', interleaved count: '
+  - InterleaveCount: '1'
+  - String:          ')'
+  - String:          '(runtime checks: '
+  - RTNeeded:        ''
+  - String:          ')'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 10 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 10 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 53 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 61 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 10 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 10 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 53 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 61 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '10'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+Function:        .omp_outlined..3
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Analysis
+Pass:            sve-loop-vectorize
+Name:            InterleavingNotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          the cost-model indicates that interleaving is not beneficial
+...
+--- !Passed
+Pass:            sve-loop-vectorize
+Name:            Vectorized
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'vectorized loop (vectorization width: '
+  - VectorizationFactor: vscale x 2
+  - String:          ', interleaved count: '
+  - InterleaveCount: '1'
+  - String:          ')'
+  - String:          '(runtime checks: '
+  - RTNeeded:        ''
+  - String:          ')'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            AllDisabled
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'loop not vectorized: vectorization and interleaving are explicitly disabled, or the loop has already been vectorized'
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 10 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 10 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 51 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 51 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 53 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 68 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 10 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 10 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            i32
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 10 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            'double*'
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 51 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 51 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 53 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, 
+                       Column: 43 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 68 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     call
+    DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, 
+                       Column: 5 }
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            UnsupportedType
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 66 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: type '
+  - String:          '<vscale x 2 x double> is unsupported by vectorizer'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            HorSLPNotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          Vectorizing horizontal reduction is possible
+  - String:          'but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' and threshold '
+  - Threshold:       '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '10'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '10'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '10'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '4'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '8'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            loop-unroll
+Name:            MissedDetails
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          loop not unrolled
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 51 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 61 }
+Function:        .omp_outlined..4
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, Column: 0 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - NumStackBytes:   '80'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 0 }
+Function:        .omp_outlined.
+Args:
+  - NumStackBytes:   '96'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 0 }
+Function:        .omp_outlined..3
+Args:
+  - NumStackBytes:   '96'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 0 }
+Function:        .omp_outlined..4
+Args:
+  - NumStackBytes:   '112'
+  - String:          ' stack bytes in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 46, Column: 3 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 48, Column: 31 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 57, Column: 14 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 0, Column: 0 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '17'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 45, Column: 3 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 46, Column: 3 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 43, Column: 0 }
+Function:        _Z17ComputeWAXPBY_refidRK13Vector_STRUCTdS1_RS_
+Args:
+  - NumInstructions: '78'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '10'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '26'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '29'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 5 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 45 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 29 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 56, Column: 64 }
+Function:        .omp_outlined.
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 54, Column: 0 }
+Function:        .omp_outlined.
+Args:
+  - NumInstructions: '103'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '10'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '26'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '29'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 5 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 45 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 29 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 61, Column: 65 }
+Function:        .omp_outlined..3
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 59, Column: 0 }
+Function:        .omp_outlined..3
+Args:
+  - NumInstructions: '103'
+  - String:          ' instructions in function'
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '10'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '27'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '34'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '11'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 5 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 45 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 29 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 66, Column: 72 }
+Function:        .omp_outlined..4
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '7'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: '../src/ComputeWAXPBY_ref.cpp', Line: 64, Column: 0 }
+Function:        .omp_outlined..4
+Args:
+  - NumInstructions: '115'
+  - String:          ' instructions in function'
+...

@@ -45,10 +45,14 @@
 
 #include "likwid_instrumentation.hpp"
 
-#ifdef HPCG_MAN_OPT_SCHEDULE_ON
-	#define SCHEDULE(T)	schedule(T)
-#else
-	#define SCHEDULE(T)
+//#ifdef HPCG_MAN_OPT_SCH_SYMGS_ON
+//	#define SCH_SYMGS(T)	schedule(runtime)
+//#else
+	#define SCH_SYMGS(T)
+//#endif
+
+#ifndef HPCG_NO_OPENMP
+	#include "omp.h"
 #endif
 
 /**************************************************************************************************/
@@ -62,10 +66,24 @@
 #ifdef HPCG_USE_SVE
 #include "arm_sve.h"
 
+#ifdef UNROLLING_4_A
+#elif defined(UNROLLING_4_B)
+	#define MANUAL_TASK_DISTRIBUTION
+#elif defined(UNROLLING_6_A)
+#elif defined(UNROLLING_6_B)
+#elif defined(UNROLLING_6_C)
+	#define MANUAL_TASK_DISTRIBUTION
+#elif defined(REF_UNROLLING_4)
+#else
+#endif
+
+
 inline void SYMGS_VERSION_1(const SparseMatrix& A, double * const& xv, const double * const& rv);	//UNROLL-2
 inline void SYMGS_VERSION_2(const SparseMatrix& A, double * const& xv, const double * const& rv);	//UNROLL-2 V2
 inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& xv, const double * const& rv);	//UNROLL-4 - OPTIMUM
 inline void SYMGS_VERSION_4(const SparseMatrix& A, double * const& xv, const double * const& rv);	//UNROLL-6
+#include "ComputeSYMGS_OPT.cpp"
+#include "ComputeSYMGS_OPT2.cpp" 
 
 /*
  * TDG VERSION
@@ -83,8 +101,18 @@ int ComputeSYMGS_TDG_SVE(const SparseMatrix & A, const Vector & r, Vector & x, T
 
 LIKWID_START(trace.enabled, "symgs_tdg");
 
-#ifndef TEST_XX
-SYMGS_VERSION_3(A, xv, rv);
+#ifdef UNROLLING_4_A
+	SYMGS_VERSION_5(A, xv, rv); 
+#elif defined(UNROLLING_4_B)
+	SYMGS_VERSION_5(A, xv, rv); 
+#elif defined(UNROLLING_6_A)
+	SYMGS_VERSION_4(A, xv, rv); 
+#elif defined(UNROLLING_6_B)
+	SYMGS_VERSION_6(A, xv, rv); 
+#elif defined(UNROLLING_6_C)
+	SYMGS_VERSION_6(A, xv, rv); 
+#elif defined(REF_UNROLLING_4)
+	SYMGS_VERSION_3(A, xv, rv); 
 #else
 
 //#pragma statement scache_isolate_way L2=10
@@ -102,7 +130,7 @@ SYMGS_VERSION_3(A, xv, rv);
 #ifndef HPCG_NO_OPENMP
 #pragma omp parallel
 {
-#pragma omp for nowait SCHEDULE(runtime)
+#pragma omp for nowait SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < size1; i+=2 ) {
 			local_int_t row_1 = A.tdg[l][i];
@@ -154,7 +182,7 @@ SYMGS_VERSION_3(A, xv, rv);
 		//else
 		//{
 #ifndef HPCG_NO_OPENMP
-//#pragma omp parallel for SCHEDULE(runtime)
+//#pragma omp parallel for SCH_SYMGS(runtime)
 #pragma omp single 
 {
 #endif
@@ -196,7 +224,7 @@ SYMGS_VERSION_3(A, xv, rv);
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -224,7 +252,7 @@ SYMGS_VERSION_3(A, xv, rv);
 		}
 
 /*#ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = size1-1; i >= 0; i-= 2 ) {
 			local_int_t row_1 = A.tdg[l][i];
@@ -292,7 +320,7 @@ int ComputeFusedSYMGS_SPMV_SVE(const SparseMatrix & A, const Vector & r, Vector 
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
@@ -325,7 +353,7 @@ int ComputeFusedSYMGS_SPMV_SVE(const SparseMatrix & A, const Vector & r, Vector 
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size(); i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -390,7 +418,7 @@ LIKWID_START(trace.enabled, "symgs_bc");
 			lastBlock = firstBlock + A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block < lastBlock; block += A.chunkSize ) { // for each superblock with the same color
 			local_int_t firstRow = block * A.blockSize;
@@ -550,7 +578,7 @@ LIKWID_START(trace.enabled, "symgs_bc");
 			lastBlock = firstBlock - A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block > lastBlock; block -= A.chunkSize ) {
 			local_int_t firstRow = ((block+1) * A.blockSize) - 1;
@@ -736,7 +764,7 @@ int ComputeSYMGS_TDG_NEON(const SparseMatrix & A, const Vector & r, Vector & x) 
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
@@ -773,7 +801,7 @@ int ComputeSYMGS_TDG_NEON(const SparseMatrix & A, const Vector & r, Vector & x) 
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -833,7 +861,7 @@ int ComputeFusedSYMGS_SPMV_NEON(const SparseMatrix & A, const Vector & r, Vector
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
@@ -870,7 +898,7 @@ int ComputeFusedSYMGS_SPMV_NEON(const SparseMatrix & A, const Vector & r, Vector
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -939,7 +967,7 @@ int ComputeSYMGS_BLOCK_NEON(const SparseMatrix & A, const Vector & r, Vector & x
 			lastBlock = firstBlock + A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block < lastBlock; block += A.chunkSize ) { // for each super block with the same color
 			local_int_t firstRow = block * A.blockSize;
@@ -1146,7 +1174,7 @@ int ComputeSYMGS_BLOCK_NEON(const SparseMatrix & A, const Vector & r, Vector & x
 			lastBlock = firstBlock - A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block > lastBlock; block -= A.chunkSize ) { // we skip a whole superblock on each iteration
 			local_int_t firstRow = ((block+1) * A.blockSize) - 1; // this is the last row of the last block (i.e., next block first row - 1)
@@ -1374,7 +1402,7 @@ int ComputeFusedSYMGS_SPMV ( const SparseMatrix & A, const Vector & r, Vector & 
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
@@ -1398,7 +1426,7 @@ int ComputeFusedSYMGS_SPMV ( const SparseMatrix & A, const Vector & r, Vector & 
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -1434,12 +1462,20 @@ int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, Tra
 	double * const xv = x.values;
 	double **matrixDiagonal = A.matrixDiagonal;
 
+/*#ifndef HPCG_NO_OPENMP
+#pragma omp parallel SCH_SYMGS(runtime)
+{
+#endif
+*/
+#pragma statement scache_isolate_way L2=10
+#pragma statement scache_isolate_assign xv
+
 	/*
 	 * FORWARD
 	 */
 	for ( local_int_t l = 0; l < A.tdg.size(); l++ ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < A.tdg[l].size(); i++ ) {
 			local_int_t row = A.tdg[l][i];
@@ -1463,7 +1499,7 @@ int ComputeSYMGS_TDG ( const SparseMatrix & A, const Vector & r, Vector & x, Tra
 	 */
 	for ( local_int_t l = A.tdg.size()-1; l >= 0; l-- ) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = A.tdg[l].size()-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -1509,7 +1545,7 @@ int ComputeSYMGS_BLOCK( const SparseMatrix & A, const Vector & r, Vector & x, Tr
 			lastBlock = firstBlock + A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for //SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block < lastBlock; block += A.chunkSize ) {
 			local_int_t firstRow = block * A.blockSize;
@@ -1578,7 +1614,7 @@ int ComputeSYMGS_BLOCK( const SparseMatrix & A, const Vector & r, Vector & x, Tr
 			lastBlock = firstBlock - A.numberOfBlocksInColor[color];
 		}
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for //SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t block = firstBlock; block > lastBlock; block -= A.chunkSize ) {
 			local_int_t firstRow = ((block+1) * A.blockSize) - 1; // this is the last row of the last block
@@ -1708,7 +1744,7 @@ inline void SYMGS_VERSION_1(const SparseMatrix& A, double * const& xv, const dou
 		local_int_t tdgLevelSize = A.tdg[l].size();
 		if((tdgLevelSize%2) == 0) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < tdgLevelSize; i+=2 ) {
 			local_int_t row_1 = A.tdg[l][i];
@@ -1760,7 +1796,7 @@ inline void SYMGS_VERSION_1(const SparseMatrix& A, double * const& xv, const dou
 		else
 		{
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < tdgLevelSize; i++ ) {
 			local_int_t row = A.tdg[l][i];
@@ -1796,7 +1832,7 @@ inline void SYMGS_VERSION_1(const SparseMatrix& A, double * const& xv, const dou
 		local_int_t tdgLevelSize = A.tdg[l].size();
 		if((tdgLevelSize%2) == 0) {		
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = tdgLevelSize-1; i >= 0; i-= 2 ) {
 			local_int_t row_1 = A.tdg[l][i];
@@ -1843,7 +1879,7 @@ inline void SYMGS_VERSION_1(const SparseMatrix& A, double * const& xv, const dou
 		else
 		{
 #ifndef HPCG_NO_OPENMP
-#pragma omp parallel for SCHEDULE(runtime)
+#pragma omp parallel for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = tdgLevelSize-1; i >= 0; i-- ) {
 			local_int_t row = A.tdg[l][i];
@@ -1887,7 +1923,7 @@ inline void SYMGS_VERSION_2(const SparseMatrix& A, double * const& xv, const dou
 #ifndef HPCG_NO_OPENMP
 	#pragma omp parallel
 	{
-	#pragma omp for nowait SCHEDULE(runtime)
+	#pragma omp for nowait SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < maxLevelSize; i+=2 ) {
 			local_int_t row_1 = A.tdg[l][i];
@@ -2009,7 +2045,7 @@ inline void SYMGS_VERSION_2(const SparseMatrix& A, double * const& xv, const dou
 		}
 #ifndef HPCG_NO_OPENMP
 		}
-#pragma omp for SCHEDULE(runtime)
+#pragma omp for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = maxLevelSize-1; i >= 0; i-= 2 ) {
 			local_int_t row_1 = A.tdg[l][i];
@@ -2068,6 +2104,7 @@ inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& prxv, const d
 #ifndef HPCG_NO_OPENMP
 	#pragma omp parallel
 	{
+		local_int_t numThreads = omp_get_num_threads();
 #endif
 	/*
 	 * FORWARD SWEEP
@@ -2076,11 +2113,27 @@ inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& prxv, const d
 		local_int_t tdgLevelSize = A.tdg[l].size();
 		local_int_t maxLevelSize = 4*(tdgLevelSize / 4);
 
+#ifdef MANUAL_TASK_DISTRIBUTION
+		//at least 8 tasks per thread 
+		local_int_t maxTasksPerThread = std::max((tdgLevelSize+numThreads-1)/numThreads, 8);
+		local_int_t groupedTasksPerThread = ((maxTasksPerThread+7)/8)*8;
+		local_int_t threadId = omp_get_thread_num();
+		local_int_t minValue = groupedTasksPerThread*threadId;
+		local_int_t maxValue = minValue+groupedTasksPerThread;
+		maxLevelSize = std::min(maxValue, maxLevelSize);
+		tdgLevelSize = std::min(maxValue, tdgLevelSize);
+
+		#pragma fj loop zfill			
+		#pragma loop nounroll
+		for ( local_int_t i = minValue; i < maxLevelSize; i+=4 ) {
+#else
 #ifndef HPCG_NO_OPENMP
-	//#pragma loop nounroll
-	#pragma omp for nowait SCHEDULE(runtime)
+	#pragma fj loop zfill			
+	#pragma loop nounroll
+	#pragma omp for nowait SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < maxLevelSize; i+=4 ) {
+#endif
 			local_int_t row_1 = A.tdg[l][i];
 			local_int_t row_2 = A.tdg[l][i+1];
 			local_int_t row_3 = A.tdg[l][i+2];
@@ -2167,7 +2220,6 @@ inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& prxv, const d
 
 			sum_4 += xv[row_4] * currentDiagonal_4;
 			xv[row_4] = sum_4 / currentDiagonal_4;
-
 		}
 
 //#pragma omp single
@@ -2175,7 +2227,7 @@ inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& prxv, const d
 /************
 #ifndef HPCG_NO_OPENMP
 //#pragma loop nounroll
-#pragma omp for SCHEDULE(runtime)
+#pragma omp for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = maxLevelSize; i < tdgLevelSize; i++ ) {
 
@@ -2205,6 +2257,7 @@ inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& prxv, const d
 *******/
 		#pragma omp sections nowait
 		{
+			#pragma fj loop zfill			
 			#pragma omp section 
 			{
 				local_int_t i = maxLevelSize;
@@ -2231,6 +2284,7 @@ inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& prxv, const d
 				sum += xv[row] * currentDiagonal;
 				xv[row] = sum / currentDiagonal;
 			}
+			#pragma fj loop zfill			
 			#pragma omp section 
 			{
 				local_int_t i = maxLevelSize + 1;
@@ -2259,6 +2313,7 @@ inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& prxv, const d
 				xv[row] = sum / currentDiagonal;
 				}
 			}
+			#pragma fj loop zfill			
 			#pragma omp section 
 			{
 				local_int_t i = maxLevelSize + 2;
@@ -2306,11 +2361,11 @@ inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& prxv, const d
 #ifndef HPCG_NO_OPENMP
 		//#pragma omp single nowait 
 		//{
-		//#pragma loop nounroll
-		#pragma omp for nowait SCHEDULE(runtime)
+		#pragma fj loop zfill			
+		#pragma loop nounroll
+		#pragma omp for nowait SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = tdgLevelSize-1; i >= maxLevelSize; i-- ) {
-
 			local_int_t row = A.tdg[l][i];
 			const double * const currentValues = A.matrixValues[row];
 			const local_int_t * const currentColIndices = A.mtxIndL[row];
@@ -2334,10 +2389,12 @@ inline void SYMGS_VERSION_3(const SparseMatrix& A, double * const& prxv, const d
 			sum += xv[row] * currentDiagonal;
 			xv[row] = sum / currentDiagonal;
 		}
+
 #ifndef HPCG_NO_OPENMP
 		//}
-//#pragma loop nounroll
-#pragma omp for SCHEDULE(runtime)
+#pragma fj loop zfill			
+#pragma loop nounroll
+#pragma omp for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = maxLevelSize-1; i >= 0; i-= 4 ) {
 			local_int_t row_1 = A.tdg[l][i];
@@ -2435,7 +2492,7 @@ inline void SYMGS_VERSION_4(const SparseMatrix& A, double * const& xv, const dou
 #ifndef HPCG_NO_OPENMP
 	#pragma omp parallel
 	{
-	#pragma omp for nowait SCHEDULE(runtime)
+	#pragma omp for nowait SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = 0; i < maxLevelSize; i+=6 ) {
 			local_int_t row_1 = A.tdg[l][i];
@@ -2570,7 +2627,7 @@ inline void SYMGS_VERSION_4(const SparseMatrix& A, double * const& xv, const dou
 //#pragma omp single
 		if (maxLevelSize < tdgLevelSize) {
 #ifndef HPCG_NO_OPENMP
-#pragma omp for SCHEDULE(runtime)
+#pragma omp for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = maxLevelSize; i < tdgLevelSize; i++ ) {
 
@@ -2615,7 +2672,7 @@ inline void SYMGS_VERSION_4(const SparseMatrix& A, double * const& xv, const dou
 	{
 		//#pragma omp single nowait 
 		//{
-		#pragma omp for nowait SCHEDULE(runtime)
+		#pragma omp for nowait SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = tdgLevelSize-1; i >= maxLevelSize; i-- ) {
 
@@ -2644,7 +2701,7 @@ inline void SYMGS_VERSION_4(const SparseMatrix& A, double * const& xv, const dou
 		}
 #ifndef HPCG_NO_OPENMP
 		//}
-#pragma omp for SCHEDULE(runtime)
+#pragma omp for SCH_SYMGS(runtime)
 #endif
 		for ( local_int_t i = maxLevelSize-1; i >= 0; i-= 6 ) {
 			local_int_t row_1 = A.tdg[l][i];
